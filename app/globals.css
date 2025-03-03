@@ -134,6 +134,10 @@
   --color-sub-600: #525866;
   --color-success-base: #1FC16B;
   --color-surface-700: #20232D;
+  --color-weak-100: #F6F8FA;
+  --color-error-base: #FB3748;
+  --color-primary-base: #335CFF;
+  --color-soft-400: #868C98;
 
   @keyframes accordion-down {
     from {
