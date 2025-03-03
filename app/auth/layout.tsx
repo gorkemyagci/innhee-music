@@ -3,8 +3,8 @@ import AuthNavbar from "@/modules/auth/ui/components/navbar";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
     return (
-        <div className="min-h-screen w-full bg-weak-100 py-7">
-            <div className="w-full max-w-7xl mx-auto">
+        <div className="min-h-screen w-full bg-weak-100 py-4">
+            <div className="w-full max-w-8xl px-8 mx-auto">
                 <AuthNavbar />
                 <Icons.grid_pattern className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0" />
                 <main className="h-[calc(100vh-107px)]">{children}</main>

@@ -138,6 +138,7 @@
   --color-error-base: #FB3748;
   --color-primary-base: #335CFF;
   --color-soft-400: #868C98;
+  --color-weak-50: #F5F7FA;
 
   @keyframes accordion-down {
     from {

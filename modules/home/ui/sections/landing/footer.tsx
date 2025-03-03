@@ -7,7 +7,7 @@ const Footer = () => {
         <footer className="w-full bg-[#0F0F0F] flex flex-col items-center gap-6">
             <div className="w-full max-w-7xl xl:px-5 flex items-start justify-between mx-auto pt-10">
                 <div className="flex flex-col items-start gap-3">
-                    <Icons.dark_logo />
+                    <Icons.logo />
                     <span className="text-white text-lg font-light max-w-lg">Start by downloading the Finpro mobile app from the App Store or Google Play.</span>
                 </div>
                 <div className="flex items-start gap-8">
@@ -90,7 +90,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <Separator className="text-white" />
+            <Separator className="bg-white/20" />
             <div className="pb-10 pt-4 w-full flex items-center justify-center">
                 <span className="text-[#D9DBE1] text-sm font-normal">© 2024 WanderNurse Staffing Solutions. All rights reserved.</span>
             </div>
