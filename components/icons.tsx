@@ -299,5 +299,36 @@ export const Icons = {
                 </linearGradient>
             </defs>
         </svg>
+    ),
+    changed_password: (props: IconProps) => (
+        <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+            <rect x="0.5" y="0.5" width="87" height="87" rx="43.5" fill="url(#paint0_linear_17086_89905)" />
+            <rect x="0.5" y="0.5" width="87" height="87" rx="43.5" stroke="url(#paint1_linear_17086_89905)" />
+            <g filter="url(#filter0_d_17086_89905)">
+                <rect x="16" y="16" width="56" height="56" rx="28" fill="white" />
+                <rect x="16.5" y="16.5" width="55" height="55" rx="27.5" stroke="#E2E4E9" />
+                <path d="M42.2562 35.3409C41.0298 34.9439 39.6966 35.4961 39.1102 36.644L38.4051 38.024C38.3213 38.188 38.188 38.3213 38.024 38.4051L36.644 39.1102C35.4961 39.6966 34.9439 41.0298 35.3409 42.2562L35.8181 43.7306C35.8748 43.9057 35.8748 44.0944 35.8181 44.2696L35.3409 45.7439C34.9439 46.9703 35.4961 48.3035 36.644 48.89L38.024 49.595C38.188 49.6788 38.3213 49.8122 38.4051 49.9761L39.1102 51.3562C39.6966 52.5041 41.0298 53.0563 42.2562 52.6593L43.7306 52.182C43.9057 52.1253 44.0944 52.1253 44.2696 52.182L45.7439 52.6593C46.9703 53.0563 48.3035 52.5041 48.89 51.3562L49.595 49.9761C49.6788 49.8122 49.8122 49.6788 49.9761 49.595L51.3562 48.89C52.5041 48.3035 53.0563 46.9703 52.6593 45.7439L52.182 44.2696C52.1253 44.0944 52.1253 43.9057 52.182 43.7306L52.6593 42.2562C53.0563 41.0298 52.5041 39.6966 51.3562 39.1102L49.9761 38.4051C49.8122 38.3213 49.6788 38.188 49.595 38.024L48.89 36.644C48.3035 35.4961 46.9703 34.9439 45.7439 35.3409L44.2696 35.8181C44.0944 35.8748 43.9057 35.8748 43.7306 35.8181L42.2562 35.3409ZM39.4149 43.7877L40.6523 42.5502L43.1272 45.0251L48.0769 40.0754L49.3144 41.3128L43.1272 47.5L39.4149 43.7877Z" fill="#525866" />
+            </g>
+            <defs>
+                <filter id="filter0_d_17086_89905" x="12" y="14" width="64" height="64" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                    <feOffset dy="2" />
+                    <feGaussianBlur stdDeviation="2" />
+                    <feColorMatrix type="matrix" values="0 0 0 0 0.105882 0 0 0 0 0.109804 0 0 0 0 0.113725 0 0 0 0.04 0" />
+                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_17086_89905" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_17086_89905" result="shape" />
+                </filter>
+                <linearGradient id="paint0_linear_17086_89905" x1="44" y1="0" x2="44" y2="88" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#E4E5E7" stopOpacity="0.48" />
+                    <stop offset="1" stopColor="#F7F8F8" stopOpacity="0" />
+                    <stop offset="1" stopColor="#E4E5E7" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="paint1_linear_17086_89905" x1="44" y1="0" x2="44" y2="88" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#E4E5E7" />
+                    <stop offset="0.765625" stopColor="#E4E5E7" stopOpacity="0" />
+                </linearGradient>
+            </defs>
+        </svg>
     )
 }

@@ -13,6 +13,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { pageUrls } from "@/lib/constants/page-urls";
+import InstallWechat from "@/components/custom/modals/install-wechat";
+import Accounts from "../sections/accounts";
 
 const signinSchema = z.object({
     account: z.string().email(),
@@ -132,14 +134,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
             <Separator className="w-full relative">
                 <span className="text-[11px] text-soft-400 font-normal absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white px-3">OR</span>
             </Separator>
-            <div className="flex pt-6 items-center gap-2">
-                <Button className="bg-white border border-soft-200 hover:bg-white flex-1 h-10 rounded-xl flex items-center justify-center">
-                    <Icons.wechat />
-                </Button>
-                <Button className="bg-white border border-soft-200 hover:bg-white flex-1 h-10 rounded-xl flex items-center justify-center">
-                    <Icons.google />
-                </Button>
-            </div>
+            <Accounts />
         </Form>
     )
 }
