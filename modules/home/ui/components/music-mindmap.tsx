@@ -46,18 +46,18 @@ export function MusicMindMap() {
 
     return (
         <div
-            className="relative hidden xl:flex w-full h-fit items-center justify-center overflow-hidden py-10"
+            className="relative hidden xl:flex w-full h-fit items-center justify-center py-10"
             ref={containerRef}
         >
             <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 top-7 -z-10 transform-gpu overflow-hidden blur-[100px]"
+                className="pointer-events-none absolute inset-x-0 top-0 -z-10 transform-gpu blur-[100px]"
             >
                 <div
                     style={{
-                        clipPath: "circle(35% at 50% 50%)",
+                        clipPath: "circle(35% at 50% 45%)",
                     }}
-                    className="relative left-[calc(50%-15rem)] aspect-[1155/800] w-[26.125rem] -translate-x-1/2 rotate-[-30deg] bg-gradient-to-t from-[#DA6733] to-white opacity-90 sm:left-[calc(50%-3rem)] sm:w-[45.1875rem]"
+                    className="relative left-[calc(50%-15rem)] aspect-[1155/700] w-[26.125rem] -translate-x-1/2 rotate-[0deg] bg-gradient-to-t from-[#DA6733] to-white opacity-90 sm:left-[calc(50%-3rem)] sm:w-[44.1875rem]"
                 />
             </div>
             <div className="flex size-full flex-row items-stretch justify-center gap-5">

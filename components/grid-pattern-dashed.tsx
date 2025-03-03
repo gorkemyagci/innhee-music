@@ -5,7 +5,7 @@ import { GridPattern } from "@/components/magicui/grid-pattern";
 
 export function GridPatternDashed() {
     return (
-        <div className="absolute -z-10 flex size-full top-0 items-center justify-center overflow-hidden rounded-lg bg-background p-20">
+        <div className="absolute -z-10 flex size-full top-0 items-center justify-center overflow-hidden bg-background rounded-lg p-20">
             <GridPattern
                 width={40}
                 height={40}
