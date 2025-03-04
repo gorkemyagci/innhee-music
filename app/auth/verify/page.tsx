@@ -13,7 +13,7 @@ const Verify = () => {
                         <span className="text-xl sm:text-2xl font-medium text-center text-main-900 max-w-[17.5rem]">
                             Enter Verification Code
                         </span>
-                        <span className="text-sm sm:text-base text-sub-600 font-normal text-center">We've sent a code to <span className="text-main-900 font-medium">arthur@gmail.com</span></span>
+                        <span className="text-sm sm:text-base text-sub-600 font-normal text-center">We&apos;ve sent a code to <span className="text-main-900 font-medium">arthur@gmail.com</span></span>
                     </div>
                 </div>
                 <VerifyForm />
