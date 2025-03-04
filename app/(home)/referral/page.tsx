@@ -2,7 +2,7 @@ import LoggedIn from "@/modules/referral/ui/views/logged-in";
 import NotLoggedIn from "@/modules/referral/ui/views/not-logged-in";
 
 const Page = () => {
-    const isLoggedIn = false;
+    const isLoggedIn = true;
     return (
         <>
             {!isLoggedIn ? <NotLoggedIn /> : <LoggedIn />}

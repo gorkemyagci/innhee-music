@@ -11,7 +11,7 @@ const Share = ({ loggedIn = false }: { loggedIn?: boolean }) => {
                 "items-center": loggedIn
             })}>
                 <p className="text-strong-950 font-medium text-lg md:text-xl">Share your unique URL</p>
-                <span className="text-neutral-500 font-medium text-xs md:text-sm text-center md:text-left">Copy your unique link and share It with your friends and followers.</span>
+                <span className="text-neutral-500 font-medium text-xs md:text-sm text-left">Copy your unique link and share It with your friends and followers.</span>
             </div>
             <div className={cn("w-full flex flex-col md:flex-row items-start md:items-center", {
                 "md:gap-10 lg:gap-40": !loggedIn,
@@ -35,7 +35,7 @@ const Share = ({ loggedIn = false }: { loggedIn?: boolean }) => {
                     "bg-weak-50 p-4 rounded-2xl": loggedIn,
                 })}>
                     <p className="text-strong-950 font-medium text-xs md:text-sm">Share Via</p>
-                    <div className="flex items-center gap-3 md:gap-5 w-full justify-between md:justify-start">
+                    <div className="flex items-center gap-3 md:gap-5 w-full justify-start">
                         <div className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center shadow-sm rounded-xl">
                             <FaFacebook className="size-4 md:size-5 fill-[#0062E0]" />
                         </div>
