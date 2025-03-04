@@ -5,11 +5,12 @@ import Link from "next/link";
 import { pageUrls } from "@/lib/constants/page-urls";
 import { Button } from "@/components/ui/button";
 import { MusicMindMap } from "../../components/music-mindmap";
+import { TextAnimate } from "@/components/magicui/text-animate";
 
 const Hero = () => {
-    return <div className="relative w-full flex items-center flex-col">
+    return <div className="relative w-full flex items-center flex-col px-4 lg:px-8">
         <GridPatternDashed />
-        <div className="flex pt-12 flex-col items-center gap-6">
+        <div className="flex pt-8 lg:pt-12 flex-col items-center gap-4 lg:gap-6">
             <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-x-0 top-5 -z-10 transform-gpu overflow-hidden blur-3xl"
@@ -27,25 +28,25 @@ const Hero = () => {
                     <Icons.arrow_right />
                 </span>
             </Badge>
-            <h1 className="text-black-light text-center text-[3.5rem] font-medium leading-[4rem] max-w-2xl">
+            <h1 className="text-black-light text-center text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] font-medium leading-[2.5rem] md:leading-[3rem] lg:leading-[4rem] max-w-2xl">
                 Release unlimited music everywhere.
             </h1>
-            <p className="text-neutral-500 text-center text-lg font-medium leading-6 max-w-[52rem]">
+            <TextAnimate startOnView={false} className="text-neutral-500 text-center text-base lg:text-lg font-medium leading-6 max-w-[52rem] px-4" animation="blurInUp" by="word">
                 Release to the biggest music streaming, download and social platforms like Spotify, Apple Music, TikTok, Amazon, Deezer, Instagram, and Tidal and more.
-            </p>
-            <div className="flex items-center gap-4">
-                <Link href={pageUrls.SIGN_UP} prefetch>
-                    <Button className="rounded-xl w-36 h-11 bg-[#20232D] flex items-center justify-center gap-2">
+            </TextAnimate>
+            <div className="flex flex-row items-center gap-4">
+                <Link href={pageUrls.SIGN_UP} prefetch className="w-full">
+                    <Button className="rounded-xl sm:w-36 h-11 bg-[#20232D] flex items-center justify-center gap-2">
                         Get Started
                         <Icons.arrow_right />
                     </Button>
                 </Link>
-                <Button variant="outline" className="rounded-xl w-36 h-11 text-main-900">
+                <Button variant="outline" className="rounded-xl sm:w-36 h-11 text-main-900">
                     How it Works
                 </Button>
             </div>
         </div>
-        <div className="w-full">
+        <div className="w-full hidden xl:block">
             <MusicMindMap />
         </div>
     </div>

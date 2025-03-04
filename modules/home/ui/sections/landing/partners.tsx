@@ -12,16 +12,16 @@ const Partners = () => {
     ];
 
     return (
-        <div className="w-full max-w-7xl flex flex-col items-center justify-between gap-16 py-20">
-            <div className="flex flex-col items-center gap-4">
-                <h2 className="text-neutral-800 text-center text-[3.5rem] leading-[4rem] font-medium">
+        <div className="w-full max-w-7xl flex flex-col items-center justify-between gap-8 md:gap-12 lg:gap-16 py-10 md:py-16 lg:py-20 px-4 lg:px-8">
+            <div className="flex flex-col items-center gap-3 md:gap-4">
+                <h2 className="text-neutral-800 text-center text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] leading-[2.5rem] md:leading-[3rem] lg:leading-[4rem] font-medium">
                     Powers the online experiences you love.
                 </h2>
-                <p className="text-neutral-500 font-medium text-lg leading-6 max-w-3xl text-center">
+                <p className="text-neutral-500 font-medium text-base lg:text-lg leading-6 max-w-3xl text-center px-4">
                     Unlock seamless music streaming with innovative features. Discover new sounds, connect with artists, and enjoy immersive audio like never before.
                 </p>
             </div>
-            <div className="w-full flex h-28 items-center gap-40 overflow-hidden relative">
+            <div className="w-full flex h-20 lg:h-28 items-center gap-40 overflow-hidden relative">
                 <Marquee className="flex h-full border-black/10 overflow-hidden items-center whitespace-nowrap">
                     {[...partnerImages, ...partnerImages, ...partnerImages, ...partnerImages].map((image, index) => (
                         <Image
@@ -30,7 +30,7 @@ const Partners = () => {
                             alt={`Partner ${index + 1}`}
                             width={100}
                             height={100}
-                            className="pointer-events-none mx-20 scale-150 object-contain w-auto h-auto"
+                            className="pointer-events-none mx-8 md:mx-12 lg:mx-20 scale-100 md:scale-125 lg:scale-150 object-contain w-auto h-auto"
                             quality={100}
                         />
                     ))}

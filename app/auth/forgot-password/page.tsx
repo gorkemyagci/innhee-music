@@ -7,7 +7,7 @@ const ForgotPassword = () => {
     return (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             {isChanged ? <PasswordChanged /> : <div
-                className="w-96 p-8 bg-white shadow-sm z-10 rounded-3xl flex flex-col items-center gap-6"
+                className="w-96 p-4 lg:p-8 bg-white shadow-sm z-10 rounded-3xl flex flex-col items-center gap-6"
             >
                 <div className="flex flex-col items-center gap-2">
                     <Icons.forgot_password />

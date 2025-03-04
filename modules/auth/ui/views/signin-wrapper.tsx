@@ -1,6 +1,6 @@
 "use client";
 import { Icons } from "@/components/icons";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/custom-tabs";
 import SignInForm from "./signin-form";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,7 +10,7 @@ const SignInWrapper = () => {
     return (
         <>
             <motion.div
-                className="w-96 p-8 bg-white shadow-sm z-10 rounded-3xl flex flex-col items-center gap-6"
+                className="w-96 p-4 lg:p-8 bg-white shadow-sm z-10 rounded-3xl flex flex-col items-center gap-6"
                 layout
                 transition={{
                     layout: { duration: 0.3, ease: "easeOut" }

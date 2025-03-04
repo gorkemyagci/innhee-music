@@ -12,7 +12,6 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import InstallWechat from "@/components/custom/modals/install-wechat";
 import Accounts from "../sections/accounts";
 
 const signupSchema = z.object({
@@ -39,24 +38,24 @@ const SignUpForm = () => {
 
     return (
         <Form {...form}>
-            <form className="w-full flex flex-col gap-3 pt-6" onSubmit={form.handleSubmit(onSubmit)}>
+            <form className="w-full flex flex-col gap-2 md:gap-4 pt-2 md:pt-6" onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField
                     control={form.control}
                     name="account"
                     render={() => (
-                        <FormItem>
-                            <FormLabel>Account<span className="text-sm text-error-base">*</span></FormLabel>
+                        <FormItem className="space-y-1 md:space-y-2">
+                            <FormLabel className="text-xs md:text-base">Account<span className="text-[10px] md:text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
-                                    <div className="flex h-10 items-center relative gap-0 pl-2.5 pr-3 py-0 bg-white border border-soft-200 rounded-xl">
-                                        <Icons.user_line />
-                                        <div className="flex-1 relative">
-                                            <InputElement form={form} name="account" placeholder="Phone number or email address" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
+                                    <div className="flex h-8 md:h-10 items-center relative gap-0 pl-2 md:pl-2.5 pr-2 md:pr-3 py-0 bg-white border border-soft-200 rounded-lg md:rounded-xl">
+                                        <Icons.user_line className="size-3 md:size-5 text-soft-500" />
+                                        <div className="flex-1 relative pl-1.5 md:pl-2">
+                                            <InputElement form={form} name="account" placeholder="Phone number or email address" className="border-none shadow-none absolute top-1/2 -translate-y-1/2 text-xs md:text-base placeholder:text-soft-500" />
                                         </div>
                                     </div>
                                 </FormControl>
                             </div>
-                            <FormMessage />
+                            <FormMessage className="text-[10px] md:text-sm" />
                         </FormItem>
                     )}
                 />
@@ -64,19 +63,21 @@ const SignUpForm = () => {
                     control={form.control}
                     name="password"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Password<span className="text-sm text-error-base">*</span></FormLabel>
+                        <FormItem className="space-y-1 md:space-y-2">
+                            <FormLabel className="text-xs md:text-base">Password<span className="text-[10px] md:text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
-                                    <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 bg-white border border-soft-200 rounded-xl">
-                                        <div className="flex-1 relative"><InputElement form={form} name="password" placeholder="Enter password" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" /></div>
+                                    <div className="flex h-8 md:h-10 items-center relative gap-0 pl-2 md:pl-2.5 pr-2 md:pr-3 py-0 bg-white border border-soft-200 rounded-lg md:rounded-xl">
+                                        <div className="flex-1 relative">
+                                            <InputElement form={form} name="password" placeholder="Enter password" className="border-none shadow-none absolute top-1/2 -translate-y-1/2 text-xs md:text-base placeholder:text-soft-500" />
+                                        </div>
                                         <div className="cursor-pointer">
-                                            <Icons.eye />
+                                            <Icons.eye className="size-3 md:size-5 text-soft-500" />
                                         </div>
                                     </div>
                                 </FormControl>
                             </div>
-                            <FormMessage />
+                            <FormMessage className="text-[10px] md:text-sm" />
                         </FormItem>
                     )}
                 />
@@ -84,21 +85,23 @@ const SignUpForm = () => {
                     control={form.control}
                     name="code"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Code<span className="text-sm text-error-base">*</span></FormLabel>
+                        <FormItem className="space-y-1 md:space-y-2">
+                            <FormLabel className="text-xs md:text-base">Code<span className="text-[10px] md:text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
-                                    <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 bg-white border border-soft-200 rounded-xl">
-                                        <div className="flex-1 relative">    <InputElement form={form} name="code" placeholder="Enter code" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" /></div>
-                                        <Separator orientation="vertical" className="h-full" />
-                                        <span className="text-sub-600 flex items-center gap-2 p-2.5 shrink-0 text-sm font-medium">
+                                    <div className="flex h-8 md:h-10 items-center relative gap-0 pl-2 md:pl-2.5 pr-2 md:pr-3 py-0 bg-white border border-soft-200 rounded-lg md:rounded-xl">
+                                        <div className="flex-1 relative">
+                                            <InputElement form={form} name="code" placeholder="Enter code" className="border-none shadow-none absolute top-1/2 -translate-y-1/2 text-xs md:text-base placeholder:text-soft-500" />
+                                        </div>
+                                        <Separator orientation="vertical" className="h-full bg-soft-200" />
+                                        <span className="text-sub-600 flex items-center gap-1 md:gap-2 px-1.5 md:px-2.5 py-1 md:py-2 shrink-0 text-[10px] md:text-sm font-medium cursor-pointer hover:text-sub-700 transition-colors">
                                             Send Code
-                                            <Icons.send />
+                                            <Icons.send className="size-2.5 md:size-4" />
                                         </span>
                                     </div>
                                 </FormControl>
                             </div>
-                            <FormMessage />
+                            <FormMessage className="text-[10px] md:text-sm" />
                         </FormItem>
                     )}
                 />
@@ -106,21 +109,21 @@ const SignUpForm = () => {
                     control={form.control}
                     name="terms"
                     render={({ field }) => (
-                        <FormItem className="flex py-2 items-center gap-2">
-                            <Checkbox id="terms" />
+                        <FormItem className="flex py-0.5 md:py-2 items-center gap-1 md:gap-2">
+                            <Checkbox id="terms" className="size-3 md:size-[18px] rounded border-soft-300" />
                             <label
                                 htmlFor="terms"
-                                className="text-sm font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                className="text-[10px] md:text-sm font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
-                                I agree to the <Link href="#" className="underline text-main-900 font-medium">Conditions</Link> and <Link href="#" className="underline text-main-900 font-medium">Privacy Policy</Link>.
+                                I agree to the <Link href="#" className="underline text-main-900 font-medium hover:text-main-800 transition-colors">Conditions</Link> and <Link href="#" className="underline text-main-900 font-medium hover:text-main-800 transition-colors">Privacy Policy</Link>.
                             </label>
                         </FormItem>
                     )}
                 />
-                <Button type="submit" className="w-full bg-surface-700 h-10 rounded-xl text-white text-sm font-medium">Sign up</Button>
+                <Button type="submit" className="w-full bg-surface-700 hover:bg-surface-800 h-8 md:h-10 rounded-lg md:rounded-xl text-white text-xs md:text-base font-medium transition-colors">Sign up</Button>
             </form>
             <Separator className="w-full relative">
-                <span className="text-[11px] text-soft-400 font-normal absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white px-3">OR</span>
+                <span className="text-[9px] md:text-[11px] text-soft-400 font-normal absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white px-1.5 md:px-3">OR</span>
             </Separator>
             <Accounts />
         </Form>

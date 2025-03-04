@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 
 const PasswordChanged = () => {
     return (
-        <div className="w-96 p-8 bg-white shadow-sm z-10 rounded-3xl flex flex-col items-center gap-6">
+        <div className="w-96 p-4 lg:p-8 bg-white shadow-sm z-10 rounded-3xl flex flex-col items-center gap-6">
             <div className="flex flex-col items-center gap-2">
                 <Icons.changed_password />
                 <div className="flex flex-col items-center gap-1.5">
