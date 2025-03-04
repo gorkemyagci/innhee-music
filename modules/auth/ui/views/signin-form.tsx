@@ -165,7 +165,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                 </div>
                 <Button
                     type="submit"
-                    className="w-full bg-[#20232D]/90 hover:bg-[#20232D]/90 transition-all h-10 border border-[#57585a] rounded-[10px] text-white text-sm font-medium shadow-[0_0_1px_#242628] relative overflow-hidden"
+                    className="w-full bg-[#20232D] hover:bg-[#20232D]/90 transition-all h-10 border border-[#57585a] rounded-[10px] text-white text-sm font-medium shadow-[0_0_1px_#242628] relative overflow-hidden"
                 >
                     Log in{activeTab === "code" && "/Sign up"}
                 </Button>
