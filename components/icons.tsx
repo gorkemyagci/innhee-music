@@ -392,7 +392,7 @@ export const Icons = {
         </svg>
     ),
     verify: (props: IconProps) => (
-        <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
             <rect x="0.5" y="0.5" width="87" height="87" rx="43.5" fill="url(#paint0_linear_14930_107647)" />
             <rect x="0.5" y="0.5" width="87" height="87" rx="43.5" stroke="url(#paint1_linear_14930_107647)" />
             <g filter="url(#filter0_d_14930_107647)">

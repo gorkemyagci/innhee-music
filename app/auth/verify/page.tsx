@@ -1,6 +1,5 @@
 import { Icons } from "@/components/icons";
 import VerifyForm from "@/modules/auth/ui/views/verify-form";
-import Image from "next/image";
 
 const Verify = () => {
     return (
