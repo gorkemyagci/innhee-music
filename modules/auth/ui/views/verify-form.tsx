@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
     InputOTP,
     InputOTPGroup,
-    InputOTPSeparator,
     InputOTPSlot,
 } from "@/components/ui/input-otp"
 
