@@ -23,6 +23,7 @@ const signinSchema = z.object({
         message: ERROR_MESSAGES.PASSWORD_COMPLEXITY,
     }).optional(),
     terms: z.boolean().optional(),
+    keep_logged: z.boolean().optional(),
 });
 
 export type Signin = z.infer<typeof signinSchema>;
@@ -86,50 +87,88 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                             <FormMessage />
                         </FormItem>
                     )}
-                /> : <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <div className="flex flex-col gap-2">
-                            <FormItem>
-                                <FormLabel>Password<span className="text-sm text-error-base">*</span></FormLabel>
-                                <div>
-                                    <FormControl>
-                                        <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 bg-white border border-soft-200 rounded-xl">
-                                            <div className="flex-1 relative"><InputElement form={form} name="password" placeholder="Enter password" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" /></div>
-                                            <div className="cursor-pointer">
-                                                <Icons.eye />
-                                            </div>
-                                        </div>
-                                    </FormControl>
-                                </div>
-                                <FormMessage />
-                            </FormItem>
+                /> :
+                    <>
 
-                            <div className="flex w-full justify-end">
-                                <Link href={pageUrls.FORGOT} className="underline text-sub-600 font-medium text-xs">
-                                    Forgot password?
-                                </Link>
-                            </div>
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <>
+
+
+                                    <div className="flex flex-col gap-2">
+                                        <FormItem>
+                                            <FormLabel>Password<span className="text-sm text-error-base">*</span></FormLabel>
+                                            <div>
+                                                <FormControl>
+                                                    <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 bg-white border border-soft-200 rounded-xl">
+                                                        <div className="flex-1 relative"><InputElement form={form} name="password" placeholder="Enter password" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" /></div>
+                                                        <div className="cursor-pointer">
+                                                            <Icons.eye />
+                                                        </div>
+                                                    </div>
+                                                </FormControl>
+                                            </div>
+                                            <FormMessage />
+                                        </FormItem>
+                                    </div>
+
+
+                                </>
+                            )}
+                        />
+
+                    </>}
+
+                <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between">
+                        <FormField
+                            control={form.control}
+                            name="keep_logged"
+                            render={({ field }) => (
+                                <FormItem className="flex shrink-0 items-center gap-2">
+                                    <Checkbox id="keep_logged" />
+                                    <label
+                                        htmlFor="keep_logged"
+                                        className="text-sm text-sub-600 font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    >
+                                        Keep me logged in
+                                    </label>
+                                </FormItem>
+
+                            )}
+                        />
+                        <div className="flex w-full justify-end">
+                            <Link href={pageUrls.FORGOT} className="underline text-sub-600 font-medium text-xs">
+                                Forgot password?
+                            </Link>
                         </div>
-                    )}
-                />}
-                <FormField
-                    control={form.control}
-                    name="terms"
-                    render={({ field }) => (
-                        <FormItem className="flex items-center gap-2">
-                            <Checkbox id="terms" />
-                            <label
-                                htmlFor="terms"
-                                className="text-sm font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                                I agree to the <Link href="#" className="underline text-main-900 font-medium">Conditions</Link> and <Link href="#" className="underline text-main-900 font-medium">Privacy Policy</Link>.
-                            </label>
-                        </FormItem>
-                    )}
-                />
-                <Button type="submit" className="w-full bg-surface-700 h-10 rounded-xl text-white text-sm font-medium">Log in {activeTab === "code" && "/Sign up"}</Button>
+                    </div>
+
+
+                    <FormField
+                        control={form.control}
+                        name="terms"
+                        render={({ field }) => (
+                            <FormItem className="flex items-center gap-2">
+                                <Checkbox id="terms" />
+                                <label
+                                    htmlFor="terms"
+                                    className="text-sm text-sub-600 font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                    I agree to the <Link href="#" className="underline text-main-900 font-semibold">Conditions</Link> and <Link href="#" className="underline text-main-900 font-medium">Privacy Policy</Link>.
+                                </label>
+                            </FormItem>
+                        )}
+                    />
+                </div>
+                <Button
+                    type="submit"
+                    className="w-full bg-[#20232D]/90 hover:bg-[#20232D]/85 transition-all h-10 border border-[#57585a] rounded-xl text-white text-sm font-medium shadow-[0_0_1px_#242628] relative overflow-hidden"
+                >
+                    Log in{activeTab === "code" && "/Sign up"}
+                </Button>
             </form>
             <Separator className="w-full relative">
                 <span className="text-[11px] text-soft-400 font-normal absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white px-3">OR</span>

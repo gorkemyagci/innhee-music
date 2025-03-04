@@ -5,12 +5,12 @@ type IconProps = React.HTMLAttributes<SVGElement> & {
 export const Icons = {
     menu: (props: IconProps) => (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-            <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     ),
     close: (props: IconProps) => (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     ),
     logo: (props: IconProps) => (
@@ -389,6 +389,45 @@ export const Icons = {
     copy: (props: IconProps) => (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
             <path d="M6.25 5.5V3.25C6.25 3.05109 6.32902 2.86032 6.46967 2.71967C6.61032 2.57902 6.80109 2.5 7 2.5H16C16.1989 2.5 16.3897 2.57902 16.5303 2.71967C16.671 2.86032 16.75 3.05109 16.75 3.25V13.75C16.75 13.9489 16.671 14.1397 16.5303 14.2803C16.3897 14.421 16.1989 14.5 16 14.5H13.75V16.75C13.75 17.164 13.4125 17.5 12.9948 17.5H4.00525C3.90635 17.5006 3.8083 17.4816 3.71674 17.4442C3.62519 17.4068 3.54192 17.3517 3.47174 17.282C3.40156 17.2123 3.34584 17.1294 3.30779 17.0381C3.26974 16.9468 3.2501 16.8489 3.25 16.75L3.25225 6.25C3.25225 5.836 3.58975 5.5 4.0075 5.5H6.25ZM4.75225 7L4.75 16H12.25V7H4.75225ZM7.75 5.5H13.75V13H15.25V4H7.75V5.5Z" fill="#525866" />
+        </svg>
+    ),
+    verify: (props: IconProps) => (
+        <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.5" y="0.5" width="87" height="87" rx="43.5" fill="url(#paint0_linear_14930_107647)" />
+            <rect x="0.5" y="0.5" width="87" height="87" rx="43.5" stroke="url(#paint1_linear_14930_107647)" />
+            <g filter="url(#filter0_d_14930_107647)">
+                <rect x="16" y="16" width="56" height="56" rx="28" fill="white" />
+                <rect x="16.5" y="16.5" width="55" height="55" rx="27.5" stroke="#E2E4E9" />
+                <path
+                    d="M54.5 45.4079C53.3783 45.0105 52.167 44.939 51.0064 45.2016C49.8457 45.4642 48.7832 46.0501 47.9417 46.8915C47.1003 47.733 46.5144 48.7955 46.2518 49.9562C45.9892 51.1168 46.0607 52.3281 46.458 53.4498H34.55C34.2715 53.4498 34.0045 53.3392 33.8075 53.1423C33.6106 52.9454 33.5 52.6783 33.5 52.3998V35.5998C33.5 35.3213 33.6106 35.0543 33.8075 34.8573C34.0045 34.6604 34.2715 34.5498 34.55 34.5498H53.45C53.7285 34.5498 53.9955 34.6604 54.1925 34.8573C54.3894 35.0543 54.5 35.3213 54.5 35.5998V45.4079ZM44.063 43.667L37.3304 37.9497L35.9706 39.5499L44.0766 46.4327L52.0367 39.5447L50.6633 37.956L44.064 43.667H44.063ZM51.35 54.4998L47.6372 50.787L49.1229 49.3023L51.35 51.5304L55.0628 47.8176L56.5475 49.3023L51.35 54.4998Z"
+                    fill="#525866" />
+            </g>
+            <defs>
+                <filter id="filter0_d_14930_107647" x="12" y="14" width="64" height="64"
+                    filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feColorMatrix in="SourceAlpha" type="matrix"
+                        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                    <feOffset dy="2" />
+                    <feGaussianBlur stdDeviation="2" />
+                    <feColorMatrix type="matrix"
+                        values="0 0 0 0 0.105882 0 0 0 0 0.109804 0 0 0 0 0.113725 0 0 0 0.04 0" />
+                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_14930_107647" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_14930_107647"
+                        result="shape" />
+                </filter>
+                <linearGradient id="paint0_linear_14930_107647" x1="44" y1="0" x2="44" y2="88"
+                    gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#E4E5E7" stopOpacity="0.48" />
+                    <stop offset="1" stopColor="#F7F8F8" stopOpacity="0" />
+                    <stop offset="1" stopColor="#E4E5E7" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="paint1_linear_14930_107647" x1="44" y1="0" x2="44" y2="88"
+                    gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#E4E5E7" />
+                    <stop offset="0.765625" stopColor="#E4E5E7" stopOpacity="0" />
+                </linearGradient>
+            </defs>
         </svg>
     )
 }
