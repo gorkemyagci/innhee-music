@@ -129,7 +129,7 @@ const ForgotForm = () => {
                         </FormItem>
                     )}
                 />
-                <Button type="submit"  className="w-full bg-[#20232D]/90 hover:bg-[#20232D]/85 transition-all h-10 border border-[#57585a] rounded-[10px] text-white text-sm font-medium shadow-[0_0_1px_#242628] relative overflow-hidden">Reset Password</Button>
+                <Button type="submit"  className="w-full bg-[#20232D]/90 hover:bg-[#20232D]/90 transition-all h-10 border border-[#57585a] rounded-[10px] text-white text-sm font-medium shadow-[0_0_1px_#242628] relative overflow-hidden">Reset Password</Button>
             </form>
         </Form>
     )

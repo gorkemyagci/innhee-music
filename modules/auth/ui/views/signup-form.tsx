@@ -120,7 +120,9 @@ const SignUpForm = () => {
                         </FormItem>
                     )}
                 />
-                <Button type="submit"  className="w-full bg-[#20232D]/90 hover:bg-[#20232D]/85 transition-all h-10 border border-[#57585a] rounded-[10px] text-white text-sm font-medium shadow-[0_0_1px_#242628] relative overflow-hidden">Sign up</Button>
+                <Button type="submit" className="w-full bg-[#20232D] hover:bg-[#20232D]/90 transition-all h-10 border border-[#57585a] rounded-[10px] text-white text-sm font-medium shadow-[0_0_1px_#242628] relative overflow-hidden">
+                    Sign up
+                </Button>
             </form>
             <Separator className="w-full relative">
                 <span className="text-[9px] md:text-[11px] text-soft-400 font-normal absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white px-1.5 md:px-3">OR</span>
