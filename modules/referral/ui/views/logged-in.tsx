@@ -6,7 +6,7 @@ import UserProfile from "../sections/user-profile";
 
 const LoggedIn = () => {
     return (
-        <div className="w-full max-w-7xl mx-auto py-5 pb-10 flex items-start gap-6">
+        <div className="w-full max-w-[1440px] mx-auto py-5 pb-10 flex items-start gap-6">
             <div className="flex-[3] border border-neutral-200 rounded-2xl p-6 flex flex-col items-center shadow-md gap-14">
                 <div className="flex w-full flex-col items-center gap-10">
                     <div className="flex w-full items-center flex-col gap-5">

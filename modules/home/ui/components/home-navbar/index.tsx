@@ -35,7 +35,7 @@ const HomeNavbar = () => {
     const closeMenu = () => setIsMobileMenuOpen(false);
 
     const NavbarContent = () => (
-        <div className="max-w-7xl mx-auto w-full h-full flex items-center justify-between">
+        <div className="max-w-[1440px] mx-auto w-full h-full flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-5">
                 <motion.div
                     whileHover={{ scale: 1.05 }}

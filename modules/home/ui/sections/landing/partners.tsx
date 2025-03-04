@@ -12,7 +12,7 @@ const Partners = () => {
     ];
 
     return (
-        <div className="w-full max-w-7xl flex flex-col items-center justify-between gap-8 md:gap-12 lg:gap-16 py-10 md:py-16 lg:py-20 px-4 lg:px-8">
+        <div className="w-full max-w-[1440px] flex flex-col items-center justify-between gap-8 md:gap-12 lg:gap-16 py-10 md:py-16 lg:py-20 px-4 lg:px-8">
             <div className="flex flex-col items-center gap-3 md:gap-4">
                 <h2 className="text-neutral-800 text-center text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] leading-[2.5rem] md:leading-[3rem] lg:leading-[4rem] font-medium">
                     Powers the online experiences you love.

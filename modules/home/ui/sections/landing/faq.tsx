@@ -15,7 +15,7 @@ const FAQ = () => {
         <div className="relative pt-8 md:pt-12 lg:pt-20 w-full">
             {pathname === "/" && <BorderBackground />}
             <div className={cn(
-                "flex flex-col lg:flex-row items-start w-full justify-between gap-8 md:gap-10 lg:gap-12",
+                "flex flex-col max-w-[1440px] mx-auto lg:flex-row items-start w-full justify-between gap-8 md:gap-10 lg:gap-12",
                 pathname === "/" && "lg:py-20 pt-5 pb-10 px-4 md:px-8 lg:px-24"
             )}>
                 <div className="flex flex-1 flex-col items-start gap-4 md:gap-5">

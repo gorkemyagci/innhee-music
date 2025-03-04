@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 
 const GetStarted = () => {
     return (
-        <div className="w-full max-w-8xl px-4 md:px-8 lg:px-20 py-8 md:py-12 lg:py-20 mx-auto">
+        <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-20 py-8 md:py-12 lg:py-20 mx-auto">
             <div className="bg-[#0F0F0F] rounded-xl md:rounded-2xl py-6 md:py-8 lg:py-10 px-4 md:px-6 lg:px-8 w-full flex items-center justify-center flex-col gap-6 md:gap-8">
                 <div className="flex flex-col gap-2 md:gap-2.5 text-center">
                     <h6 className="text-xl md:text-2xl lg:text-3xl font-semibold text-white">Generate top quality texts. Instantly.</h6>

@@ -5,7 +5,7 @@ import Link from "next/link";
 const Footer = () => {
     return (
         <footer className="w-full bg-[#0F0F0F] flex flex-col items-center gap-4 md:gap-6">
-            <div className="w-full max-w-7xl px-4 md:px-6 xl:px-5 flex flex-col lg:flex-row items-start gap-8 lg:gap-0 lg:justify-between mx-auto pt-8 md:pt-10">
+            <div className="w-full max-w-[1440px] px-4 md:px-6 xl:px-5 flex flex-col lg:flex-row items-start gap-8 lg:gap-0 lg:justify-between mx-auto pt-8 md:pt-10">
                 <div className="flex flex-col items-start gap-3 w-full lg:max-w-lg">
                     <Icons.logo />
                     <span className="text-white text-base md:text-lg font-light">Start by downloading the Finpro mobile app from the App Store or Google Play.</span>

@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 
 const AudioWorkers = () => {
-    return <div className="w-full px-4 md:px-8 lg:px-20 py-10 md:py-12 lg:py-16 flex flex-col items-center gap-8 md:gap-10 lg:gap-14">
+    return <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-20 py-10 md:py-12 lg:py-16 flex flex-col items-center gap-8 md:gap-10 lg:gap-14">
         <div className="flex flex-col items-center gap-3 md:gap-4">
             <h2 className="text-neutral-800 text-center text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] leading-[2.5rem] md:leading-[3rem] lg:leading-[4rem] font-medium">
                 Top Audio Workers

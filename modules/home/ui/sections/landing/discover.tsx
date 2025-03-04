@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 const Discover = () => {
     return (
-        <div className="py-10 md:py-12 lg:py-16 px-4 md:px-8 lg:px-20 flex flex-col gap-8 md:gap-10 lg:gap-14 items-center">
+        <div className="py-10 max-w-[1440px] mx-auto md:py-12 lg:py-16 px-4 md:px-8 lg:px-20 flex flex-col gap-8 md:gap-10 lg:gap-14 items-center">
             <div className="flex flex-col items-center gap-4 md:gap-5 lg:gap-6">
                 <Button variant="outline" className="bg-white flex gap-2.5 items-center pr-6 py-[0.325rem] rounded-full h-10 max-w-[207px] w-full pl-[0.325rem] border border-[#DA6733]">
                     <div className="bg-[#DA6733] w-16 h-[1.875rem] rounded-full flex items-center justify-center">

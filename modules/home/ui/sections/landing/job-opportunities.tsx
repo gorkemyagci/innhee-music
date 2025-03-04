@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 
 const JobOpportunities = () => {
     return (
-        <div className="w-full max-w-8xl flex flex-col items-center gap-8 md:gap-12 lg:gap-16 px-4 md:px-8 lg:px-20 py-8 md:py-12 lg:py-20 mx-auto">
+        <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center gap-8 md:gap-12 lg:gap-16 px-4 md:px-8 lg:px-20 py-8 md:py-12 lg:py-20">
             <div className="flex flex-col items-center gap-3 md:gap-4">
                 <h2 className="text-neutral-800 text-center text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] leading-[2.5rem] md:leading-[3rem] lg:leading-[4rem] font-medium">
                     Top Audio Job Opportunities
