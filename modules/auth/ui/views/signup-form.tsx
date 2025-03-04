@@ -120,7 +120,9 @@ const SignUpForm = () => {
                         </FormItem>
                     )}
                 />
-                <Button type="submit" className="w-full bg-[#20232D] hover:bg-[#20232D]/90 transition-all h-10 border border-[#57585a] rounded-[10px] text-white text-sm font-medium shadow-[0_0_1px_#242628] relative overflow-hidden">
+                <Button type="submit" className="w-full h-10 rounded-[10px] text-white text-sm font-medium relative overflow-hidden transition-all
+                    bg-gradient-to-b from-[#20232D]/90 to-[#20232D]
+                    border border-[#20232D]/80 shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
                     Sign up
                 </Button>
             </form>
