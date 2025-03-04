@@ -36,10 +36,11 @@ const HomeNavbar = () => {
 
     const NavbarContent = () => (
         <div className="max-w-7xl mx-auto w-full h-full flex items-center justify-between">
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-2 sm:gap-5">
                 <motion.div
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    className="scale-90 sm:scale-100"
                 >
                     <Link href={pageUrls.HOME} prefetch>
                         <Icons.logo />
@@ -63,14 +64,14 @@ const HomeNavbar = () => {
                     ))}
                 </ul>
             </div>
-            <div className="flex items-center gap-4 lg:gap-7">
+            <div className="flex items-center gap-2 sm:gap-4 lg:gap-7">
                 <div className="hidden lg:block">
                     <SearchInput />
                 </div>
                 <motion.span
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    className="cursor-pointer"
+                    className="cursor-pointer hidden sm:block"
                 >
                     <Icons.sunline />
                 </motion.span>
@@ -101,9 +102,9 @@ const HomeNavbar = () => {
                     whileTap={{ scale: 0.9 }}
                 >
                     {isMobileMenuOpen ? (
-                        <Icons.close className="w-6 h-6" />
+                        <Icons.close className="w-5 h-5 sm:w-6 sm:h-6" />
                     ) : (
-                        <Icons.menu className="w-6 h-6" />
+                        <Icons.menu className="w-5 h-5 sm:w-6 sm:h-6" />
                     )}
                 </motion.button>
             </div>
@@ -113,83 +114,88 @@ const HomeNavbar = () => {
     return (
         <>
             <div className="h-[4.5rem] w-full" />
-            {isMobile ? (
-                <motion.nav 
-                    className={cn("h-[4.5rem] w-full px-4 lg:px-8 fixed top-0 left-0 bg-white z-50", 
-                        pathname !== "/" && "border-b border-soft-200"
-                    )}
-                    initial={{ y: -100 }}
-                    animate={{ y: 0 }}
-                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                >
-                    <NavbarContent />
-                </motion.nav>
-            ) : (
-                <nav className={cn("h-[4.5rem] w-full px-4 lg:px-8 fixed top-0 left-0 bg-white z-50", 
-                    pathname !== "/" && "border-b border-soft-200"
-                )}>
-                    <NavbarContent />
-                </nav>
-            )}
-
-            <AnimatePresence>
-                {isMobileMenuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="fixed top-[4.5rem] left-0 w-full h-[calc(100vh-4.5rem)] bg-white z-40 lg:hidden overflow-y-auto"
+            <div className="fixed top-0 left-0 right-0 w-full z-[999]">
+                {isMobile ? (
+                    <motion.nav 
+                        className={cn("h-[4.5rem] w-full bg-white", 
+                            pathname !== "/" && "border-b border-soft-200"
+                        )}
+                        initial={{ y: -100 }}
+                        animate={{ y: 0 }}
+                        transition={{ type: "spring", stiffness: 100, damping: 20 }}
                     >
-                        <div className="p-6 flex flex-col gap-6">
-                            <div className="w-full">
-                                <SearchInput />
-                            </div>
-                            <ul className="flex flex-col gap-4">
-                                {navItems.map((item, index) => (
-                                    <motion.li 
-                                        key={index}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ 
-                                            opacity: 1, 
-                                            x: 0,
-                                            transition: { delay: index * 0.1 }
-                                        }}
-                                        className={cn("py-3 px-4 rounded-lg",
-                                            pathname === item.href && "bg-weak-50"
-                                        )}
-                                    >
-                                        <Link href={item.href} prefetch className="flex items-center gap-3" onClick={closeMenu}>
-                                            {item.icon}
-                                            <span className="text-black font-medium tracking-tight">{item.label}</span>
-                                        </Link>
-                                    </motion.li>
-                                ))}
-                            </ul>
-                            <div className="flex flex-col gap-4 mt-4">
-                                <Link href={pageUrls.SIGN_IN} prefetch onClick={closeMenu}>
-                                    <motion.div
-                                        whileTap={{ scale: 0.95 }}
-                                        className="w-full h-10 flex items-center justify-center px-4 text-center text-black font-medium tracking-tight rounded-lg border border-gray-200"
-                                    >
-                                        Login
-                                    </motion.div>
-                                </Link>
-                                <Link href={pageUrls.SIGN_UP} prefetch onClick={closeMenu}>
-                                    <motion.div
-                                        whileTap={{ scale: 0.95 }}
-                                        className="w-full"
-                                    >
-                                        <Button className="w-full flex items-center justify-center px-4 h-10 rounded-xl bg-[#20232D]">
-                                            Get Started
-                                        </Button>
-                                    </motion.div>
-                                </Link>
-                            </div>
+                        <div className="h-full w-full max-w-[100vw] px-2 sm:px-4 lg:px-8">
+                            <NavbarContent />
                         </div>
-                    </motion.div>
+                    </motion.nav>
+                ) : (
+                    <nav className={cn("h-[4.5rem] w-full bg-white", 
+                        pathname !== "/" && "border-b border-soft-200"
+                    )}>
+                        <div className="h-full w-full max-w-[100vw] px-2 sm:px-4 lg:px-8">
+                            <NavbarContent />
+                        </div>
+                    </nav>
                 )}
-            </AnimatePresence>
+                <AnimatePresence>
+                    {isMobileMenuOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            className="w-full h-[calc(100vh-4.5rem)] bg-white lg:hidden overflow-y-auto"
+                        >
+                            <div className="p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
+                                <div className="w-full">
+                                    <SearchInput />
+                                </div>
+                                <ul className="flex flex-col gap-3 sm:gap-4">
+                                    {navItems.map((item, index) => (
+                                        <motion.li 
+                                            key={index}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ 
+                                                opacity: 1, 
+                                                x: 0,
+                                                transition: { delay: index * 0.1 }
+                                            }}
+                                            className={cn("py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg",
+                                                pathname === item.href && "bg-weak-50"
+                                            )}
+                                        >
+                                            <Link href={item.href} prefetch className="flex items-center gap-2 sm:gap-3" onClick={closeMenu}>
+                                                {item.icon}
+                                                <span className="text-sm sm:text-base text-black font-medium tracking-tight">{item.label}</span>
+                                            </Link>
+                                        </motion.li>
+                                    ))}
+                                </ul>
+                                <div className="flex flex-col gap-3 sm:gap-4 mt-2 sm:mt-4">
+                                    <Link href={pageUrls.SIGN_IN} prefetch onClick={closeMenu}>
+                                        <motion.div
+                                            whileTap={{ scale: 0.95 }}
+                                            className="w-full h-9 sm:h-10 flex items-center justify-center px-3 sm:px-4 text-center text-sm sm:text-base text-black font-medium tracking-tight rounded-lg border border-gray-200"
+                                        >
+                                            Login
+                                        </motion.div>
+                                    </Link>
+                                    <Link href={pageUrls.SIGN_UP} prefetch onClick={closeMenu}>
+                                        <motion.div
+                                            whileTap={{ scale: 0.95 }}
+                                            className="w-full"
+                                        >
+                                            <Button className="w-full flex items-center justify-center px-3 sm:px-4 h-9 sm:h-10 text-sm sm:text-base rounded-xl bg-[#20232D]">
+                                                Get Started
+                                            </Button>
+                                        </motion.div>
+                                    </Link>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
         </>
     );
 }
