@@ -10,6 +10,8 @@ import { Icons } from "@/components/icons";
 import InputElement from "@/components/custom/form-elements/input";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import SubmitButton from "../components/submit-button";
+import SendCodeButton from "../components/send-code-button";
 
 const forgotSchema = z.object({
     account: z.string().email(),
@@ -49,15 +51,15 @@ const ForgotForm = () => {
                             <FormLabel>Account<span className="text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
-                                    <div className="flex h-10 items-center relative gap-0 pl-2.5 pr-3 py-0 bg-white border border-soft-200 rounded-xl">
+                                    <div className="flex h-10 items-center relative gap-0 pl-2.5 pr-3 py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
                                         <Icons.user_line />
                                         <div className="flex-1 relative">
-                                            <InputElement form={form} name="account" placeholder="Phone number or email address" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
+                                            <InputElement form={form} name="account" placeholder="Phone number or email address" className="border-none  shadow-none absolute top-1/2 -translate-y-1/2" />
                                         </div>
                                     </div>
                                 </FormControl>
                             </div>
-                            <FormMessage />
+                            <FormMessage  />
                         </FormItem>
                     )}
                 />
@@ -69,7 +71,7 @@ const ForgotForm = () => {
                             <FormLabel>Password<span className="text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
-                                    <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 bg-white border border-soft-200 rounded-xl">
+                                    <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
                                         <div className="flex-1 relative">
                                             <InputElement form={form} name="password" placeholder="Enter new password" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
                                         </div>
@@ -79,7 +81,7 @@ const ForgotForm = () => {
                                     </div>
                                 </FormControl>
                             </div>
-                            <FormMessage />
+                            <FormMessage className="font-medium text-xs" />
                         </FormItem>
                     )}
                 />
@@ -91,7 +93,7 @@ const ForgotForm = () => {
                             <FormLabel>Confirm Password<span className="text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
-                                    <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 bg-white border border-soft-200 rounded-xl">
+                                    <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
                                         <div className="flex-1 relative">
                                             <InputElement form={form} name="confirmPassword" placeholder="Confirm new password" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
                                         </div>
@@ -101,7 +103,7 @@ const ForgotForm = () => {
                                     </div>
                                 </FormControl>
                             </div>
-                            <FormMessage />
+                            <FormMessage className="font-medium text-xs" />
                         </FormItem>
                     )}
                 />
@@ -113,25 +115,20 @@ const ForgotForm = () => {
                             <FormLabel>Code<span className="text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
-                                    <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 bg-white border border-soft-200 rounded-xl">
-                                        <div className="flex-1 relative">
+                                    <div className="flex h-10 items-center relative py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
+                                        <div className="flex-1 relative px-1">
                                             <InputElement form={form} name="code" placeholder="Enter code" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
                                         </div>
                                         <Separator orientation="vertical" className="h-full" />
-                                        <span className="text-sub-600 flex items-center gap-2 p-2.5 shrink-0 text-sm font-medium">
-                                            Send Code
-                                            <Icons.send />
-                                        </span>
+                                        <SendCodeButton onClick={() => { }} />
                                     </div>
                                 </FormControl>
                             </div>
-                            <FormMessage />
+                            <FormMessage className="font-medium text-xs" />
                         </FormItem>
                     )}
                 />
-                <Button type="submit" className="w-full h-10 rounded-[10px] text-white text-sm font-medium relative overflow-hidden transition-all
-                    bg-gradient-to-b from-[#20232D]/90 to-[#20232D]
-                    border border-[#20232D]/80 shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">Reset Password</Button>
+                <SubmitButton text="Reset" />
             </form>
         </Form>
     )

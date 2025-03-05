@@ -1,0 +1,63 @@
+"use client";
+
+import { create } from "zustand";
+import nookies, { setCookie, destroyCookie } from "nookies";
+import { jwtDecode } from "jwt-decode";
+
+interface IAuth {
+  token: string | null;
+  user: any | null;
+  setToken: (token: string) => void;
+  setUser: (user: any) => void;
+  logout: () => void;
+  initializeFromToken: () => void;
+}
+
+export const useAuthStore = create<IAuth>((set) => {
+  const domain = ".localhost";
+  const initializeFromToken = () => {
+    const cookies = nookies.get(null);
+    if (cookies.token) {
+      try {
+        const decodedUser = jwtDecode(cookies.token) as any;
+        set({
+          token: `Bearer ${cookies.token}`,
+          user: decodedUser,
+        });
+      } catch (err) {}
+    }
+  };
+
+  if (typeof window !== "undefined") {
+    initializeFromToken();
+  }
+
+  return {
+    token: null,
+    user: null,
+    setToken: (token) => {
+      try {
+        const decodedUser = jwtDecode(token) as any;
+        set({ token: `Bearer ${token}`, user: decodedUser });
+        setCookie(null, "token", token, {
+          maxAge: 30 * 24 * 60 * 60,
+          path: "/",
+          domain: domain,
+        });
+      } catch (error) {
+        set({ token: `Bearer ${token}` });
+      }
+    },
+    setUser: (user) => {
+      set({ user });
+    },
+    logout: () => {
+      destroyCookie(null, "token", {
+        path: "/",
+        domain: domain,
+      });
+      set({ token: null, user: null });
+    },
+    initializeFromToken,
+  };
+});

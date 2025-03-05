@@ -52,6 +52,7 @@ export function InputElement({
                             {...field}
                             {...props}
                             onChange={field.onChange}
+                            className={cn(props.className, "placeholder:text-soft-400 hover:placeholder:text-[#696e79] placeholder:font-normal placeholder:text-sm [&::placeholder]:transition-colors [&::placeholder]:duration-500")}
                         />
                     </FormControl>
                 </FormItem>

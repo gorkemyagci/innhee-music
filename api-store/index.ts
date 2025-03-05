@@ -4,7 +4,7 @@ import {
 import { RecordType } from "@/lib/types";
   import { removeUndefined } from "@/lib/utils/modify";
   
-  export const SERVICE_URL = process.env.NEXT_PUBLIC_API_URL;
+  export const SERVICE_URL = process.env.NEXT_PUBLIC_API_URL! || "http://localhost:3000"
   
   export class CustomError extends Error {
     public info: any;
@@ -40,7 +40,6 @@ import { RecordType } from "@/lib/types";
     tags,
   }: API_PROPS) {
     const jwtToken = token || (await getTokenFromCookie());
-  
     const customParams = Object.keys(removeUndefined(params))?.length
       ? `?${new URLSearchParams(params)}`
       : "";

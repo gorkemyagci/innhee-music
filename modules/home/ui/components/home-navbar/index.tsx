@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import AuthedNavbar from "./authed-navbar";
 
 const HomeNavbar = () => {
     const pathname = usePathname();
@@ -18,10 +19,10 @@ const HomeNavbar = () => {
         const checkMobile = () => {
             setIsMobile(window.innerWidth < 1024);
         };
-        
+
         checkMobile();
         window.addEventListener('resize', checkMobile);
-        
+
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
@@ -33,6 +34,7 @@ const HomeNavbar = () => {
     ]
 
     const closeMenu = () => setIsMobileMenuOpen(false);
+    const isAuthenticated = false;
 
     const NavbarContent = () => (
         <div className="max-w-[1440px] mx-auto w-full h-full flex items-center justify-between">
@@ -48,8 +50,8 @@ const HomeNavbar = () => {
                 </motion.div>
                 <ul className="hidden lg:flex items-center gap-0">
                     {navItems.map((item, index) => (
-                        <motion.li 
-                            key={index} 
+                        <motion.li
+                            key={index}
                             className={cn("py-2 px-3",
                                 pathname === item.href && "bg-weak-50 rounded-lg"
                             )}
@@ -68,34 +70,34 @@ const HomeNavbar = () => {
                 <div className="hidden lg:block">
                     <SearchInput />
                 </div>
-                <motion.span
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="cursor-pointer hidden sm:block"
-                >
-                    <Icons.sunline />
-                </motion.span>
-                <div className="hidden lg:flex items-center gap-4">
-                    <Link href={pageUrls.SIGN_IN} prefetch>
-                        <motion.span 
-                            className="text-black font-medium tracking-tight cursor-pointer"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                {!isAuthenticated ? (
+                    <>
+                        <motion.span
+                            className="cursor-pointer hidden sm:block"
                         >
-                            Login
+                            <Icons.sunline />
                         </motion.span>
-                    </Link>
-                    <Link href={pageUrls.SIGN_UP} prefetch>
-                        <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            <Button className="rounded-xl w-[101px] h-[40px] bg-[#20232D]">
-                                Get Started
-                            </Button>
-                        </motion.div>
-                    </Link>
-                </div>
+                        <div className="hidden lg:flex items-center gap-4">
+                            <Link href={pageUrls.SIGN_IN} prefetch>
+                                <motion.span
+                                    className="text-black font-medium tracking-tight cursor-pointer"
+                                >
+                                    Login
+                                </motion.span>
+                            </Link>
+                            <Link href={pageUrls.SIGN_UP} prefetch>
+                                <motion.div
+                                >
+                                    <Button className="rounded-xl w-[101px] h-[40px] bg-[#20232D]">
+                                        Get Started
+                                    </Button>
+                                </motion.div>
+                            </Link>
+                        </div>
+                    </>
+                ) : (
+                    <AuthedNavbar />
+                )}
                 <motion.button
                     className="lg:hidden text-gray-800"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -116,8 +118,8 @@ const HomeNavbar = () => {
             <div className="h-[4.5rem] w-full" />
             <div className="fixed top-0 left-0 right-0 w-full z-[999]">
                 {isMobile ? (
-                    <motion.nav 
-                        className={cn("h-[4.5rem] w-full bg-white", 
+                    <motion.nav
+                        className={cn("h-[4.5rem] w-full bg-white",
                             pathname !== "/" && "border-b border-soft-200"
                         )}
                         initial={{ y: -100 }}
@@ -129,7 +131,7 @@ const HomeNavbar = () => {
                         </div>
                     </motion.nav>
                 ) : (
-                    <nav className={cn("h-[4.5rem] w-full bg-white", 
+                    <nav className={cn("h-[4.5rem] w-full bg-white",
                         pathname !== "/" && "border-b border-soft-200"
                     )}>
                         <div className="h-full w-full max-w-[100vw] px-2 sm:px-4 lg:px-8">
@@ -152,11 +154,11 @@ const HomeNavbar = () => {
                                 </div>
                                 <ul className="flex flex-col gap-3 sm:gap-4">
                                     {navItems.map((item, index) => (
-                                        <motion.li 
+                                        <motion.li
                                             key={index}
                                             initial={{ opacity: 0, x: -20 }}
-                                            animate={{ 
-                                                opacity: 1, 
+                                            animate={{
+                                                opacity: 1,
                                                 x: 0,
                                                 transition: { delay: index * 0.1 }
                                             }}

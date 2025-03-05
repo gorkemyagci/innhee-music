@@ -10,7 +10,7 @@ const SignInWrapper = () => {
     return (
         <>
             <motion.div
-                className="w-96 p-4 lg:p-8 bg-white shadow-sm z-10 rounded-3xl flex flex-col items-center gap-6"
+                className="w-[390px] p-4 lg:p-8 bg-white shadow-sm z-10 rounded-3xl flex flex-col items-center gap-6"
                 layout
                 transition={{
                     layout: { duration: 0.3, ease: "easeOut" }
@@ -19,7 +19,7 @@ const SignInWrapper = () => {
                 <div className="flex flex-col items-center gap-2">
                     <Icons.auth_user />
                     <span className="text-2xl font-medium text-center text-main-900 max-w-[17.5rem]">
-                        {activeTab === "code" ? "Auto-create account on login" : "Log In With Password"}
+                        {activeTab === "code" ? "Create or Login" : "Log In With Password"}
                     </span>
                 </div>
                 <Tabs defaultValue="code" className="w-full">

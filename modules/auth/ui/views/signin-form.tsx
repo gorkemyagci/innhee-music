@@ -11,10 +11,12 @@ import InputElement from "@/components/custom/form-elements/input";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { pageUrls } from "@/lib/constants/page-urls";
-import InstallWechat from "@/components/custom/modals/install-wechat";
 import Accounts from "../sections/accounts";
+import SubmitButton from "../components/submit-button";
+import SendCodeButton from "../components/send-code-button";
+import { trpc } from "@/trpc/client";
+import { toast } from "sonner";
 
 const signinSchema = z.object({
     account: z.string().email(),
@@ -26,21 +28,49 @@ const signinSchema = z.object({
     keep_logged: z.boolean().optional(),
 });
 
-export type Signin = z.infer<typeof signinSchema>;
+export type SignIn = z.infer<typeof signinSchema>;
 
 interface SignInFormProps {
     activeTab: "code" | "password";
 }
 
 const SignInForm = ({ activeTab }: SignInFormProps) => {
-    const form = useForm<Signin>({
+    const form = useForm<SignIn>({
         mode: "onSubmit",
         reValidateMode: "onChange",
         resolver: zodResolver(signinSchema),
+        defaultValues: {
+            account: "",
+            code: "",
+            password: "",
+            terms: false,
+            keep_logged: false
+        }
     });
 
-    const onSubmit = (data: Signin) => {
-        console.log(data);
+    const create = trpc.auth.login.useMutation({
+        onSuccess: (data) => {
+            toast.success("Login successful");
+        },
+        onError: (error) => {
+            toast.error("Failed to login");
+        }
+    });
+
+    const sendOtp = trpc.auth.send_otp.useMutation({
+        onSuccess: (data) => {
+            toast.success("OTP sent successfully");
+        },
+        onError: (error) => {
+            toast.error("Failed to send OTP");
+        }
+    });
+
+    const onSubmit = async (data: SignIn) => {
+        create.mutate({
+            account: data.account,
+            password: data.password || ""
+        });
     }
 
     return (
@@ -54,7 +84,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                             <FormLabel>Account<span className="text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
-                                    <div className="flex h-10 items-center relative gap-0 pl-2.5 pr-3 py-0 bg-white border border-soft-200 rounded-xl">
+                                    <div className="flex h-10 items-center relative gap-0 pl-2.5 pr-3 py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
                                         <Icons.user_line />
                                         <div className="flex-1 relative">
                                             <InputElement form={form} name="account" placeholder="Phone number or email address" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
@@ -62,7 +92,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                                     </div>
                                 </FormControl>
                             </div>
-                            <FormMessage />
+                            <FormMessage className="font-medium text-xs" />
                         </FormItem>
                     )}
                 />
@@ -74,17 +104,19 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                             <FormLabel>Code<span className="text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
-                                    <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 bg-white border border-soft-200 rounded-xl">
-                                        <div className="flex-1 relative">    <InputElement form={form} name="code" placeholder="Enter code" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" /></div>
+                                    <div className="flex h-10 items-center relative py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
+                                        <div className="flex-1 px-1 relative">
+                                            <InputElement form={form} name="code" placeholder="Enter code" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" /></div>
                                         <Separator orientation="vertical" className="h-full" />
-                                        <span className="text-sub-600 flex items-center gap-2 p-2.5 shrink-0 text-sm font-medium">
-                                            Send Code
-                                            <Icons.send />
-                                        </span>
+                                        <SendCodeButton onClick={() => {
+                                            sendOtp.mutate({
+                                                account: form.getValues("account")
+                                            })
+                                        }} />
                                     </div>
                                 </FormControl>
                             </div>
-                            <FormMessage />
+                            <FormMessage className="font-medium text-xs" />
                         </FormItem>
                     )}
                 /> :
@@ -102,7 +134,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                                             <FormLabel>Password<span className="text-sm text-error-base">*</span></FormLabel>
                                             <div>
                                                 <FormControl>
-                                                    <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 bg-white border border-soft-200 rounded-xl">
+                                                    <div className="flex h-10 items-center relative gap-0 px-1 py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
                                                         <div className="flex-1 relative"><InputElement form={form} name="password" placeholder="Enter password" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" /></div>
                                                         <div className="cursor-pointer">
                                                             <Icons.eye />
@@ -110,7 +142,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                                                     </div>
                                                 </FormControl>
                                             </div>
-                                            <FormMessage />
+                                            <FormMessage className="font-medium text-xs" />
                                         </FormItem>
                                     </div>
 
@@ -120,57 +152,49 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                         />
 
                     </>}
-
                 <div className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between">
-                        <FormField
-                            control={form.control}
-                            name="keep_logged"
-                            render={({ field }) => (
-                                <FormItem className="flex shrink-0 items-center gap-2">
-                                    <Checkbox id="keep_logged" />
-                                    <label
-                                        htmlFor="keep_logged"
-                                        className="text-sm text-strong-950 font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                    >
-                                        Keep me logged in
-                                    </label>
-                                </FormItem>
+                    {activeTab === "password" && (
+                        <div className="flex items-center justify-between">
+                            <FormField
+                                control={form.control}
+                                name="keep_logged"
+                                render={({ field }) => (
+                                    <FormItem className="flex shrink-0 items-center gap-2">
+                                        <Checkbox id="keep_logged" className="border w-[18px] h-[18px] border-soft-200 hover:shadow-sm" />
+                                        <label
+                                            htmlFor="keep_logged"
+                                            className="text-sm text-strong-950 font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                        >
+                                            Keep me logged in
+                                        </label>
+                                    </FormItem>
 
-                            )}
-                        />
-                        <div className="flex w-full justify-end">
-                            <Link href={pageUrls.FORGOT} className="underline text-sub-600 font-medium text-xs">
-                                Forgot password?
-                            </Link>
+                                )}
+                            />
+                            <div className="flex w-full justify-end">
+                                <Link href={pageUrls.FORGOT} className="underline text-sub-600 font-medium text-xs">
+                                    Forgot password?
+                                </Link>
+                            </div>
                         </div>
-                    </div>
-
-
+                    )}
                     <FormField
                         control={form.control}
                         name="terms"
                         render={({ field }) => (
                             <FormItem className="flex items-center gap-2">
-                                <Checkbox id="terms" />
+                                <Checkbox id="terms" className="border w-[18px] h-[18px] border-soft-200 hover:shadow-sm" />
                                 <label
                                     htmlFor="terms"
                                     className="text-sm text-sub-600 font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
-                                    I agree to the <Link href="#" className="underline text-main-900 font-semibold">Conditions</Link> and <Link href="#" className="underline text-main-900 font-medium">Privacy Policy</Link>.
+                                    I agree to the <Link href="#" className="border-b border-strong-950 text-main-900 font-medium">Conditions</Link> and <Link href="#" className="border-b border-strong-950 text-main-900 font-medium">Privacy Policy</Link>.
                                 </label>
                             </FormItem>
                         )}
                     />
                 </div>
-                <Button
-                    type="submit"
-                    className="w-full h-10 rounded-[10px] text-white text-sm font-medium relative overflow-hidden transition-all
-                    bg-gradient-to-b from-[#20232D]/90 to-[#20232D]
-                    border border-[#20232D]/80 shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]"
-                >
-                    Log in{activeTab === "code" && "/Sign up"}
-                </Button>
+                <SubmitButton text={`Log in${activeTab === "code" ? "/Sign up" : ""}`} />
             </form>
             <Separator className="w-full relative">
                 <span className="text-[11px] text-soft-400 font-normal absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white px-3">OR</span>
