@@ -7,7 +7,7 @@ const Verify = () => {
             <div
                 className="w-full max-w-[340px] sm:max-w-[440px] p-4 sm:p-8 bg-white shadow-sm z-10 rounded-2xl sm:rounded-3xl flex flex-col items-center gap-4 sm:gap-6"
             >
-                <div className="flex border-b border-soft-200 pb-2 sm:pb-3 flex-col items-center gap-1.5 sm:gap-2">
+                <div className="flex w-full border-b border-soft-200 pb-2 sm:pb-3 flex-col items-center gap-1.5 sm:gap-2">
                     <Icons.verify />
                     <div className="flex flex-col gap-0.5 sm:gap-1">
                         <span className="text-xl sm:text-2xl font-medium text-center text-main-900 max-w-[17.5rem]">

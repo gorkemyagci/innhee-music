@@ -3,15 +3,18 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { PASSWORD_REGEX } from "@/data/constants/regex.constant";
+import { EMAIL_REGEX, PASSWORD_REGEX, PHONE_REGEX } from "@/data/constants/regex.constant";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { ERROR_MESSAGES } from "@/data/constants/form-errors.constant";
 import { Icons } from "@/components/icons";
 import InputElement from "@/components/custom/form-elements/input";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 import SubmitButton from "../components/submit-button";
 import SendCodeButton from "../components/send-code-button";
+import { trpc } from "@/trpc/client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { pageUrls } from "@/lib/constants/page-urls";
 
 const forgotSchema = z.object({
     account: z.string().email(),
@@ -30,14 +33,64 @@ const forgotSchema = z.object({
 export type Forgot = z.infer<typeof forgotSchema>;
 
 const ForgotForm = () => {
+    const router = useRouter();
     const form = useForm<Forgot>({
         mode: "onSubmit",
         reValidateMode: "onChange",
         resolver: zodResolver(forgotSchema),
+        defaultValues: {
+            account: "",
+            code: "",
+            password: "",
+            confirmPassword: "",
+        }
     });
 
+    const sendOtp = trpc.auth.sendForgotPasswordOtp.useMutation({
+        onSuccess: (data) => {
+            console.log(data);
+            toast.success("OTP sent successfully!")
+        },
+        onError: (error) => {
+            console.log(error);
+            toast.error("Failed to send");
+        }
+    })
+
+    const verifyOtp = trpc.auth.verifyForgotPasswordOtp.useMutation({
+        onSuccess: (data) => {
+            toast.success("Password reset successfully!");
+            router.push(pageUrls.SIGN_IN);
+        },
+        onError: (error) => {
+            console.log(error);
+            toast.error("Failed to reset password");
+        }
+    })
+
+    const handleSendOtp = () => {
+        const account = form.getValues("account");
+        if (!account) {
+            return toast.error("Please enter your email or phone number");
+        }
+        sendOtp.mutate({ account });
+    }
+
     const onSubmit = (data: Forgot) => {
-        console.log(data);
+        const { account, code, password, confirmPassword } = data;
+        if (!account || !code || !password || !confirmPassword) {
+            return toast.error("Please fill all the fields");
+        }
+        if (!EMAIL_REGEX.test(account) && !PHONE_REGEX.test(account)) {
+            return toast.error("Invalid email or phone number");
+        }
+        if (code.length < 6) {
+            return toast.error("Invalid code");
+        }
+        if (password !== confirmPassword) {
+            return toast.error("Passwords don't match");
+        }
+        verifyOtp.mutate({ account, code, password });
     }
 
     return (
@@ -59,7 +112,7 @@ const ForgotForm = () => {
                                     </div>
                                 </FormControl>
                             </div>
-                            <FormMessage  />
+                            <FormMessage />
                         </FormItem>
                     )}
                 />
@@ -120,7 +173,7 @@ const ForgotForm = () => {
                                             <InputElement form={form} name="code" placeholder="Enter code" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
                                         </div>
                                         <Separator orientation="vertical" className="h-full" />
-                                        <SendCodeButton onClick={() => { }} />
+                                        <SendCodeButton onClick={handleSendOtp} loading={sendOtp.isPending} />
                                     </div>
                                 </FormControl>
                             </div>
@@ -128,7 +181,7 @@ const ForgotForm = () => {
                         </FormItem>
                     )}
                 />
-                <SubmitButton text="Reset" />
+                <SubmitButton text="Reset" onClick={() => onSubmit(form.getValues())} loading={verifyOtp.isPending} />
             </form>
         </Form>
     )

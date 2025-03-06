@@ -1,3 +1,4 @@
+import SettingsModal from "@/components/custom/modals/settings";
 import BorderBackground from "../components/border-background";
 import Actions from "../sections/landing/actions";
 import AudioWorkers from "../sections/landing/audio-workers";

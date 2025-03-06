@@ -1,12 +1,9 @@
-"use client";
 import { motion } from "framer-motion";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import ProfileDropdown from "./profile-dropdown";
 
 const AuthedNavbar = () => {
-    const [isOpen, setIsOpen] = useState(false);
     return (
         <>
             <Button
@@ -29,12 +26,11 @@ const AuthedNavbar = () => {
             >
                 <Icons.notification />
             </motion.span>
-            <div className="relative">
-                <Button variant="outline" onClick={() => setIsOpen(true)} className="bg-white border border-soft-200 h-10 p-2.5 rounded-[10px] text-strong-950 font-medium text-sm">
+            <ProfileDropdown>
+                <Button variant="outline" className="bg-white border border-soft-200 hover:bg-gray-50 h-10 p-2.5 rounded-[10px] text-strong-950 font-medium text-sm">
                     My Account
                 </Button>
-                {isOpen && <ProfileDropdown isOpen={isOpen} />}
-            </div>
+            </ProfileDropdown>
         </>
     )
 }

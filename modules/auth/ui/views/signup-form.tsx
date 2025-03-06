@@ -96,7 +96,7 @@ const SignUpForm = () => {
                                             <InputElement form={form} name="code" placeholder="Enter code" className="border-none shadow-none absolute top-1/2 -translate-y-1/2 text-xs md:text-base placeholder:text-soft-500" />
                                         </div>
                                         <Separator orientation="vertical" className="h-full bg-soft-200" />
-                                        <SendCodeButton onClick={() => { }} />
+                                        <SendCodeButton onClick={() => { }} loading={false} />
                                     </div>
                                 </FormControl>
                             </div>

@@ -4,7 +4,7 @@ import {
 import { RecordType } from "@/lib/types";
   import { removeUndefined } from "@/lib/utils/modify";
   
-  export const SERVICE_URL = process.env.NEXT_PUBLIC_API_URL! || "http://localhost:3000"
+  export const SERVICE_URL = process.env.NEXT_PUBLIC_API_URL! || "https://music-upwork-project-production.up.railway.app"
   
   export class CustomError extends Error {
     public info: any;

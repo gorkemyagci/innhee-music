@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { PASSWORD_REGEX } from "@/data/constants/regex.constant";
+import { EMAIL_REGEX, PASSWORD_REGEX, PHONE_REGEX } from "@/data/constants/regex.constant";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { ERROR_MESSAGES } from "@/data/constants/form-errors.constant";
 import { Icons } from "@/components/icons";
@@ -17,6 +17,9 @@ import SubmitButton from "../components/submit-button";
 import SendCodeButton from "../components/send-code-button";
 import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
+import { useAuthStore } from "@/store/auth-store";
+import { useRouter } from "next/navigation";
+import { PasswordInput } from "@/components/custom/form-elements/password-input";
 
 const signinSchema = z.object({
     account: z.string().email(),
@@ -24,7 +27,9 @@ const signinSchema = z.object({
     password: z.string().regex(PASSWORD_REGEX, {
         message: ERROR_MESSAGES.PASSWORD_COMPLEXITY,
     }).optional(),
-    terms: z.boolean().optional(),
+    terms: z.boolean().refine(val => val === true, {
+        message: "You must accept the terms and conditions",
+    }),
     keep_logged: z.boolean().optional(),
 });
 
@@ -35,6 +40,7 @@ interface SignInFormProps {
 }
 
 const SignInForm = ({ activeTab }: SignInFormProps) => {
+    const router = useRouter();
     const form = useForm<SignIn>({
         mode: "onSubmit",
         reValidateMode: "onChange",
@@ -48,34 +54,124 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
         }
     });
 
-    const create = trpc.auth.login.useMutation({
+    const login = trpc.auth.login.useMutation({
         onSuccess: (data) => {
+            console.log(data);
             toast.success("Login successful");
+            const access_token = data.access_token;
+            const keep_logged = form.getValues("keep_logged");
+            useAuthStore.getState().setToken(access_token, keep_logged);
+            router.push(pageUrls.FIND_WORKS);
         },
         onError: (error) => {
-            toast.error("Failed to login");
+            toast.error(error.message || "Failed to login");
+        }
+    });
+
+    const verify = trpc.auth.verifyOtp.useMutation({
+        onSuccess: async (data) => {
+            toast.success("OTP verified successfully");
+            const access_token = data.access_token;
+            const keep_logged = form.getValues("keep_logged");
+            useAuthStore.getState().setToken(access_token, keep_logged);
+            router.push(pageUrls.FIND_WORKS);
+        },
+        onError: (error) => {
+            toast.error(error.message || "Failed to verify OTP");
         }
     });
 
     const sendOtp = trpc.auth.send_otp.useMutation({
-        onSuccess: (data) => {
-            toast.success("OTP sent successfully");
+        onSuccess: async (data) => {
+            toast.success("Verification code sent successfully");
         },
         onError: (error) => {
-            toast.error("Failed to send OTP");
+            toast.error(error.message || "Failed to send verification code");
         }
     });
 
     const onSubmit = async (data: SignIn) => {
-        create.mutate({
-            account: data.account,
-            password: data.password || ""
-        });
+        const account = form.getValues("account");
+        const code = form.getValues("code");
+        const password = form.getValues("password");
+        const terms = form.getValues("terms");
+        
+        if (!account) {
+            toast.error("Please enter your email or phone number");
+            return;
+        }
+        if (activeTab === "code" && !code) {
+            toast.error("Please enter the verification code");
+            return;
+        }
+        if (activeTab === "password" && !password) {
+            toast.error("Please enter your password");
+            return;
+        }
+        if (!terms) {
+            toast.error("You must accept the terms and conditions");
+            return;
+        }
+
+        const toastId = toast.loading(activeTab === "code" ? "Verifying code..." : "Logging in...");
+
+        try {
+            if (activeTab === "code") {
+                verify.mutate(
+                    { account, code: code || "" },
+                    {
+                        onSuccess: (data) => {
+                            toast.dismiss(toastId);
+                        },
+                        onError: () => {
+                            toast.dismiss(toastId);
+                        }
+                    }
+                );
+            } else {
+                login.mutate(
+                    { account, password: password || "" },
+                    {
+                        onSuccess: () => {
+                            toast.dismiss(toastId);
+                        },
+                        onError: () => {
+                            toast.dismiss(toastId);
+                        }
+                    }
+                );
+            }
+        } catch (error) {
+            toast.dismiss(toastId);
+            toast.error("An error occurred during form submission");
+        }
+    }
+
+    const handleSendOtp = () => {
+        const account = form.getValues("account");
+        if (!account) {
+            toast.error("Please enter your email or phone number");
+            return;
+        }
+        const isEmail = EMAIL_REGEX.test(account);
+        const isPhone = PHONE_REGEX.test(account);
+        if (!isEmail && !isPhone) {
+            toast.error("Please enter a valid email or phone number");
+            return;
+        }
+        sendOtp.mutate({ account });
     }
 
     return (
         <Form {...form}>
-            <form className="w-full flex flex-col gap-6 py-6" onSubmit={form.handleSubmit(onSubmit)}>
+            <form
+                className="w-full flex flex-col gap-6 py-6"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    form.handleSubmit(onSubmit)(e);
+                }}
+                noValidate
+            >
                 <FormField
                     control={form.control}
                     name="account"
@@ -108,11 +204,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                                         <div className="flex-1 px-1 relative">
                                             <InputElement form={form} name="code" placeholder="Enter code" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" /></div>
                                         <Separator orientation="vertical" className="h-full" />
-                                        <SendCodeButton onClick={() => {
-                                            sendOtp.mutate({
-                                                account: form.getValues("account")
-                                            })
-                                        }} />
+                                        <SendCodeButton onClick={handleSendOtp} loading={sendOtp.isPending} />
                                     </div>
                                 </FormControl>
                             </div>
@@ -121,36 +213,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                     )}
                 /> :
                     <>
-
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <>
-
-
-                                    <div className="flex flex-col gap-2">
-                                        <FormItem>
-                                            <FormLabel>Password<span className="text-sm text-error-base">*</span></FormLabel>
-                                            <div>
-                                                <FormControl>
-                                                    <div className="flex h-10 items-center relative gap-0 px-1 py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
-                                                        <div className="flex-1 relative"><InputElement form={form} name="password" placeholder="Enter password" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" /></div>
-                                                        <div className="cursor-pointer">
-                                                            <Icons.eye />
-                                                        </div>
-                                                    </div>
-                                                </FormControl>
-                                            </div>
-                                            <FormMessage className="font-medium text-xs" />
-                                        </FormItem>
-                                    </div>
-
-
-                                </>
-                            )}
-                        />
-
+                        <PasswordInput form={form} name="password" placeholder="Enter password" />
                     </>}
                 <div className="flex flex-col gap-4">
                     {activeTab === "password" && (
@@ -160,7 +223,14 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                                 name="keep_logged"
                                 render={({ field }) => (
                                     <FormItem className="flex shrink-0 items-center gap-2">
-                                        <Checkbox id="keep_logged" className="border w-[18px] h-[18px] border-soft-200 hover:shadow-sm" />
+                                        <FormControl>
+                                            <Checkbox 
+                                                id="keep_logged" 
+                                                className="border w-[18px] h-[18px] border-soft-200 hover:shadow-sm"
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
                                         <label
                                             htmlFor="keep_logged"
                                             className="text-sm text-strong-950 font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -168,7 +238,6 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                                             Keep me logged in
                                         </label>
                                     </FormItem>
-
                                 )}
                             />
                             <div className="flex w-full justify-end">
@@ -183,18 +252,34 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                         name="terms"
                         render={({ field }) => (
                             <FormItem className="flex items-center gap-2">
-                                <Checkbox id="terms" className="border w-[18px] h-[18px] border-soft-200 hover:shadow-sm" />
+                                <FormControl>
+                                    <Checkbox 
+                                        id="terms" 
+                                        className="border w-[18px] h-[18px] border-soft-200 hover:shadow-sm"
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
                                 <label
                                     htmlFor="terms"
                                     className="text-sm text-sub-600 font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
                                     I agree to the <Link href="#" className="border-b border-strong-950 text-main-900 font-medium">Conditions</Link> and <Link href="#" className="border-b border-strong-950 text-main-900 font-medium">Privacy Policy</Link>.
                                 </label>
+                                <FormMessage className="font-medium text-xs" />
                             </FormItem>
                         )}
                     />
                 </div>
-                <SubmitButton text={`Log in${activeTab === "code" ? "/Sign up" : ""}`} />
+                <SubmitButton
+                    text={`Log in${activeTab === "code" ? "/Sign up" : ""}`}
+                    onClick={() => {
+                        console.log("Submit button clicked, calling onSubmit with form values");
+                        onSubmit(form.getValues());
+                    }}
+                    loading={login.isPending || verify.isPending}
+                    disabled={login.isPending || verify.isPending}
+                />
             </form>
             <Separator className="w-full relative">
                 <span className="text-[11px] text-soft-400 font-normal absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white px-3">OR</span>

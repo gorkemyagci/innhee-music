@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 interface IAuth {
   token: string | null;
   user: any | null;
-  setToken: (token: string) => void;
+  setToken: (token: string, keepLogged?: boolean) => void;
   setUser: (user: any) => void;
   logout: () => void;
   initializeFromToken: () => void;
@@ -35,12 +35,12 @@ export const useAuthStore = create<IAuth>((set) => {
   return {
     token: null,
     user: null,
-    setToken: (token) => {
+    setToken: (token, keepLogged = false) => {
       try {
         const decodedUser = jwtDecode(token) as any;
         set({ token: `Bearer ${token}`, user: decodedUser });
         setCookie(null, "token", token, {
-          maxAge: 30 * 24 * 60 * 60,
+          maxAge: keepLogged ? 30 * 24 * 60 * 60 : 24 * 60 * 60,
           path: "/",
           domain: domain,
         });
