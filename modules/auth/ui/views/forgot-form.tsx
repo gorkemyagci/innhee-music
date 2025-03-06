@@ -48,11 +48,9 @@ const ForgotForm = () => {
 
     const sendOtp = trpc.auth.sendForgotPasswordOtp.useMutation({
         onSuccess: (data) => {
-            console.log(data);
             toast.success("OTP sent successfully!")
         },
         onError: (error) => {
-            console.log(error);
             toast.error("Failed to send");
         }
     })
@@ -63,7 +61,6 @@ const ForgotForm = () => {
             router.push(pageUrls.SIGN_IN);
         },
         onError: (error) => {
-            console.log(error);
             toast.error("Failed to reset password");
         }
     })

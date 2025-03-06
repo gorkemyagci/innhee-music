@@ -20,3 +20,63 @@ export const faqsItems = [
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     },
 ]
+
+export const slides = [
+    {
+        id: 1,
+        image: "/assets/images/slider-item.png",
+        title: "R & B Hits",
+        description: "All mine, Lie again, Petty call me everyday, Out of time, No love, Bad habit, and so much more"
+    },
+    {
+        id: 2,
+        image: "/assets/images/slider-item.png",
+        title: "Tomorrow's Tunes",
+        description: "Enjoy the latest hits from emerging artists and discover the sound of tomorrow"
+    },
+    {
+        id: 3,
+        image: "/assets/images/slider-item.png",
+        title: "Hip Hop Classics",
+        description: "Relive the golden era with timeless tracks that defined a generation"
+    }
+];
+
+// Job postings mock data
+export const featuredJobs = [
+    {
+        id: 1,
+        clientName: "Cleve Music",
+        clientAvatar: "/assets/images/profile.png",
+        rating: 4.9,
+        reviewCount: 125,
+        jobType: "Salary",
+        workType: "Work",
+        specialization: "Specia",
+        title: "Write professional resume, cover letter",
+        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+        description: "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually...",
+        price: 1400,
+        priceType: "Fixed Price",
+        deadline: "3 days ago",
+        proposalsSent: 1
+    },
+    {
+        id: 2,
+        clientName: "Melody Studios",
+        clientAvatar: "/assets/images/profile.png",
+        rating: 4.8,
+        reviewCount: 98,
+        jobType: "Hourly",
+        workType: "Remote",
+        specialization: "Expert",
+        title: "Music producer needed for pop album",
+        skills: ["Production", "Mixing", "Mastering", "Vocals", "Arrangement"],
+        description: "Looking for an experienced music producer to help finalize our upcoming pop album. The ideal candidate will have experience with vocal production and modern pop arrangements...",
+        price: 45,
+        priceType: "Hourly Rate",
+        deadline: "1 week ago",
+        proposalsSent: 5
+    }
+];
+

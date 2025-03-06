@@ -56,7 +56,6 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
 
     const login = trpc.auth.login.useMutation({
         onSuccess: (data) => {
-            console.log(data);
             toast.success("Login successful");
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
@@ -274,7 +273,6 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                 <SubmitButton
                     text={`Log in${activeTab === "code" ? "/Sign up" : ""}`}
                     onClick={() => {
-                        console.log("Submit button clicked, calling onSubmit with form values");
                         onSubmit(form.getValues());
                     }}
                     loading={login.isPending || verify.isPending}
