@@ -61,7 +61,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
             useAuthStore.getState().setToken(access_token, keep_logged);
-            router.push(pageUrls.FIND_WORKS);
+            typeof window !== "undefined" && window.location.replace(pageUrls.FIND_WORKS);
         },
         onError: (error) => {
             toast.error(error.message || "Failed to login");
@@ -74,7 +74,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
             useAuthStore.getState().setToken(access_token, keep_logged);
-            router.push(pageUrls.FIND_WORKS);
+            typeof window !== "undefined" && window.location.replace(pageUrls.FIND_WORKS);
         },
         onError: (error) => {
             toast.error(error.message || "Failed to verify OTP");
