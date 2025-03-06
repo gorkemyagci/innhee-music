@@ -14,7 +14,7 @@ interface IAuth {
 }
 
 export const useAuthStore = create<IAuth>((set) => {
-  const domain = ".localhost";
+  const domain = ".upwork-next-app.vercel.app";
   const initializeFromToken = () => {
     const cookies = nookies.get(null);
     if (cookies.token) {
