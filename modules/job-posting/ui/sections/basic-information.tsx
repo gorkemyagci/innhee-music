@@ -1,0 +1,196 @@
+"use client"
+import { Icons } from "@/components/icons";
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+} from "@/components/ui/card"
+import SubmitButton from "@/modules/auth/ui/components/submit-button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useEffect, useState } from "react";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DatePickerForm } from "@/components/custom/form-elements/date-picker";
+import { UseFormReturn } from "react-hook-form";
+import { jobPostingFormSchema } from "../views/job-posting";
+import { Form } from "@/components/ui/form";
+import Image from "next/image";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { useQueryState } from "nuqs";
+
+const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
+    const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
+    const [wordCount, setWordCount] = useState(0);
+    const [budgetConfirmed, setBudgetConfirmed] = useState(false);
+    const maxWords = 200;
+
+    const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const text = e.target.value;
+        const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+        setWordCount(Math.min(words, maxWords));
+    };
+
+    const onSubmit = (data: jobPostingFormSchema) => {
+        console.log(data);
+    };
+
+    const toggleOpen = () => {
+        setTab(tab === "basic-information" ? "" : "basic-information");
+    };
+
+
+    const isOpen = tab === "basic-information";
+
+    return (
+        <Card className={cn("w-[440px] border-soft-200 rounded-[20px] shadow-none", !isOpen && "pb-2")}>
+            <CardHeader
+                onClick={toggleOpen}
+                className={cn("bg-transparent border-soft-200 pb-4 pr-6 pl-5 flex flex-row items-center justify-between cursor-pointer", !isOpen ? "border-b-none" : "border-b")}
+            >
+                <div className="flex items-center gap-3">
+                    <span className="rounded-full flex items-center justify-center h-10 w-10 border border-soft-200 text-strong-950 font-medium text-sm">01</span>
+                    <span className="text-strong-950 font-medium text-sm">Basic information</span>
+                </div>
+                <motion.div
+                    className="w-6 h-6 rounded-md border border-soft-200 flex items-center justify-center p-0.5"
+                    animate={{ rotate: isOpen ? 90 : 270 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <Icons.chevron_short_right />
+                </motion.div>
+            </CardHeader>
+
+            <AnimatePresence initial={false}>
+                {isOpen && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        style={{ overflow: "hidden" }}
+                    >
+                        <CardContent className="space-y-6">
+                            <Form {...form}>
+                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                    {/* Subject Field */}
+                                    <div className="space-y-2">
+                                        <label htmlFor="subject" className="block text-sub-600 text-sm font-medium">
+                                            Subject
+                                        </label>
+                                        <Input
+                                            id="subject"
+                                            placeholder="Project subject"
+                                            className="bg-transparent shadow-none h-10 hover:border-weak-50 hover:bg-weak-50 transition-all duration-200 border border-soft-200 placeholder:text-[#99A0AE] focus-visible:ring-0 focus-visible:ring-offset-0"
+                                        />
+                                    </div>
+
+                                    {/* Detail Field */}
+                                    <div className="space-y-2">
+                                        <label htmlFor="detail" className="block text-sub-600 text-sm font-medium">
+                                            Detail
+                                        </label>
+                                        <div className="relative">
+                                            <Textarea
+                                                id="detail"
+                                                placeholder="Please describe your needs"
+                                                className="w-full min-h-[120px] border-soft-200 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-sub-400 resize-none pr-16"
+                                                onChange={handleTextChange}
+                                            />
+                                            <div className="absolute bottom-2 right-2 text-sub-400 text-xs">
+                                                {wordCount}/{maxWords} <Icons.pencil className="inline ml-1 size-4" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Amount and Deadline Row */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {/* Amount Field */}
+                                        <div className="space-y-2">
+                                            <label htmlFor="amount" className="block text-sub-600 text-sm font-medium">
+                                                Amount
+                                            </label>
+                                            <div className="flex">
+                                                <div className="relative w-[134px] flex-1">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sub-600">¥</span>
+                                                    <Input
+                                                        id="amount"
+                                                        type="number"
+                                                        placeholder="0.00"
+                                                        className="w-full pl-8 h-10 border-r-0 rounded-r-none border-soft-200 focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none shadow-b"
+                                                    />
+                                                </div>
+                                                <Select defaultValue="CNY">
+                                                    <SelectTrigger className="w-24 h-10 border-l-0 rounded-l-none border-soft-200 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent className="border-soft-200">
+                                                        <SelectItem value="CNY" className="cursor-pointer">
+                                                            <div className="flex items-center gap-2">
+                                                                <Image
+                                                                    src="/assets/svgs/china.svg"
+                                                                    alt="CNY"
+                                                                    width={20}
+                                                                    height={20}
+                                                                    loading="lazy"
+                                                                    quality={100}
+                                                                />
+                                                                <span className="text-sub-600 font-normal text-sm">CNY</span>
+                                                            </div>
+                                                        </SelectItem>
+                                                        <SelectItem value="USD" className="cursor-pointer">USD</SelectItem>
+                                                        <SelectItem value="EUR" className="cursor-pointer">EUR</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
+
+                                        {/* Deadline Field */}
+                                        <DatePickerForm
+                                            form={form}
+                                            name="deadline"
+                                            label="Deadline"
+                                            className="shadow-sm border border-soft-200 h-10 py-0 w-40 rounded-[10px] flex items-center justify-center"
+                                            icon={<Icons.calendar_line className="size-5" />}
+                                            customLabel={
+                                                <div className="flex items-center gap-1">
+                                                    <span className="text-sub-600 font-medium text-sm">Deadline</span>
+                                                    <Icons.info />
+                                                </div>
+                                            }
+                                        />
+                                    </div>
+
+                                    {/* Budget Confirmation Checkbox */}
+                                    <div className="flex items-center space-x-2.5">
+                                        <Switch
+                                            id="budget-confirm"
+                                            checked={budgetConfirmed}
+                                            onCheckedChange={(checked) => setBudgetConfirmed(checked as boolean)}
+                                            className="h-5"
+                                        />
+                                        <Label
+                                            htmlFor="budget-confirm"
+                                            className="text-strong-950 font-normal text-sm cursor-pointer"
+                                        >
+                                            Budget to be confirmed
+                                        </Label>
+                                    </div>
+                                </form>
+                            </Form>
+                        </CardContent>
+                        <CardFooter className="flex justify-end p-5 pb-0 pt-0">
+                            <SubmitButton text="Next" className="h-9 w-14 rounded-lg" onClick={() => setTab("select-category")} />
+                        </CardFooter>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </Card>
+    );
+};
+
+export default BasicInformation;

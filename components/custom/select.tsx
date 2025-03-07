@@ -2,6 +2,7 @@
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem } from "@/components/ui/select";
 import { useEffect } from "react";
 import { useFilterContext } from "@/modules/find-jobs/ui/sections/filter";
+import { cn } from "@/lib/utils";
 
 interface CustomSelectProps {
     label?: string;
@@ -9,6 +10,7 @@ interface CustomSelectProps {
     value: string;
     onChange: (value: string) => void;
     defaultValue?: string;
+    className?: string;
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -16,7 +18,8 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
     options,
     value,
     onChange,
-    defaultValue
+    defaultValue,
+    className
 }) => {
     const { isFilterCleared } = useFilterContext();
 
@@ -27,7 +30,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
     }, [isFilterCleared, defaultValue, onChange]);
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className={cn("flex flex-col gap-2", className)}>
             {label && <label className="text-sm font-medium text-strong-950">{label}</label>}
             <Select value={value} onValueChange={onChange}>
                 <SelectTrigger className="w-full h-10 focus-visible:ring-0 focus-visible:border-soft-200 focus-visible:ring-offset-0 border rounded-lg px-3 flex items-center justify-between text-soft-400 bg-white font-normal text-sm focus:ring-0 focus:ring-offset-0">

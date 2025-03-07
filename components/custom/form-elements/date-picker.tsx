@@ -26,6 +26,9 @@ interface DatePickerProps {
   label: string;
   required?: boolean;
   disabled?: boolean;
+  className?: string;
+  icon?: React.ReactNode;
+  customLabel?: React.ReactNode;
 }
 
 export function DatePickerForm({
@@ -34,6 +37,9 @@ export function DatePickerForm({
   label,
   required,
   disabled,
+  className,
+  icon,
+  customLabel,
   ...props
 }: DatePickerProps) {
   const [inputValue, setInputValue] = useState("");
@@ -95,7 +101,7 @@ export function DatePickerForm({
         return (
           <FormItem>
             <FormLabel className="text-xs font-medium">
-              {label} {required ? <span className="text-lm_red">*</span> : ""}
+              {customLabel ? customLabel : label} {required ? <span className="text-lm_red">*</span> : ""}
             </FormLabel>
             <FormControl>
               <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -107,9 +113,11 @@ export function DatePickerForm({
                       onClick={() => setIsOpen(true)}
                       className={cn(
                         "relative py-6 border-0 rounded-xl items-center justify-start placeholder:text-lm_muted focus-visible:ring-primary flex h-9 w-full border-input px-3 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50 bg-background",
+                        className,
                         !field.value && "text-muted-foreground"
                       )}
                     >
+                      {icon && <span>{icon}</span>}
                       <Input
                         {...props}
                         type="text"
@@ -144,7 +152,7 @@ export function DatePickerForm({
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto p-0 border-soft-200" align="start">
                   <Calendar
                     mode="single"
                     selected={field.value}

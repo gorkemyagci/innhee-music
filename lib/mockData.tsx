@@ -162,3 +162,10 @@ export const workers = [
     }
 ];
 
+
+export const jobPostingMenu = [
+    { id: 1, title: "Basic Information", value: "basic-information" },
+    { id: 2, title: "Select category", value: "select-category" },
+    { id: 3, title: "Usage", value: "usage" },
+    { id: 4, title: "Preview", value: "preview" },
+];
