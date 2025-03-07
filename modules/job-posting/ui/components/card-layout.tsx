@@ -13,9 +13,11 @@ interface CardLayoutProps {
     toggleOpen: () => void;
     children: React.ReactNode;
     item: any;
+    onSubmit?: () => void;
+    loading?: boolean;
 }
 
-const CardLayout = ({ isOpen, toggleOpen, children, item }: CardLayoutProps) => {
+const CardLayout = ({ isOpen, toggleOpen, children, item, onSubmit, loading }: CardLayoutProps) => {
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
 
     const nextItem = (() => {
@@ -62,7 +64,8 @@ const CardLayout = ({ isOpen, toggleOpen, children, item }: CardLayoutProps) => 
                                 <SubmitButton
                                     text="Post"
                                     className="h-9 flex-1 rounded-lg"
-                                    onClick={() => { }}
+                                    onClick={onSubmit}
+                                    loading={loading}
                                 />
                             </CardFooter>
                             : <CardFooter className="flex justify-end p-5 mt-5 pb-0 pt-0">

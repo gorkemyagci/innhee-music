@@ -12,9 +12,13 @@ import Preview from "../sections/preview";
 const formSchema = z.object({
     subject: z.string().min(1, { message: "Subject is required" }),
     detail: z.string().min(1, { message: "Detail is required" }),
-    amount: z.number().min(1, { message: "Amount is required" }),
+    salary: z.number().min(1, { message: "Salary is required" }),
     deadline: z.date(),
-    budgetConfirmed: z.boolean(),
+    budgetsActive: z.boolean(),
+    usage: z.string(),
+    privacy: z.string(),
+    skillLevelIds: z.array(z.string()),
+    candidateSourceIds: z.array(z.string())
 });
 
 export type jobPostingFormSchema = z.infer<typeof formSchema>;
@@ -26,9 +30,13 @@ const JobPostingSuspense = () => {
         defaultValues: {
             subject: "",
             detail: "",
-            amount: 0,
+            salary: 0,
             deadline: new Date(),
-            budgetConfirmed: false,
+            budgetsActive: false,
+            usage: "",
+            privacy: "",
+            skillLevelIds: [],
+            candidateSourceIds: []
         },
     });
 
@@ -40,9 +48,9 @@ const JobPostingSuspense = () => {
             </div>
             <div className="flex flex-col gap-4">
                 <BasicInformation form={form} />
-                <SelectCategory />
-                <Usage />
-                <Preview />
+                <SelectCategory form={form} />
+                <Usage form={form} />
+                <Preview form={form} />
             </div>
         </div>
     )

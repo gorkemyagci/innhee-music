@@ -54,7 +54,7 @@ export const authProcedures = createTRPCRouter({
         account: z.string(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input }) => {    
       try {
         const { account } = input;
         const isEmail = account.includes("@");

@@ -11,25 +11,19 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
 import { X } from "lucide-react";
+import { trpc } from "@/trpc/client";
+import { UseFormReturn } from "react-hook-form";
+import { jobPostingFormSchema } from "../views/job-posting";
 
 interface SkillLevel {
     id: string;
     name: string;
 }
-
-const SelectCategory = () => {
-    const [skillLevels, setSkillLevels] = useState<SkillLevel[]>([
-        { id: "1", name: "Trainee" },
-        { id: "2", name: "Director" },
-        { id: "3", name: "Skilled" },
-        { id: "4", name: "Expert" }
-    ]);
-    const [tools, setTools] = useState<SkillLevel[]>([
-        { id: "1", name: "Manual Entry" },
-        { id: "2", name: "Referral" },
-        { id: "3", name: "Referral" },
-        { id: "4", name: "Skilled" }
-    ]);
+const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
+    const { data: skillsData } = trpc.jobPosting.getAllSkillLevels.useQuery();
+    const { data: toolsData } = trpc.jobPosting.getAllCandidateSources.useQuery();
+    const [skillLevels, setSkillLevels] = useState<SkillLevel[]>([]);
+    const [tools, setTools] = useState<SkillLevel[]>([]);
     const [selectedSkillLevels, setSelectedSkillLevels] = useState<SkillLevel[]>([]);
     const [selectedSkillLevel, setSelectedSkillLevel] = useState<string>("");
     const [selectedTools, setSelectedTools] = useState<SkillLevel[]>([]);
@@ -40,6 +34,50 @@ const SelectCategory = () => {
     const [pdfFiles, setPdfFiles] = useState<File[]>([]);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
+
+    // Initialize from form values if they exist
+    useEffect(() => {
+        const formSkillLevelIds = form.getValues("skillLevelIds");
+        const formCandidateSourceIds = form.getValues("candidateSourceIds");
+
+        // If we have form values and API data, initialize selected items
+        if (skillsData && Array.isArray(skillsData) && formSkillLevelIds.length > 0) {
+            const selectedLevels = skillsData.filter(level => 
+                formSkillLevelIds.includes(level.id)
+            );
+            setSelectedSkillLevels(selectedLevels);
+        }
+
+        if (toolsData && Array.isArray(toolsData) && formCandidateSourceIds.length > 0) {
+            const selectedToolItems = toolsData.filter(tool => 
+                formCandidateSourceIds.includes(tool.id)
+            );
+            setSelectedTools(selectedToolItems);
+        }
+    }, [skillsData, toolsData, form]);
+
+    useEffect(() => {
+        if (skillsData && Array.isArray(skillsData)) {
+            setSkillLevels(skillsData);
+        }
+    }, [skillsData]);
+
+    useEffect(() => {
+        if (toolsData && Array.isArray(toolsData)) {
+            setTools(toolsData);
+        }
+    }, [toolsData]);
+
+    // Update form values when selections change
+    useEffect(() => {
+        const skillLevelIds = selectedSkillLevels.map(level => level.id);
+        form.setValue("skillLevelIds", skillLevelIds);
+    }, [selectedSkillLevels, form]);
+
+    useEffect(() => {
+        const candidateSourceIds = selectedTools.map(tool => tool.id);
+        form.setValue("candidateSourceIds", candidateSourceIds);
+    }, [selectedTools, form]);
 
     const isOpen = tab === "select-category";
     const item = jobPostingMenu.find((item) => item.value === "select-category");

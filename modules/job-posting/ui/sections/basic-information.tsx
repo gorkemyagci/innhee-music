@@ -10,15 +10,13 @@ import SubmitButton from "@/modules/auth/ui/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DatePickerForm } from "@/components/custom/form-elements/date-picker";
 import { UseFormReturn } from "react-hook-form";
 import { jobPostingFormSchema } from "../views/job-posting";
-import { Form } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import Image from "next/image";
 import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useQueryState } from "nuqs";
@@ -26,23 +24,55 @@ import { useQueryState } from "nuqs";
 const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
     const [wordCount, setWordCount] = useState(0);
-    const [budgetConfirmed, setBudgetConfirmed] = useState(false);
+    const [amountInput, setAmountInput] = useState('');
     const maxWords = 200;
+
+    // Function to calculate word count from text
+    const calculateWordCount = (text: string) => {
+        return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+    };
 
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const text = e.target.value;
-        const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+        const words = calculateWordCount(text);
         setWordCount(Math.min(words, maxWords));
     };
 
     const onSubmit = (data: jobPostingFormSchema) => {
         console.log(data);
+        setTab("select-category");
     };
 
     const toggleOpen = () => {
         setTab(tab === "basic-information" ? "" : "basic-information");
     };
 
+    useEffect(() => {
+        // Initialize word count from form value
+        const detail = form.getValues("detail");
+        if (detail) {
+            const words = calculateWordCount(detail);
+            setWordCount(Math.min(words, maxWords));
+        }
+
+        // Initialize amount input
+        const salary = form.getValues("salary");
+        if (salary && salary > 0) {
+            setAmountInput(salary.toString());
+        }
+    }, [form, maxWords]);
+
+    // Update word count when form value changes
+    useEffect(() => {
+        const subscription = form.watch((value, { name }) => {
+            if (name === 'detail' && value.detail) {
+                const words = calculateWordCount(value.detail as string);
+                setWordCount(Math.min(words, maxWords));
+            }
+        });
+        
+        return () => subscription.unsubscribe();
+    }, [form, maxWords]);
 
     const isOpen = tab === "basic-information";
 
@@ -78,75 +108,111 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                             <Form {...form}>
                                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                                     {/* Subject Field */}
-                                    <div className="space-y-2">
-                                        <label htmlFor="subject" className="block text-sub-600 text-sm font-medium">
-                                            Subject
-                                        </label>
-                                        <Input
-                                            id="subject"
-                                            placeholder="Project subject"
-                                            className="bg-transparent shadow-none h-10 hover:border-weak-50 hover:bg-weak-50 transition-all duration-200 border border-soft-200 placeholder:text-[#99A0AE] focus-visible:ring-0 focus-visible:ring-offset-0"
-                                        />
-                                    </div>
+                                    <FormField
+                                        control={form.control}
+                                        name="subject"
+                                        render={({ field }) => (
+                                            <FormItem className="space-y-1">
+                                                <FormLabel className="block text-sub-600 text-sm font-medium">
+                                                    Subject
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        {...field}
+                                                        placeholder="Project subject"
+                                                        className="bg-transparent shadow-none h-10 hover:border-weak-50 hover:bg-weak-50 transition-all duration-200 border border-soft-200 placeholder:text-[#99A0AE] focus-visible:ring-0 focus-visible:ring-offset-0"
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
 
                                     {/* Detail Field */}
-                                    <div className="space-y-2">
-                                        <label htmlFor="detail" className="block text-sub-600 text-sm font-medium">
-                                            Detail
-                                        </label>
-                                        <div className="relative">
-                                            <Textarea
-                                                id="detail"
-                                                placeholder="Please describe your needs"
-                                                className="w-full min-h-[120px] border-soft-200 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-sub-400 resize-none pr-16"
-                                                onChange={handleTextChange}
-                                            />
-                                            <div className="absolute bottom-2 right-2 text-sub-400 text-xs">
-                                                {wordCount}/{maxWords} <Icons.pencil className="inline ml-1 size-4" />
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <FormField
+                                        control={form.control}
+                                        name="detail"
+                                        render={({ field }) => (
+                                            <FormItem className="space-y-1">
+                                                <FormLabel className="block text-sub-600 text-sm font-medium">
+                                                    Detail
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <div className="relative">
+                                                        <Textarea
+                                                            {...field}
+                                                            placeholder="Please describe your needs"
+                                                            className="w-full min-h-[120px] border-soft-200 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-sub-400 resize-none pr-16"
+                                                            onChange={(e) => {
+                                                                field.onChange(e);
+                                                                handleTextChange(e);
+                                                            }}
+                                                        />
+                                                        <div className="absolute bottom-2 right-2 text-sub-400 text-xs">
+                                                            {wordCount}/{maxWords} <Icons.pencil className="inline ml-1 size-4" />
+                                                        </div>
+                                                    </div>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
 
                                     {/* Amount and Deadline Row */}
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="flex items-center w-full gap-4">
                                         {/* Amount Field */}
-                                        <div className="space-y-2">
-                                            <label htmlFor="amount" className="block text-sub-600 text-sm font-medium">
-                                                Amount
-                                            </label>
-                                            <div className="flex">
-                                                <div className="relative w-[134px] flex-1">
-                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sub-600">¥</span>
-                                                    <Input
-                                                        id="amount"
-                                                        type="number"
-                                                        placeholder="0.00"
-                                                        className="w-full pl-8 h-10 border-r-0 rounded-r-none border-soft-200 focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none shadow-b"
-                                                    />
-                                                </div>
-                                                <Select defaultValue="CNY">
-                                                    <SelectTrigger className="w-24 h-10 border-l-0 rounded-l-none border-soft-200 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0">
-                                                        <SelectValue />
-                                                    </SelectTrigger>
-                                                    <SelectContent className="border-soft-200">
-                                                        <SelectItem value="CNY" className="cursor-pointer">
-                                                            <div className="flex items-center gap-2">
-                                                                <Image
-                                                                    src="/assets/svgs/china.svg"
-                                                                    alt="CNY"
-                                                                    width={20}
-                                                                    height={20}
-                                                                    loading="lazy"
-                                                                    quality={100}
-                                                                />
-                                                                <span className="text-sub-600 font-normal text-sm">CNY</span>
+                                        <div>
+                                            <FormField
+                                                control={form.control}
+                                                name="salary"
+                                                render={({ field }) => (
+                                                    <FormItem className="space-y-1">
+                                                        <FormLabel className="text-sub-600 text-sm font-medium">
+                                                            Amount
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <div className="flex">
+                                                                <div className="relative w-[104px] flex-1">
+                                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sub-600">¥</span>
+                                                                    <Input
+                                                                        type="number"
+                                                                        placeholder="0.00"
+                                                                        className="w-full pl-8 h-10 border-r-0 rounded-r-none border-soft-200 focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none shadow-b"
+                                                                        value={amountInput}
+                                                                        onChange={(e) => {
+                                                                            setAmountInput(e.target.value);
+                                                                            field.onChange(parseFloat(e.target.value) || 0);
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                                <Select defaultValue="CNY">
+                                                                    <SelectTrigger className="w-24 h-10 border-l-0 rounded-l-none border-soft-200 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+                                                                        <SelectValue />
+                                                                    </SelectTrigger>
+                                                                    <SelectContent className="border-soft-200">
+                                                                        <SelectItem value="CNY" className="cursor-pointer">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <Image
+                                                                                    src="/assets/svgs/china.svg"
+                                                                                    alt="CNY"
+                                                                                    width={20}
+                                                                                    height={20}
+                                                                                    loading="lazy"
+                                                                                    quality={100}
+                                                                                />
+                                                                                <span className="text-sub-600 font-normal text-sm">CNY</span>
+                                                                            </div>
+                                                                        </SelectItem>
+                                                                        <SelectItem value="USD" className="cursor-pointer">USD</SelectItem>
+                                                                        <SelectItem value="EUR" className="cursor-pointer">EUR</SelectItem>
+                                                                    </SelectContent>
+                                                                </Select>
                                                             </div>
-                                                        </SelectItem>
-                                                        <SelectItem value="USD" className="cursor-pointer">USD</SelectItem>
-                                                        <SelectItem value="EUR" className="cursor-pointer">EUR</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
                                         </div>
 
                                         {/* Deadline Field */}
@@ -166,20 +232,27 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                     </div>
 
                                     {/* Budget Confirmation Checkbox */}
-                                    <div className="flex items-center space-x-2.5">
-                                        <Switch
-                                            id="budget-confirm"
-                                            checked={budgetConfirmed}
-                                            onCheckedChange={(checked) => setBudgetConfirmed(checked as boolean)}
-                                            className="h-5"
-                                        />
-                                        <Label
-                                            htmlFor="budget-confirm"
-                                            className="text-strong-950 font-normal text-sm cursor-pointer"
-                                        >
-                                            Budget to be confirmed
-                                        </Label>
-                                    </div>
+                                    <FormField
+                                        control={form.control}
+                                        name="budgetsActive"
+                                        render={({ field }) => (
+                                            <FormItem className="flex items-center space-x-2.5">
+                                                <FormControl>
+                                                    <Switch
+                                                        checked={field.value}
+                                                        onCheckedChange={field.onChange}
+                                                        className="h-5"
+                                                    />
+                                                </FormControl>
+                                                <FormLabel
+                                                    className="text-strong-950 font-normal text-sm cursor-pointer"
+                                                >
+                                                    Budget to be confirmed
+                                                </FormLabel>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
                                 </form>
                             </Form>
                         </CardContent>
