@@ -58,7 +58,7 @@ const Workers = () => {
                         <motion.button 
                             onClick={() => toggleFavorite(item.id)}
                             whileTap={{ scale: 0.8 }}
-                            className="relative cursor-pointer"
+                            className="relative cursor-pointer hover:bg-weak-50 transition-all duration-200 w-9 h-9 rounded-md flex items-center justify-center"
                         >
                             <AnimatePresence mode="wait">
                                 {item.isFavorite ? (
@@ -74,7 +74,7 @@ const Workers = () => {
                                             duration: 0.1,
                                             times: [0, 0.5, 1]
                                         }}
-                                        className="absolute inset-0 flex items-center justify-center"
+                                        className="absolute inset-0 rounded-md flex items-center justify-center"
                                     >
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" strokeWidth="1" className="size-6">
                                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -86,7 +86,7 @@ const Workers = () => {
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
-                                        className="absolute inset-0 flex items-center justify-center"
+                                        className="absolute inset-0 rounded-md flex items-center justify-center"
                                     >
                                         <Icons.heart className="size-6" />
                                     </motion.div>

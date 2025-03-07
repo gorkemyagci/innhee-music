@@ -1,10 +1,13 @@
+"use client"
 import { Icons } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/user-avatar";
 import { ProjectItemProps } from "@/lib/types";
+import { usePathname } from "next/navigation";
 
 const ProjectItem = ({ item }: ProjectItemProps) => {
+    const pathname = usePathname();
     return (
         <div className="flex flex-col w-full items-start p-4 gap-4">
             <div className="flex items-center justify-between w-full">
@@ -67,7 +70,11 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
                         <span className="text-[#525866] font-medium text-sm">{item.priceType}</span>
                         <span className="text-strong-950 font-medium text-xl">${item.price.toLocaleString()}</span>
                     </div>
-                    <Button variant="outline" className="h-10 rounded-[10px] p-2.5 border border-soft-200 text-sub-600 font-medium text-sm">Apply Now</Button>
+                    <Button variant="outline" className="h-10 rounded-[10px] p-2.5 border border-soft-200 text-sub-600 font-medium text-sm">Apply Now
+                        {pathname === "/find-jobs" && (
+                            <Icons.chevron_short_right className="size-2.5" />
+                        )}
+                    </Button>
                 </div>
             </div>
         </div>
