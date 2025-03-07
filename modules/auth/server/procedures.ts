@@ -1,4 +1,3 @@
-import { SERVICE_URL } from "@/api-store";
 import {
   baseProcedure,
   createTRPCRouter,
@@ -6,6 +5,10 @@ import {
 } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
+const SERVICE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://music-upwork-project-production.up.railway.app";
 
 export const authProcedures = createTRPCRouter({
   login: baseProcedure
