@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import ProfileDropdown from "./profile-dropdown";
 import Link from "next/link";
 import { pageUrls } from "@/lib/constants/page-urls";
+import Notifications from "./notifcations";
 
 const AuthedNavbar = () => {
     return (
@@ -24,11 +25,13 @@ const AuthedNavbar = () => {
             >
                 <Icons.sunline />
             </motion.span>
-            <motion.span
-                className="cursor-pointer hidden sm:block"
-            >
-                <Icons.notification />
-            </motion.span>
+            <Notifications>
+                <motion.span
+                    className="cursor-pointer hidden sm:block"
+                >
+                    <Icons.notification />
+                </motion.span>
+            </Notifications>
             <ProfileDropdown>
                 <Button variant="outline" className="bg-white border border-soft-200 hover:bg-gray-50 h-10 p-2.5 rounded-[10px] text-strong-950 font-medium text-sm">
                     My Account
