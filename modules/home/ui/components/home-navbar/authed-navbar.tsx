@@ -3,11 +3,12 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import ProfileDropdown from "./profile-dropdown";
 import Link from "next/link";
+import { pageUrls } from "@/lib/constants/page-urls";
 
 const AuthedNavbar = () => {
     return (
         <>
-            <Link href="/job-posting" prefetch>
+            <Link href={pageUrls.JOB_POSTING} prefetch>
                 <Button
                     type="submit"
                     className="h-10 group flex items-center gap-2 rounded-[10px] text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all
