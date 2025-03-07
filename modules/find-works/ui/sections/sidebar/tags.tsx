@@ -1,3 +1,4 @@
+import EditTags from "@/components/custom/modals/edit-tags";
 import { Icons } from "@/components/icons"
 
 const Tags = () => {
@@ -6,7 +7,9 @@ const Tags = () => {
         <div className="p-4 flex flex-col gap-3 items-start">
             <div className="flex w-full items-center justify-between">
                 <span className="text-main-900 font-medium text-xs">Tags</span>
-                <Icons.pencil className="size-5" />
+                <EditTags>
+                    <Icons.pencil className="size-5 cursor-pointer" />
+                </EditTags>
             </div>
             <div className="flex gap-2 flex-wrap items-start">
                 {tagItems.map((item, index) => (
