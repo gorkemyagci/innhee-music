@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface DatePickerProps {
   form: UseFormReturn<any>;
@@ -29,6 +29,7 @@ interface DatePickerProps {
   className?: string;
   icon?: React.ReactNode;
   customLabel?: React.ReactNode;
+  open?: boolean;
 }
 
 export function DatePickerForm({
@@ -40,11 +41,18 @@ export function DatePickerForm({
   className,
   icon,
   customLabel,
+  open,
   ...props
 }: DatePickerProps) {
   const [inputValue, setInputValue] = useState("");
   const [calendarDate, setCalendarDate] = useState<Date | undefined>(undefined);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(open || false);
+
+  useEffect(() => {
+    if (open !== undefined) {
+      setIsOpen(open);
+    }
+  }, [open]);
 
   return (
     <FormField
@@ -106,53 +114,61 @@ export function DatePickerForm({
             <FormControl>
               <Popover open={isOpen} onOpenChange={setIsOpen}>
                 <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      type="button"
-                      variant={"outline"}
-                      onClick={() => setIsOpen(true)}
-                      className={cn(
-                        "relative py-6 border-0 rounded-xl items-center justify-start placeholder:text-lm_muted focus-visible:ring-primary flex h-9 w-full border-input px-3 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50 bg-background",
-                        className,
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {icon && <span>{icon}</span>}
-                      <Input
-                        {...props}
-                        type="text"
-                        value={
-                          inputValue ||
-                          (field.value ? format(field.value, "dd/MM/yyyy") : "")
-                        }
-                        onChange={(e) => {
-                          handleDateInput(e.target.value);
-                          setIsOpen(true);
-                        }}
-                        onFocus={() => setIsOpen(true)}
-                        onKeyDown={(e) => {
-                          if (
-                            e.key === "Backspace" &&
-                            inputValue.length === 1
-                          ) {
-                            setInputValue("");
-                            setCalendarDate(undefined);
-                            field.onChange(null);
+                  <FormControl className="shadow-none">
+                    {!open ? (
+                      <Button
+                        type="button"
+                        variant={"outline"}
+                        onClick={() => setIsOpen(true)}
+                        className={cn(
+                          "relative py-6 border-0 rounded-xl items-center justify-start placeholder:text-lm_muted focus-visible:ring-primary flex h-9 w-full border-input px-3 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50 bg-background",
+                          className,
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {icon && <span>{icon}</span>}
+                        <Input
+                          {...props}
+                          type="text"
+                          value={
+                            inputValue ||
+                            (field.value ? format(field.value, "dd/MM/yyyy") : "")
                           }
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsOpen(true);
-                        }}
-                        placeholder="DD/MM/YYYY"
-                        maxLength={10}
-                        disabled={disabled}
-                        className="w-full border-0 bg-transparent shadow-none p-0 focus:ring-0 focus-visible:ring-0"
+                          onChange={(e) => {
+                            handleDateInput(e.target.value);
+                            setIsOpen(true);
+                          }}
+                          onFocus={() => setIsOpen(true)}
+                          onKeyDown={(e) => {
+                            if (
+                              e.key === "Backspace" &&
+                              inputValue.length === 1
+                            ) {
+                              setInputValue("");
+                              setCalendarDate(undefined);
+                              field.onChange(null);
+                            }
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsOpen(true);
+                          }}
+                          placeholder="DD/MM/YYYY"
+                          maxLength={10}
+                          disabled={disabled}
+                          className="w-full border-0 bg-transparent shadow-none p-0 focus:ring-0 focus-visible:ring-0"
+                        />
+                      </Button>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant={"outline"}
+                        className="w-full border-0 h-0 bg-transparent shadow-none p-0 focus:ring-0 focus-visible:ring-0"
                       />
-                    </Button>
+                    )}
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 border-soft-200" align="start">
+                <PopoverContent className="p-0 shadow-none border-soft-200" align="start">
                   <Calendar
                     mode="single"
                     selected={field.value}

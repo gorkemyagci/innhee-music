@@ -44,10 +44,11 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Icons } from "@/components/icons";
 import useCurrencyFormatter from "@/lib/hooks/use-currency-formatter";
+import { DatePickerForm } from "@/components/custom/form-elements/date-picker";
 
 const formSchema = z.object({
     search: z.string().optional(),
-    date: z.array(z.date()).default([]),
+    date: z.date().default(new Date()),
     sort: z.string().optional(),
 });
 
@@ -240,7 +241,7 @@ const Billing = () => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: "",
-            date: [],
+            date: new Date(),
             sort: "newest",
         },
     });
@@ -316,10 +317,8 @@ const Billing = () => {
                                                             !field.value && "text-muted-foreground"
                                                         )}
                                                     >
-                                                        {field.value && field.value.length > 0 ? (
-                                                            field.value.length === 1
-                                                                ? format(field.value[0], "PPP")
-                                                                : `${field.value.length} dates selected`
+                                                        {field.value ? (
+                                                            format(field.value, "PPP")
                                                         ) : (
                                                             <span className="text-soft-400 group-hover:text-main-900 transition-all duration-200 font-medium text-sm">Select Date</span>
                                                         )}
@@ -327,17 +326,15 @@ const Billing = () => {
                                                     </Button>
                                                 </FormControl>
                                             </PopoverTrigger>
-                                            <PopoverContent className="w-[280px] p-3 bg-white rounded-xl shadow-lg border-none"
+                                            <PopoverContent className="p-0 shadow-none bg-transparent border-none"
                                                 align="start">
-                                                <Calendar
-                                                    mode="multiple"
-                                                    selected={field.value}
-                                                    onSelect={field.onChange}
-                                                    disabled={(date) =>
-                                                        date > new Date() || date < new Date("1900-01-01")
-                                                    }
-                                                    initialFocus
-                                                    className="rounded-md"
+                                                <DatePickerForm
+                                                    form={form}
+                                                    open={true}
+                                                    label=""
+                                                    name="date"
+                                                    className="shadow-sm border border-soft-200 h-10 py-0 w-40 rounded-[10px] flex items-center justify-center"
+                                                    icon={<Icons.calendar_line className="size-5" />}
                                                 />
                                             </PopoverContent>
                                         </Popover>
