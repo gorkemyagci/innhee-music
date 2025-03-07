@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import FilterTabs from "../components/tabs";
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext, Suspense } from "react";
 import FilterSkills from "../components/skills";
 import FilterTools from "../components/tools";
 import FeaturedTags from "../components/featured-tags";
@@ -23,7 +23,7 @@ export const FilterContext = createContext<FilterContextType>({
 
 export const useFilterContext = () => useContext(FilterContext);
 
-const Filter = () => {
+const FilterSuspense = () => {
     const [tab, setTab] = useQueryState("tab", {
         defaultValue: "workers",
     });
@@ -110,5 +110,13 @@ const Filter = () => {
         </FilterContext.Provider>
     );
 };
+
+const Filter = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <FilterSuspense />
+        </Suspense>
+    )
+}
 
 export default Filter;

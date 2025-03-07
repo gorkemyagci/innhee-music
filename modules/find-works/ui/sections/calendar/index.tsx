@@ -4,7 +4,7 @@ import Timeline from "./timeline";
 
 const Calendar = () => {
     return (
-        <div className="border border-soft-200 flex-[2] min-w-[352px] min-h-[calc(100vh-114px)] rounded-[20px]">
+        <div className="border border-soft-200 flex-[2] max-w-[352px] min-h-[calc(100vh-114px)] rounded-[20px]">
             <DatePicker />
             <Separator />
             <Timeline />
