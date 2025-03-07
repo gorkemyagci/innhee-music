@@ -36,7 +36,7 @@ const Notifications = ({ children }: NotificationsProps) => {
                         <div className="p-3 flex flex-col gap-1 items-start">
                             <p className="text-sub-600 font-medium text-sm"><span className="text-strong-950 font-medium">Sophia Williams</span> invvites you <span className="text-strong-950 font-medium">synergy.fig</span> file with you</p>
                             <span className="text-sub-600 font-normal text-xs">2 hours ago</span>
-                            <Button variant="outline" className="rounded-lg border-soft-200 cursor-pointer w-16 h-7 py-1 px-2.5 text-sub-600 font-medium text-sm">View</Button>
+                            <Button variant="outline" className="rounded-lg mt-1.5 border-soft-200 cursor-pointer w-16 h-7 py-1 px-2.5 text-sub-600 font-medium text-sm">View</Button>
                         </div>
                         <Separator className="bg-soft-200" />
                         <div className="p-3 flex flex-col gap-1 items-start">
