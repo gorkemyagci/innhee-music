@@ -256,7 +256,6 @@ const DatePicker = () => {
                         </div>
                     </div>
                 )}
-
                 <div className="w-full bg-white rounded-lg border border-soft-200 py-1.5 pr-1 pl-2.5 h-7 flex items-center justify-between">
                     <span className="text-sub-600 font-normal text-xs">Current number of outstanding orders 1.</span>
                     <Icons.info />

@@ -80,3 +80,85 @@ export const featuredJobs = [
     }
 ];
 
+// Workers mock data
+export const workers = [
+    {
+        id: 1,
+        name: "Cleve Music",
+        avatar: "/assets/images/profile.png",
+        rating: 4.9,
+        reviewCount: 125,
+        jobType: "Salary",
+        workType: "Work",
+        specialization: "Specia",
+        description: "Passionate about delivering high-quality audio mixing and editing. Let's create something",
+        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+        isFavorite: false
+    },
+    {
+        id: 2,
+        name: "Cleve Music",
+        avatar: "/assets/images/profile.png",
+        rating: 4.9,
+        reviewCount: 125,
+        jobType: "Salary",
+        workType: "Work",
+        specialization: "Specia",
+        description: "Passionate about delivering high-quality audio mixing and editing. Let's create something..........",
+        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+        isFavorite: false
+    },
+    {
+        id: 3,
+        name: "Cleve Music",
+        avatar: "/assets/images/profile.png",
+        rating: 4.9,
+        reviewCount: 125,
+        jobType: "Salary",
+        workType: "Work",
+        specialization: "Specia",
+        description: "Passionate about delivering high-quality audio mixing and editing. Let's create something ama",
+        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+        isFavorite: false
+    },
+    {
+        id: 4,
+        name: "Cleve Music",
+        avatar: "/assets/images/profile.png",
+        rating: 4.9,
+        reviewCount: 125,
+        jobType: "Salary",
+        workType: "Work",
+        specialization: "Specia",
+        description: "Passionate about delivering high-quality audio mixing and editing. Let's create something",
+        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+        isFavorite: false
+    },
+    {
+        id: 5,
+        name: "Cleve Music",
+        avatar: "/assets/images/profile.png",
+        rating: 4.9,
+        reviewCount: 125,
+        jobType: "Salary",
+        workType: "Work",
+        specialization: "Specia",
+        description: "Passionate about delivering high-quality audio mixing and editing. Let's create something",
+        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+        isFavorite: false
+    },
+    {
+        id: 6,
+        name: "Cleve Music",
+        avatar: "/assets/images/profile.png",
+        rating: 4.9,
+        reviewCount: 125,
+        jobType: "Salary",
+        workType: "Work",
+        specialization: "Specia",
+        description: "Passionate about delivering high-quality audio mixing and editing. Let's create something",
+        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+        isFavorite: false
+    }
+];
+

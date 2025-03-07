@@ -8,7 +8,7 @@ const Projects = () => {
         "All", "Billboard", "Americamn", "BRIT", "MTV", "Awards"
     ]
     const [active, setActive] = useState(0);
-    return <div className="flex flex-col items-start gap-4 w-full">
+    return <div className="flex flex-col items-start gap-4 w-full pr-1">
         <div className="flex items-center w-full justify-between">
             <p className="text-main-900 font-medium">Projects</p>
             <div className="flex items-center gap-6 py-0.5">
