@@ -14,11 +14,13 @@ import { motion, AnimatePresence } from "framer-motion";
 const Sidebar = () => {
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Check if we're on mobile when component mounts and when window resizes
     useEffect(() => {
         const checkIfMobile = () => {
             setIsMobile(window.innerWidth < 1024);
+            setIsLoading(false);
         };
         
         // Initial check
@@ -62,20 +64,25 @@ const Sidebar = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isMobile, isMobileOpen]);
 
+    // Don't render anything until we've determined if it's mobile or not
+    if (isLoading) {
+        return null;
+    }
+
     return (
         <>
             {/* Mobile toggle button - only visible on mobile */}
             <AnimatePresence>
                 {isMobile && !isMobileOpen && (
                     <motion.div 
-                        className="lg:hidden fixed top-20 left-3 z-50"
+                        className="lg:hidden fixed bottom-4 right-[65px] z-50"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.8 }}
                         transition={{ duration: 0.2 }}
                     >
                         <motion.button 
-                            className="flex items-center justify-center w-8 h-8 rounded-full shadow-lg bg-white border border-soft-200 hover:bg-gray-50 transition-colors"
+                            className="flex items-center justify-center w-10 h-10 rounded-full shadow-lg bg-white border border-soft-200 hover:bg-gray-50 transition-colors"
                             onClick={() => setIsMobileOpen(true)}
                             whileTap={{ scale: 0.9 }}
                         >

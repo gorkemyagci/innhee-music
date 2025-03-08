@@ -13,6 +13,7 @@ const Calendar = () => {
     const [isMobile, setIsMobile] = useState(false);
     const [isTablet, setIsTablet] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Check screen size when component mounts and when window resizes
     useEffect(() => {
@@ -20,6 +21,7 @@ const Calendar = () => {
             const width = window.innerWidth;
             setIsMobile(width < 768);
             setIsTablet(width >= 768 && width < 1024);
+            setIsLoading(false);
         };
         
         // Initial check
@@ -59,6 +61,11 @@ const Calendar = () => {
             document.body.style.overflow = '';
         };
     }, [isMobile, isTablet, isOpen]);
+
+    // Don't render anything until we've determined the device type
+    if (isLoading) {
+        return null;
+    }
 
     return (
         <>

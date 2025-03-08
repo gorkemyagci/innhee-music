@@ -13,6 +13,21 @@ import { slides } from "@/lib/mockData";
 const Slider = () => {
     const [api, setApi] = useState<any>(null);
     const [current, setCurrent] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isMounted, setIsMounted] = useState(false);
+
+    // Check if component is mounted
+    useEffect(() => {
+        setIsMounted(true);
+        return () => setIsMounted(false);
+    }, []);
+
+    // Set loading to false once mounted
+    useEffect(() => {
+        if (isMounted) {
+            setIsLoading(false);
+        }
+    }, [isMounted]);
 
     useEffect(() => {
         if (!api) return;
@@ -34,11 +49,17 @@ const Slider = () => {
             api.off("select", onSelect);
         };
     }, [api]);
+    
     const scrollTo = (index: number) => {
         if (api) {
             api.scrollTo(index);
         }
     };
+
+    // Don't render anything until component is mounted and loading is complete
+    if (isLoading || !isMounted) {
+        return null;
+    }
 
     return (
         <div className="relative w-full xl:max-w-[676px] h-[248px] rounded-2xl">
