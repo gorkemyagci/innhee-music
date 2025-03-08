@@ -300,7 +300,7 @@ const Billing = () => {
                     </TabsList>
                 </Tabs>
 
-                <div className={cn("flex w-full", pathname !== "/orders" ? "justify-center": "justify-end")}>
+                <div className={cn("flex w-full", pathname !== "/orders" ? "justify-center" : "justify-end")}>
                     <Form {...form}>
                         <form className={cn("flex flex-wrap items-center gap-4", pathname !== "/orders" && "w-full justify-center")} onSubmit={form.handleSubmit(onSubmit)}>
                             <div className="bg-white border border-[#E1E4EA] rounded-xl w-[300px] h-9 flex items-center pl-3 pr-2.5 py-2.5">

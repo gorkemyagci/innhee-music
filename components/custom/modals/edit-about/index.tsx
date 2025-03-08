@@ -12,12 +12,18 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { useState, useEffect } from "react";
 
 interface EditAboutProps {
     children: React.ReactNode;
+    initialText?: string;
+    onSave?: (text: string) => void;
 }
 
-const EditAbout = ({ children }: EditAboutProps) => {
+const EditAbout = ({ children, initialText = "", onSave }: EditAboutProps) => {
+    const [text, setText] = useState(initialText);
+    const maxChars = 200; // Karakter sınırı
+
     return (
         <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>
@@ -29,18 +35,25 @@ const EditAbout = ({ children }: EditAboutProps) => {
                         </div>
                         <div className="flex flex-col gap-1">
                             <DialogTitle><span className="text-main-900 font-medium text-sm">About me</span></DialogTitle>
-                            <span className="text-sub-600 font-normal text-xs">The maximum word count limit is 200.</span>
+                            <span className="text-sub-600 font-normal text-xs">The maximum character count limit is {maxChars}.</span>
                         </div>
                     </div>
                 </DialogHeader>
                 <div className="px-4 pb-4 flex flex-col gap-3">
                     <div className="relative my-2">
                         <Textarea
-                            placeholder="Please describe your needs"
+                            value={text}
+                            placeholder="Please describe yourself"
                             className="w-full min-h-[120px] border-soft-200 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-sub-400 resize-none pr-16"
+                            onChange={(e) => {
+                                const newText = e.target.value;
+                                setText(newText);
+                            }}
+                            maxLength={maxChars}
                         />
-                        <div className="absolute bottom-2 right-2 text-sub-400 text-xs">
-                            0/200<Icons.pencil className="inline ml-1 size-4" />
+                        <div className="absolute bottom-2 right-2 text-sub-400 text-xs flex items-center">
+                            <span className="w-[60px] text-right">{text.length}/{maxChars}</span>
+                            <Icons.resize className="ml-1 size-4 flex-shrink-0" />
                         </div>
                     </div>
                     <Separator className="bg-soft-200" />
@@ -48,7 +61,12 @@ const EditAbout = ({ children }: EditAboutProps) => {
                         <DialogClose asChild>
                             <Button variant="outline" className="border-soft-200 flex-1 h-9 rounded-lg text-sub-600 font-medium text-sm">Cancel</Button>
                         </DialogClose>
-                        <Button className="h-9 rounded-lg text-white flex-1 font-medium text-sm bg-neutral-950">Save</Button>
+                        <Button 
+                            className="h-9 rounded-lg text-white flex-1 font-medium text-sm bg-neutral-950"
+                            onClick={() => onSave && onSave(text)}
+                        >
+                            Save
+                        </Button>
                     </div>
                 </div>
             </DialogContent>

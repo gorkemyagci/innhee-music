@@ -23,20 +23,22 @@ import { useQueryState } from "nuqs";
 
 const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
-    const [wordCount, setWordCount] = useState(0);
+    const [text, setText] = useState("");
     const [amountInput, setAmountInput] = useState('');
-    const maxWords = 200;
+    const maxChars = 200; // Karakter sınırı
 
-    // Function to calculate word count from text
-    const calculateWordCount = (text: string) => {
-        return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-    };
-
-    const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const text = e.target.value;
-        const words = calculateWordCount(text);
-        setWordCount(Math.min(words, maxWords));
-    };
+    // Initialize values from form
+    useEffect(() => {
+        // Initialize textarea value
+        const detail = form.getValues("detail") || "";
+        setText(detail);
+        
+        // Initialize amount input
+        const salary = form.getValues("salary");
+        if (salary && salary > 0) {
+            setAmountInput(salary.toString());
+        }
+    }, [form]);
 
     const onSubmit = (data: jobPostingFormSchema) => {
         console.log(data);
@@ -46,33 +48,6 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
     const toggleOpen = () => {
         setTab(tab === "basic-information" ? "" : "basic-information");
     };
-
-    useEffect(() => {
-        // Initialize word count from form value
-        const detail = form.getValues("detail");
-        if (detail) {
-            const words = calculateWordCount(detail);
-            setWordCount(Math.min(words, maxWords));
-        }
-
-        // Initialize amount input
-        const salary = form.getValues("salary");
-        if (salary && salary > 0) {
-            setAmountInput(salary.toString());
-        }
-    }, [form, maxWords]);
-
-    // Update word count when form value changes
-    useEffect(() => {
-        const subscription = form.watch((value, { name }) => {
-            if (name === 'detail' && value.detail) {
-                const words = calculateWordCount(value.detail as string);
-                setWordCount(Math.min(words, maxWords));
-            }
-        });
-        
-        return () => subscription.unsubscribe();
-    }, [form, maxWords]);
 
     const isOpen = tab === "basic-information";
 
@@ -140,16 +115,19 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                                 <FormControl>
                                                     <div className="relative">
                                                         <Textarea
-                                                            {...field}
+                                                            value={text}
                                                             placeholder="Please describe your needs"
                                                             className="w-full min-h-[120px] border-soft-200 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-sub-400 resize-none pr-16"
                                                             onChange={(e) => {
-                                                                field.onChange(e);
-                                                                handleTextChange(e);
+                                                                const newText = e.target.value;
+                                                                setText(newText);
+                                                                field.onChange(newText);
                                                             }}
+                                                            maxLength={maxChars}
                                                         />
-                                                        <div className="absolute bottom-2 right-2 text-sub-400 text-xs">
-                                                            {wordCount}/{maxWords} <Icons.pencil className="inline ml-1 size-4" />
+                                                        <div className="absolute bottom-2 right-2 text-sub-400 text-xs flex items-center">
+                                                            <span className="w-[60px] text-right">{text.length}/{maxChars}</span>
+                                                            <Icons.resize className="ml-1 size-4 flex-shrink-0" />
                                                         </div>
                                                     </div>
                                                 </FormControl>
