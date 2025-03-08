@@ -272,9 +272,9 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
                     <div className="flex flex-col items-start gap-1">
                         <div className="flex flex-row items-center gap-1">
                             <p className="text-sub-600 font-medium text-sm">Add Download File</p>
-                            <span className="text-sub-600 font-normal text-sm">(PDF files only)</span>
+                            <span className="text-sub-600 font-normal text-sm">(Up to 3 audio files)</span>
                         </div>
-                        <span className="text-sub-600 font-normal text-xs">PDF format and 25 MB size limitation</span>
+                        <span className="text-sub-600 font-normal text-xs">MP3 format and 25 mb size limitations</span>
                     </div>
                     <Button
                         variant="outline"

@@ -68,7 +68,7 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
                 <div className="flex flex-col gap-4 items-end">
                     <div className="flex flex-col gap-2 items-end">
                         <span className="text-[#525866] font-medium text-sm">{item.priceType}</span>
-                        <span className="text-strong-950 font-medium text-xl">${item.price.toLocaleString()}</span>
+                        <span className="text-strong-950 font-medium text-xl">${typeof item.price === 'number' ? item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : item.price}</span>
                     </div>
                     <Button variant="outline" className="h-10 rounded-[10px] p-2.5 border border-soft-200 text-sub-600 font-medium text-sm">Apply Now
                         {pathname === "/find-jobs" && (
