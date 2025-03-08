@@ -302,7 +302,7 @@ const Billing = () => {
 
                 <div className="flex justify-center w-full">
                     <Form {...form}>
-                        <form className="flex flex-wrap items-center justify-center gap-4 w-full" onSubmit={form.handleSubmit(onSubmit)}>
+                        <form className={cn("flex flex-wrap items-center gap-4", pathname !== "/orders" && "w-full justify-center")} onSubmit={form.handleSubmit(onSubmit)}>
                             <div className="bg-white border border-[#E1E4EA] rounded-xl w-[300px] h-9 flex items-center pl-3 pr-2.5 py-2.5">
                                 <Icons.search />
                                 <Input className="bg-transparent shadow-none border-none placeholder:text-[#99A0AE] focus-visible:ring-0 focus-visible:ring-offset-0" placeholder="Serch..." />
