@@ -658,5 +658,10 @@ export const Icons = {
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
             <path d="M3.25 15.25H16.75V16.75H3.25V15.25ZM10.75 5.371V13.75H9.25V5.371L4.69675 9.925L3.63625 8.8645L10 2.5L16.3638 8.86375L15.3032 9.92425L10.75 5.3725V5.371Z" fill="#525866" />
         </svg>
+    ),
+    filter_icon: (props: IconProps) => (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+            <path d="M8.5 14.5H11.5V13H8.5V14.5ZM3.25 5.5V7H16.75V5.5H3.25ZM5.5 10.75H14.5V9.25H5.5V10.75Z" fill="#525866" />
+        </svg>
     )
 }

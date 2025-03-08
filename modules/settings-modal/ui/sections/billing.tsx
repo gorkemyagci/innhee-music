@@ -45,6 +45,8 @@ import { CalendarIcon } from "lucide-react";
 import { Icons } from "@/components/icons";
 import useCurrencyFormatter from "@/lib/hooks/use-currency-formatter";
 import { DatePickerForm } from "@/components/custom/form-elements/date-picker";
+import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
 const formSchema = z.object({
     search: z.string().optional(),
@@ -235,6 +237,7 @@ const mockBilling: Billing[] = [
 ];
 
 const Billing = () => {
+    const pathname = usePathname();
     const form = useForm<z.infer<typeof formSchema>>({
         mode: "onChange",
         reValidateMode: "onChange",
@@ -286,61 +289,72 @@ const Billing = () => {
 
     return (
         <div className="w-full pt-6 flex flex-col items-start gap-6">
-            <div className="w-full px-6">
+            <div className={cn("w-full px-6", {
+                "flex flex-row items-center justify-between": pathname === "/orders",
+            })}>
                 <Tabs defaultValue="all" className="w-full mb-4">
                     <TabsList className="bg-gray-50 w-fit">
-                        <TabsTrigger value="all" onClick={() => setTab("all")} className="data-[state=active]:bg-white w-[100px] h-7">All</TabsTrigger>
-                        <TabsTrigger value="pending" onClick={() => setTab("pending")} className="data-[state=active]:bg-white w-[100px] h-7">In progress</TabsTrigger>
-                        <TabsTrigger value="completed" onClick={() => setTab("completed")} className="data-[state=active]:bg-white w-[100px] h-7">Completed</TabsTrigger>
+                        <TabsTrigger value="all" onClick={() => setTab("all")} className="cursor-pointer data-[state=active]:bg-white w-[100px] h-7">All</TabsTrigger>
+                        <TabsTrigger value="pending" onClick={() => setTab("pending")} className="cursor-pointer data-[state=active]:bg-white w-[100px] h-7">In progress</TabsTrigger>
+                        <TabsTrigger value="completed" onClick={() => setTab("completed")} className="cursor-pointer data-[state=active]:bg-white w-[100px] h-7">Completed</TabsTrigger>
                     </TabsList>
                 </Tabs>
 
                 <div className="flex justify-center w-full">
                     <Form {...form}>
                         <form className="flex flex-wrap items-center justify-center gap-4 w-full" onSubmit={form.handleSubmit(onSubmit)}>
-                            <div className="relative flex-1 max-w-md">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                                <Input placeholder="Search..." className="pl-10 h-10 w-full hover:bg-gray-50 shadow-none hover:border-gray-50 rounded-lg placeholder:text-soft-400 placeholder:font-normal placeholder:text-sm border border-soft-200" />
+                            <div className="bg-white border border-[#E1E4EA] rounded-xl w-[300px] h-9 flex items-center pl-3 pr-2.5 py-2.5">
+                                <Icons.search />
+                                <Input className="bg-transparent shadow-none border-none placeholder:text-[#99A0AE] focus-visible:ring-0 focus-visible:ring-offset-0" placeholder="Serch..." />
+                                <div className="bg-transparent border border-[#E1E4EA] w-8 h-5 rounded-sm py-0.5 px-1.5 flex items-center justify-center">
+                                    <Icons.shortcut />
+                                </div>
                             </div>
-                            <div className="w-auto">
-                                <FormField
-                                    control={form.control}
-                                    name="date"
-                                    render={({ field }) => (
-                                        <Popover modal>
-                                            <PopoverTrigger asChild>
-                                                <FormControl>
-                                                    <Button
-                                                        variant={"outline"}
-                                                        className={cn(
-                                                            "min-w-[125px] transition-all group h-9 duration-200 pl-3 text-left font-normal flex justify-end flex-row-reverse items-center",
-                                                            !field.value && "text-muted-foreground"
-                                                        )}
-                                                    >
-                                                        {field.value ? (
-                                                            format(field.value, "PPP")
-                                                        ) : (
-                                                            <span className="text-soft-400 group-hover:text-main-900 transition-all duration-200 font-medium text-sm">Select Date</span>
-                                                        )}
-                                                        <Icons.calendar className="size-4 group-hover:stroke-main-900 transition-all duration-200" />
-                                                    </Button>
-                                                </FormControl>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="p-0 shadow-none bg-transparent border-none"
-                                                align="start">
-                                                <DatePickerForm
-                                                    form={form}
-                                                    open={true}
-                                                    label=""
-                                                    name="date"
-                                                    className="shadow-sm border border-soft-200 h-10 py-0 w-40 rounded-[10px] flex items-center justify-center"
-                                                    icon={<Icons.calendar_line className="size-5" />}
-                                                />
-                                            </PopoverContent>
-                                        </Popover>
-                                    )}
-                                />
-                            </div>
+                            {pathname !== "/orders" ? (
+                                <div className="w-auto">
+                                    <FormField
+                                        control={form.control}
+                                        name="date"
+                                        render={({ field }) => (
+                                            <Popover modal>
+                                                <PopoverTrigger asChild>
+                                                    <FormControl>
+                                                        <Button
+                                                            variant={"outline"}
+                                                            className={cn(
+                                                                "min-w-[125px] transition-all group h-9 duration-200 pl-3 text-left font-normal flex justify-end flex-row-reverse items-center",
+                                                                !field.value && "text-muted-foreground"
+                                                            )}
+                                                        >
+                                                            {field.value ? (
+                                                                format(field.value, "PPP")
+                                                            ) : (
+                                                                <span className="text-soft-400 group-hover:text-main-900 transition-all duration-200 font-medium text-sm">Select Date</span>
+                                                            )}
+                                                            <Icons.calendar className="size-4 group-hover:stroke-main-900 transition-all duration-200" />
+                                                        </Button>
+                                                    </FormControl>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="p-0 shadow-none bg-transparent border-none"
+                                                    align="start">
+                                                    <DatePickerForm
+                                                        form={form}
+                                                        open={true}
+                                                        label=""
+                                                        name="date"
+                                                        className="shadow-sm border border-soft-200 h-10 py-0 w-40 rounded-[10px] flex items-center justify-center"
+                                                        icon={<Icons.calendar_line className="size-5" />}
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                        )}
+                                    />
+                                </div>
+                            ) : (
+                                <Button variant="outline" className="border border-soft-200 h-9 w-[82px] rounded-lg flex items-center gap-1 text-sub-600 font-medium text-sm">
+                                    <Icons.filter />
+                                    Filter</Button>
+                            )}
                             <Select>
                                 <SelectTrigger className="w-[122px] hover:bg-accent hover:data-[placeholder]:text-main-900 group h-9 cursor-pointer rounded-lg border flex items-center justify-between appearance-none">
                                     <Icons.sort_desc className="group-hover:fill-main-900 transition-all duration-200" />
@@ -361,112 +375,134 @@ const Billing = () => {
             </div>
 
             <div className="w-full overflow-x-auto px-2">
-                <Table>
-                    <TableHeader>
-                        <TableRow className="hover:bg-transparent border-none">
-                            <TableHead className="w-[250px]">Company Name</TableHead>
-                            <TableHead className="w-[250px]">Contact Person</TableHead>
-                            <TableHead className="w-[250px]">Contract Details</TableHead>
-                            <TableHead className="w-[100px]">Rating</TableHead>
-                            <TableHead className="w-[150px]">Status</TableHead>
-                            <TableHead className="w-[50px]"></TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {filteredBilling.map((billing) => (
-                            <TableRow key={billing.id} className="border-soft-200 hover:bg-white cursor-auto">
-                                <TableCell className="py-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="relative">
-                                            <span className="absolute -top-1 -right-1 size-5 z-10">
-                                                <Icons.top_rated />
-                                            </span>
-                                            <Avatar className="h-10 w-10">
-                                                <AvatarImage src={billing.contactPerson.avatar} alt={billing.contactPerson.name} />
-                                                <AvatarFallback>{billing.contactPerson.name.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <span className="font-medium text-sm text-strong-950">{billing.companyName}</span>
-                                            <div className="flex items-center gap-1">
-                                                <Star className="text-yellow-400 fill-yellow-400" size={14} />
-                                                <span className="text-sm text-strong-950 font-normal">{billing.rating}</span>
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={tab}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="w-full"
+                    >
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="hover:bg-transparent border-none">
+                                    <TableHead className="w-[250px]">Company Name</TableHead>
+                                    <TableHead className="w-[250px]">Contact Person</TableHead>
+                                    <TableHead className="w-[250px]">Contract Details</TableHead>
+                                    <TableHead className="w-[100px]">Rating</TableHead>
+                                    <TableHead className="w-[150px]">Status</TableHead>
+                                    <TableHead className="w-[50px]"></TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {filteredBilling.map((billing, index) => (
+                                    <motion.tr
+                                        key={billing.id}
+                                        className="border-soft-200 hover:bg-white cursor-auto"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{
+                                            duration: 0.3,
+                                            delay: index * 0.05,
+                                            ease: "easeOut"
+                                        }}
+                                        custom={index}
+                                    >
+                                        <TableCell className="py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="relative">
+                                                    <span className="absolute -top-1 -right-1 size-5 z-10">
+                                                        <Icons.top_rated />
+                                                    </span>
+                                                    <Avatar className="h-10 w-10">
+                                                        <AvatarImage src={billing.contactPerson.avatar} alt={billing.contactPerson.name} />
+                                                        <AvatarFallback>{billing.contactPerson.name.charAt(0)}</AvatarFallback>
+                                                    </Avatar>
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium text-sm text-strong-950">{billing.companyName}</span>
+                                                    <div className="flex items-center gap-1">
+                                                        <Star className="text-yellow-400 fill-yellow-400" size={14} />
+                                                        <span className="text-sm text-strong-950 font-normal">{billing.rating}</span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </TableCell>
-                                <TableCell>
-                                    <div>
-                                        <span className="text-strong-950 font-normal text-sm">Subject name</span>
-                                        <p className="text-xs text-sub-600">{formatCurrency(billing.amount)}</p>
-                                    </div>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-2">
-                                        <Image
-                                            src="/assets/svgs/wav.svg"
-                                            alt="Pdf"
-                                            width={32}
-                                            height={32}
-                                        />
-                                        <div>
-                                            <p className="text-sm font-medium text-strong-950">{billing.contractDetails.name}</p>
-                                            <p className="text-xs text-sub-600 font-normal">{billing.contractDetails.size}</p>
-                                        </div>
-                                    </div>
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-1">
-                                        <Star className="text-yellow-400 fill-yellow-400" size={16} />
-                                        <span className="text-strong-950 font-normal text-sm">{billing.rating}</span>
-                                    </div>
-                                </TableCell>
-                                <TableCell>
-                                    {getBadge(billing.status)}
-                                </TableCell>
-                                <TableCell>
-                                    <Button variant="ghost" size="icon" className="rounded-md cursor-pointer">
-                                        <MoreVertical size={16} />
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div>
+                                                <span className="text-strong-950 font-normal text-sm">Subject name</span>
+                                                <p className="text-xs text-sub-600">{formatCurrency(billing.amount)}</p>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center gap-2">
+                                                <Image
+                                                    src="/assets/svgs/wav.svg"
+                                                    alt="Pdf"
+                                                    width={32}
+                                                    height={32}
+                                                />
+                                                <div>
+                                                    <p className="text-sm font-medium text-strong-950">{billing.contractDetails.name}</p>
+                                                    <p className="text-xs text-sub-600 font-normal">{billing.contractDetails.size}</p>
+                                                </div>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center gap-1">
+                                                <Star className="text-yellow-400 fill-yellow-400" size={16} />
+                                                <span className="text-strong-950 font-normal text-sm">{billing.rating}</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            {getBadge(billing.status)}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button variant="ghost" size="icon" className="rounded-md cursor-pointer">
+                                                <MoreVertical size={16} />
+                                            </Button>
+                                        </TableCell>
+                                    </motion.tr>
+                                ))}
+                            </TableBody>
+                        </Table>
 
-                <div className="flex items-center justify-center gap-2 mt-6">
-                    <Button variant="ghost" size="icon" className="w-8 h-8 p-0">
-                        &laquo;
-                    </Button>
-                    <Button variant="ghost" size="icon" className="w-8 h-8 p-0">
-                        &lsaquo;
-                    </Button>
-                    <Button variant="outline" className="w-8 h-8 p-0 bg-weak-50 text-sub-600 font-medium text-sm">
-                        1
-                    </Button>
-                    <Button variant="outline" className="w-8 h-8 border-soft-200 bg-white text-sub-600 font-medium text-s m rounded-lg p-1.5">
-                        2
-                    </Button>
-                    <Button variant="outline" className="w-8 h-8 border-soft-200 bg-white text-sub-600 font-medium text-s m rounded-lg p-1.5">
-                        3
-                    </Button>
-                    <Button variant="outline" className="w-8 h-8 border-soft-200 bg-white text-sub-600 font-medium text-s m rounded-lg p-1.5">
-                        4
-                    </Button>
-                    <Button variant="outline" className="w-8 h-8 border-soft-200 bg-white text-sub-600 font-medium text-s m rounded-lg p-1.5">
-                        5
-                    </Button>
-                    <span>...</span>
-                    <Button variant="outline" className="w-8 h-8 border-soft-200 bg-white text-sub-600 font-medium text-s m rounded-lg p-1.5">
-                        16
-                    </Button>
-                    <Button variant="ghost" size="icon" className="w-8 h-8 p-0">
-                        &rsaquo;
-                    </Button>
-                    <Button variant="ghost" size="icon" className="w-8 h-8 p-0">
-                        &raquo;
-                    </Button>
-                </div>
+                        <div className="flex items-center justify-center gap-2 mt-6">
+                            <Button variant="ghost" size="icon" className="w-8 h-8 p-0">
+                                &laquo;
+                            </Button>
+                            <Button variant="ghost" size="icon" className="w-8 h-8 p-0">
+                                &lsaquo;
+                            </Button>
+                            <Button variant="outline" className="w-8 h-8 p-0 bg-weak-50 text-sub-600 font-medium text-sm">
+                                1
+                            </Button>
+                            <Button variant="outline" className="w-8 h-8 border-soft-200 bg-white text-sub-600 font-medium text-s m rounded-lg p-1.5">
+                                2
+                            </Button>
+                            <Button variant="outline" className="w-8 h-8 border-soft-200 bg-white text-sub-600 font-medium text-s m rounded-lg p-1.5">
+                                3
+                            </Button>
+                            <Button variant="outline" className="w-8 h-8 border-soft-200 bg-white text-sub-600 font-medium text-s m rounded-lg p-1.5">
+                                4
+                            </Button>
+                            <Button variant="outline" className="w-8 h-8 border-soft-200 bg-white text-sub-600 font-medium text-s m rounded-lg p-1.5">
+                                5
+                            </Button>
+                            <span>...</span>
+                            <Button variant="outline" className="w-8 h-8 border-soft-200 bg-white text-sub-600 font-medium text-s m rounded-lg p-1.5">
+                                16
+                            </Button>
+                            <Button variant="ghost" size="icon" className="w-8 h-8 p-0">
+                                &rsaquo;
+                            </Button>
+                            <Button variant="ghost" size="icon" className="w-8 h-8 p-0">
+                                &raquo;
+                            </Button>
+                        </div>
+                    </motion.div>
+                </AnimatePresence>
             </div>
         </div>
     )
