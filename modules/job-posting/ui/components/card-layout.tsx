@@ -28,7 +28,7 @@ const CardLayout = ({ isOpen, toggleOpen, children, item, onSubmit, loading }: C
     })();
 
     return (
-        <Card className={cn("w-[440px] border-soft-200 rounded-[20px] shadow-none", !isOpen && "pb-2", item?.value === "preview" && "gap-0")}>
+        <Card className={cn("w-full max-w-[350px] lg:w-[440px] border-soft-200 rounded-[20px] shadow-none", !isOpen && "pb-2", item?.value === "preview" && "gap-0")}>
             <CardHeader
                 onClick={toggleOpen}
                 className={cn("bg-transparent border-soft-200 pb-4 pr-6 pl-5 flex flex-row items-center justify-between cursor-pointer", !isOpen ? "border-b-none" : "border-b")}

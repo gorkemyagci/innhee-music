@@ -52,7 +52,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
     const isOpen = tab === "basic-information";
 
     return (
-        <Card className={cn("w-[440px] border-soft-200 rounded-[20px] shadow-none", !isOpen && "pb-2")}>
+        <Card className={cn("w-full lg:w-full max-w-[350px] lg:w-[440px] border-soft-200 rounded-[20px] shadow-none", !isOpen && "pb-2")}>
             <CardHeader
                 onClick={toggleOpen}
                 className={cn("bg-transparent border-soft-200 pb-4 pr-6 pl-5 flex flex-row items-center justify-between cursor-pointer", !isOpen ? "border-b-none" : "border-b")}
@@ -137,7 +137,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                     />
 
                                     {/* Amount and Deadline Row */}
-                                    <div className="flex items-center w-full gap-4">
+                                    <div className="flex sm:flex-row flex-col items-start sm:items-center w-full gap-4">
                                         {/* Amount Field */}
                                         <div>
                                             <FormField

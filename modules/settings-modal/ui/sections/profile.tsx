@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import Head from "../components/head";
 import { Icons } from "@/components/icons";
 import UserAvatar from "@/components/user-avatar";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { cn } from "@/lib/utils";
 
 const Profile = () => {
     const [nickname, setNickname] = useState("Arthur Taylor");
@@ -19,7 +19,29 @@ const Profile = () => {
     const [tempWebLink, setTempWebLink] = useState(webLink);
     const [profileImage, setProfileImage] = useState("/assets/images/profile.png");
     const [isUploading, setIsUploading] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [isTablet, setIsTablet] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Check screen size when component mounts and when window resizes
+    useEffect(() => {
+        const checkScreenSize = () => {
+            const width = window.innerWidth;
+            setIsMobile(width < 640);
+            setIsTablet(width >= 640 && width < 1024);
+            setIsLoading(false);
+        };
+        
+        // Initial check
+        checkScreenSize();
+        
+        // Add event listener for window resize
+        window.addEventListener("resize", checkScreenSize);
+        
+        // Cleanup
+        return () => window.removeEventListener("resize", checkScreenSize);
+    }, []);
 
     const copyToClipboard = (text: string, label: string) => {
         navigator.clipboard.writeText(text)
@@ -85,11 +107,23 @@ const Profile = () => {
         reader.readAsDataURL(file);
     };
 
+    // Don't render until we've determined the screen size
+    if (isLoading) {
+        return null;
+    }
+
     return (
         <div className="w-full">
             <Head heading="Privacy & Security" subHeading="Personalize your privacy settings and enhance the security of your account." />
-            <div className="w-full px-6 pt-4 flex flex-col gap-6 items-start">
-                <div className="flex items-center w-1/2 justify-between">
+            <div className={cn(
+                "w-full flex flex-col items-start",
+                isMobile ? "px-4 pt-3 gap-4" : "px-6 pt-4 gap-6"
+            )}>
+                {/* Apex ID Section */}
+                <div className={cn(
+                    "flex items-center justify-between",
+                    isMobile ? "w-full" : "w-1/2"
+                )}>
                     <div className="flex flex-col items-start gap-1">
                         <span className="text-main-900 text-sm font-medium">Apex ID</span>
                         <span className="text-sub-600 font-normal text-xs">A-12341234</span>
@@ -102,9 +136,18 @@ const Profile = () => {
                         <Icons.copy />
                     </Button>
                 </div>
+
                 <div className="border border-dashed w-full h-[1px] border-soft-200" />
-                <div className="flex items-center w-[65%] justify-between">
-                    <div className="flex flex-col items-start gap-1">
+
+                {/* Profile Photo Section */}
+                <div className={cn(
+                    "flex items-center justify-between",
+                    isMobile ? "w-full flex-col items-start gap-3" : isTablet ? "w-full" : "w-[65%]"
+                )}>
+                    <div className={cn(
+                        "flex flex-col items-start gap-1",
+                        isMobile && "mb-1"
+                    )}>
                         <span className="text-main-900 text-sm font-medium">Profile Photo</span>
                         <span className="text-sub-600 font-normal text-xs">Min 400x400px, PNG or JPEG formats.</span>
                     </div>
@@ -153,13 +196,25 @@ const Profile = () => {
                         </Button>
                     </div>
                 </div>
+
                 <div className="border border-dashed w-full h-[1px] border-soft-200" />
-                <div className="flex items-center w-full justify-between">
-                    <div className="flex flex-col items-start gap-1 w-1/3">
+
+                {/* Nicknames Section */}
+                <div className={cn(
+                    "flex w-full",
+                    isMobile ? "flex-col gap-3" : "items-center justify-between"
+                )}>
+                    <div className={cn(
+                        "flex flex-col items-start gap-1",
+                        isMobile ? "w-full" : "w-1/3"
+                    )}>
                         <span className="text-main-900 text-sm font-medium">Nicknames</span>
                         <span className="text-sub-600 font-normal text-xs">Your name will be visible to your contacts.</span>
                     </div>
-                    <div className="w-1/3 flex justify-start">
+                    <div className={cn(
+                        "flex",
+                        isMobile ? "w-full justify-between items-center" : "w-1/3 justify-start"
+                    )}>
                         <AnimatePresence mode="wait">
                             {isEditingNickname ? (
                                 <motion.div
@@ -168,7 +223,9 @@ const Profile = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -5 }}
                                     transition={{ duration: 0.2 }}
-                                    className="w-full"
+                                    className={cn(
+                                        isMobile ? "w-[85%]" : "w-full"
+                                    )}
                                 >
                                     <Input
                                         type="text"
@@ -195,56 +252,108 @@ const Profile = () => {
                                 </motion.span>
                             )}
                         </AnimatePresence>
-                    </div>
-                    <div>
-                        <AnimatePresence mode="wait">
-                            {isEditingNickname ? (
-                                <motion.div
-                                    key="save-button"
-                                    initial={{ scale: 0.8, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    exit={{ scale: 0.8, opacity: 0 }}
-                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                        {isMobile && !isEditingNickname && (
+                            <motion.div
+                                key="edit-button-mobile"
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.8, opacity: 0 }}
+                                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                            >
+                                <Button
+                                    variant="ghost"
+                                    className="p-0 h-9 w-9 flex items-center justify-center"
+                                    onClick={() => {
+                                        setTempNickname(nickname);
+                                        setIsEditingNickname(true);
+                                    }}
                                 >
-                                    <Button
-                                        variant="outline"
-                                        size="icon"
-                                        className="h-8 w-8 rounded-full border border-soft-200"
-                                        onClick={handleSaveNickname}
-                                    >
-                                        <Icons.check_icon />
-                                    </Button>
-                                </motion.div>
-                            ) : (
-                                <motion.div
-                                    key="edit-button"
-                                    initial={{ scale: 0.8, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    exit={{ scale: 0.8, opacity: 0 }}
-                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                                >
-                                    <Button
-                                        variant="ghost"
-                                        className="p-0 h-9 w-9 flex items-center justify-center"
-                                        onClick={() => {
-                                            setTempNickname(nickname);
-                                            setIsEditingNickname(true);
-                                        }}
-                                    >
-                                        <Icons.pencil />
-                                    </Button>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                                    <Icons.pencil />
+                                </Button>
+                            </motion.div>
+                        )}
                     </div>
+                    {!isMobile && (
+                        <div>
+                            <AnimatePresence mode="wait">
+                                {isEditingNickname ? (
+                                    <motion.div
+                                        key="save-button"
+                                        initial={{ scale: 0.8, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        exit={{ scale: 0.8, opacity: 0 }}
+                                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                    >
+                                        <Button
+                                            variant="outline"
+                                            size="icon"
+                                            className="h-8 w-8 rounded-full border border-soft-200"
+                                            onClick={handleSaveNickname}
+                                        >
+                                            <Icons.check_icon />
+                                        </Button>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="edit-button"
+                                        initial={{ scale: 0.8, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        exit={{ scale: 0.8, opacity: 0 }}
+                                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                    >
+                                        <Button
+                                            variant="ghost"
+                                            className="p-0 h-9 w-9 flex items-center justify-center"
+                                            onClick={() => {
+                                                setTempNickname(nickname);
+                                                setIsEditingNickname(true);
+                                            }}
+                                        >
+                                            <Icons.pencil />
+                                        </Button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    )}
+                    {isMobile && isEditingNickname && (
+                        <motion.div
+                            key="save-button-mobile"
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                        >
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-8 w-8 rounded-full border border-soft-200"
+                                onClick={handleSaveNickname}
+                            >
+                                <Icons.check_icon />
+                            </Button>
+                        </motion.div>
+                    )}
                 </div>
+
                 <div className="border border-dashed w-full h-[1px] border-soft-200" />
-                <div className="flex items-center w-full justify-between">
-                    <div className="flex flex-col items-start gap-1 w-1/3">
+
+                {/* Web Links Section */}
+                <div className={cn(
+                    "flex w-full",
+                    isMobile ? "flex-col gap-3" : "items-center justify-between"
+                )}>
+                    <div className={cn(
+                        "flex flex-col items-start gap-1",
+                        isMobile ? "w-full" : "w-1/3"
+                    )}>
                         <span className="text-main-900 text-sm font-medium">Web Links</span>
                         <span className="text-sub-600 font-normal text-xs">Links for your company's website and social media accounts.</span>
                     </div>
-                    <div className="w-1/3 flex justify-start">
+                    <div className={cn(
+                        "flex",
+                        isMobile ? "w-full justify-between items-center" : "w-1/3 justify-start"
+                    )}>
                         <AnimatePresence mode="wait">
                             {isEditingWebLink ? (
                                 <motion.div
@@ -253,7 +362,9 @@ const Profile = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -5 }}
                                     transition={{ duration: 0.2 }}
-                                    className="w-full"
+                                    className={cn(
+                                        isMobile ? "w-[85%]" : "w-full"
+                                    )}
                                 >
                                     <Input
                                         type="text"
@@ -280,48 +391,88 @@ const Profile = () => {
                                 </motion.span>
                             )}
                         </AnimatePresence>
-                    </div>
-                    <div>
-                        <AnimatePresence mode="wait">
-                            {isEditingWebLink ? (
-                                <motion.div
-                                    key="save-button"
-                                    initial={{ scale: 0.8, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    exit={{ scale: 0.8, opacity: 0 }}
-                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                        {isMobile && !isEditingWebLink && (
+                            <motion.div
+                                key="edit-button-mobile"
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.8, opacity: 0 }}
+                                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                            >
+                                <Button
+                                    variant="ghost"
+                                    className="p-0 h-9 w-9 flex items-center justify-center"
+                                    onClick={() => {
+                                        setTempWebLink(webLink);
+                                        setIsEditingWebLink(true);
+                                    }}
                                 >
-                                    <Button
-                                        variant="outline"
-                                        size="icon"
-                                        className="h-8 w-8 rounded-full border border-soft-200"
-                                        onClick={handleSaveWebLink}
-                                    >
-                                        <Icons.check_icon />
-                                    </Button>
-                                </motion.div>
-                            ) : (
-                                <motion.div
-                                    key="edit-button"
-                                    initial={{ scale: 0.8, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    exit={{ scale: 0.8, opacity: 0 }}
-                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                                >
-                                    <Button
-                                        variant="ghost"
-                                        className="p-0 h-9 w-9 flex items-center justify-center"
-                                        onClick={() => {
-                                            setTempWebLink(webLink);
-                                            setIsEditingWebLink(true);
-                                        }}
-                                    >
-                                        <Icons.pencil />
-                                    </Button>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                                    <Icons.pencil />
+                                </Button>
+                            </motion.div>
+                        )}
                     </div>
+                    {!isMobile && (
+                        <div>
+                            <AnimatePresence mode="wait">
+                                {isEditingWebLink ? (
+                                    <motion.div
+                                        key="save-button"
+                                        initial={{ scale: 0.8, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        exit={{ scale: 0.8, opacity: 0 }}
+                                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                    >
+                                        <Button
+                                            variant="outline"
+                                            size="icon"
+                                            className="h-8 w-8 rounded-full border border-soft-200"
+                                            onClick={handleSaveWebLink}
+                                        >
+                                            <Icons.check_icon />
+                                        </Button>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="edit-button"
+                                        initial={{ scale: 0.8, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        exit={{ scale: 0.8, opacity: 0 }}
+                                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                    >
+                                        <Button
+                                            variant="ghost"
+                                            className="p-0 h-9 w-9 flex items-center justify-center"
+                                            onClick={() => {
+                                                setTempWebLink(webLink);
+                                                setIsEditingWebLink(true);
+                                            }}
+                                        >
+                                            <Icons.pencil />
+                                        </Button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    )}
+                    {isMobile && isEditingWebLink && (
+                        <motion.div
+                            key="save-button-mobile"
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                        >
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-8 w-8 rounded-full border border-soft-200"
+                                onClick={handleSaveWebLink}
+                            >
+                                <Icons.check_icon />
+                            </Button>
+                        </motion.div>
+                    )}
                 </div>
             </div>
         </div>
