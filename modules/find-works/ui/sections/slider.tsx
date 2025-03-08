@@ -41,7 +41,7 @@ const Slider = () => {
     };
 
     return (
-        <div className="relative max-w-[676px] h-[248px] rounded-2xl">
+        <div className="relative w-full xl:max-w-[676px] h-[248px] rounded-2xl">
             <Carousel
                 setApi={setApi}
                 opts={{
@@ -53,7 +53,7 @@ const Slider = () => {
                 <CarouselContent className="h-full rounded-2xl">
                     {slides.map((slide) => (
                         <CarouselItem key={slide.id} className="h-full">
-                            <div className="relative w-[676px] h-[248px] rounded-2xl overflow-hidden">
+                            <div className="relative xl:max-w-[676px] h-[248px] rounded-2xl overflow-hidden">
                                 <Image
                                     src={slide.image}
                                     alt={slide.title}

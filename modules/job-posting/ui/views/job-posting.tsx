@@ -46,7 +46,7 @@ const JobPostingSuspense = () => {
                 <span className="text-main-900 font-medium text-3xl">Create job</span>
                 <p className="text-[#525866] font-medium text-lg">Define details, set the budget and outline preferences</p>
             </div>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 pb-20 md:pb-0">
                 <BasicInformation form={form} />
                 <SelectCategory form={form} />
                 <Usage form={form} />

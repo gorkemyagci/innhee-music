@@ -173,26 +173,28 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                                         </motion.li>
                                     ))}
                                 </ul>
-                                <div className="flex flex-col gap-3 sm:gap-4 mt-2 sm:mt-4">
-                                    <Link href={pageUrls.SIGN_IN} prefetch onClick={closeMenu}>
-                                        <motion.div
-                                            whileTap={{ scale: 0.95 }}
-                                            className="w-full h-9 sm:h-10 flex items-center justify-center px-3 sm:px-4 text-center text-sm sm:text-base text-black font-medium tracking-tight rounded-lg border border-gray-200"
-                                        >
-                                            Login
-                                        </motion.div>
-                                    </Link>
-                                    <Link href={pageUrls.SIGN_UP} prefetch onClick={closeMenu}>
-                                        <motion.div
-                                            whileTap={{ scale: 0.95 }}
-                                            className="w-full"
-                                        >
-                                            <Button className="w-full flex items-center justify-center px-3 sm:px-4 h-9 sm:h-10 text-sm sm:text-base rounded-xl bg-[#20232D]">
-                                                Get Started
-                                            </Button>
-                                        </motion.div>
-                                    </Link>
-                                </div>
+                                {!isAuthenticated && (
+                                    <div className="flex flex-col gap-3 sm:gap-4 mt-2 sm:mt-4">
+                                        <Link href={pageUrls.SIGN_IN} prefetch onClick={closeMenu}>
+                                            <motion.div
+                                                whileTap={{ scale: 0.95 }}
+                                                className="w-full h-9 sm:h-10 flex items-center justify-center px-3 sm:px-4 text-center text-sm sm:text-base text-black font-medium tracking-tight rounded-lg border border-gray-200"
+                                            >
+                                                Login
+                                            </motion.div>
+                                        </Link>
+                                        <Link href={pageUrls.SIGN_UP} prefetch onClick={closeMenu}>
+                                            <motion.div
+                                                whileTap={{ scale: 0.95 }}
+                                                className="w-full"
+                                            >
+                                                <Button className="w-full flex items-center justify-center px-3 sm:px-4 h-9 sm:h-10 text-sm sm:text-base rounded-xl bg-[#20232D]">
+                                                    Get Started
+                                                </Button>
+                                            </motion.div>
+                                        </Link>
+                                    </div>
+                                )}
                             </div>
                         </motion.div>
                     )}
