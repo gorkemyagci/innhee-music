@@ -107,10 +107,10 @@ const Calendar = () => {
             <motion.div
                 id="calendar-sidebar"
                 className={cn(
-                    "border border-soft-200 rounded-[20px] bg-white z-50",
+                    "border border-soft-200 rounded-[20px] bg-white z-40",
                     "transition-all duration-300",
                     // Desktop styles
-                    "lg:static lg:flex-[2] lg:w-[352px] lg:min-h-[calc(100vh-114px)] lg:opacity-100 lg:pointer-events-auto",
+                    "lg:w-[352px] lg:shrink-0 lg:min-h-[calc(100vh-114px)] lg:opacity-100 lg:pointer-events-auto",
                     // Mobile and tablet styles - full screen when open
                     (isMobile || isTablet) && "fixed inset-4 shadow-xl"
                 )}

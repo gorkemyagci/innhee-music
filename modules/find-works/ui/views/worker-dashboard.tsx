@@ -5,7 +5,7 @@ import Slider from "../sections/slider";
 const WorkerDashboard = () => {
     return (
         <>
-            <div className="flex-[4] flex flex-col gap-4">
+            <div className="flex flex-col items-center gap-4">
                 <Slider />
                 <Projects />
             </div>

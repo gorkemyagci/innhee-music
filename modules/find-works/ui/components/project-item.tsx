@@ -46,7 +46,7 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
                     />
                     <div className="flex flex-col items-start gap-1">
                         <div className="flex items-center gap-2">
-                            <p className="text-[#222530] font-medium text-sm">{item.clientName}</p>
+                            <p className="text-sub-600 font-medium text-xs">{item.clientName}</p>
                             <div className="flex items-center gap-1">
                                 <Icons.star />
                                 <span className="text-sub-600 font-normal text-xs">{item.rating}({item.reviewCount})</span>
@@ -98,7 +98,7 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
 
                     {/* Description - hide on mobile */}
                     {!isMobile && (
-                        <p className="text-strong-950 font-normal text-sm line-clamp-2 max-w-3/4">{item.description}</p>
+                        <p className="text-strong-950 font-normal text-sm line-clamp-3 max-w-[85%]">{item.description}</p>
                     )}
 
                     {/* Badges */}
@@ -132,7 +132,7 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
                         isMobile ? "flex-row items-center" : "flex-col items-end"
                     )}>
                         <span className="text-[#525866] font-medium text-xs md:text-sm">
-                            {pathname !== "/" ? "Fixed Price" : "Budget"}
+                            Fixed Price
                         </span>
                         <span className="text-strong-950 font-medium text-base md:text-xl">${typeof item.price === 'number' ? item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : item.price}</span>
                     </div>

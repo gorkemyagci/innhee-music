@@ -22,7 +22,7 @@ const Notifications = ({ children }: NotificationsProps) => {
                 <DropdownMenuTrigger asChild>
                     {children}
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[360px] mt-4 py-0 border-soft-200 rounded-2xl z-50" align="end">
+                <DropdownMenuContent className="w-[360px] mt-5 py-0 border-soft-200 rounded-2xl z-[99999]" align="end">
                     <div className="py-4 px-5 flex items-center justify-between border-b border-soft-200">
                         <span className="text-strong-950 font-medium">Notifications</span>
                         <span className="text-primary-base font-medium text-sm">Mark all as read</span>

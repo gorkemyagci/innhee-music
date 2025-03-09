@@ -42,14 +42,14 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
 
         // If we have form values and API data, initialize selected items
         if (skillsData && Array.isArray(skillsData) && formSkillLevelIds.length > 0) {
-            const selectedLevels = skillsData.filter(level => 
+            const selectedLevels = skillsData.filter(level =>
                 formSkillLevelIds.includes(level.id)
             );
             setSelectedSkillLevels(selectedLevels);
         }
 
         if (toolsData && Array.isArray(toolsData) && formCandidateSourceIds.length > 0) {
-            const selectedToolItems = toolsData.filter(tool => 
+            const selectedToolItems = toolsData.filter(tool =>
                 formCandidateSourceIds.includes(tool.id)
             );
             setSelectedTools(selectedToolItems);
@@ -177,23 +177,13 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
                         <span className="text-sub-600 font-normal text-sm">(max. 4)</span>
                         <Icons.info className="size-5 text-sub-600 ml-1" />
                     </div>
-                    {selectedSkillLevels.length > 0 && (
-                        <span
-                            className="text-sub-600 font-medium text-xs border-b border-sub-600 cursor-pointer"
-                            onClick={handleClearAll}
-                        >
-                            Clear
-                        </span>
-                    )}
                 </div>
-                {skillLevelOptions.length > 0 && selectedSkillLevels.length < 4 && (
-                    <CustomSelect
-                        options={skillLevelOptions}
-                        value={selectedSkillLevel}
-                        onChange={handleSelectSkillLevel}
-                        className="w-full mt-2"
-                    />
-                )}
+                <CustomSelect
+                    options={skillLevelOptions}
+                    value={selectedSkillLevel}
+                    onChange={handleSelectSkillLevel}
+                    className="w-full mt-2"
+                />
                 <div className="flex flex-wrap gap-2 pt-2 w-full">
                     <AnimatePresence>
                         {selectedSkillLevels.length > 0 ? (
@@ -203,14 +193,14 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
-                                    className="flex items-center justify-center gap-0.5 pr-1 pl-2 h-6 rounded-md border border-sub-600 bg-white"
+                                    className="flex items-center justify-center gap-0.5 pr-1 pl-2 h-6 rounded-md border border-soft-200 bg-white"
                                 >
                                     <span className="text-sub-600 text-xs font-medium">{skill.name}</span>
                                     <button
                                         onClick={() => handleRemoveSkillLevel(skill.id)}
                                         className="flex items-center justify-center cursor-pointer"
                                     >
-                                        <Icons.close className="size-[14px] stroke-sub-600" />
+                                        <Icons.close className="size-[14px] stroke-soft-400" />
                                     </button>
                                 </motion.div>
                             ))
@@ -225,23 +215,13 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
                         <span className="text-sub-600 font-medium text-sm">Tools</span>
                         <Icons.info className="size-5 text-sub-600 ml-1" />
                     </div>
-                    {selectedTools.length > 0 && (
-                        <span
-                            className="text-sub-600 font-medium text-xs border-b border-sub-600 cursor-pointer"
-                            onClick={handleClearAllTools}
-                        >
-                            Clear
-                        </span>
-                    )}
                 </div>
-                {toolOptions.length > 0 && selectedTools.length < 4 && (
-                    <CustomSelect
-                        options={toolOptions}
-                        value={selectedTool}
-                        onChange={handleSelectTool}
-                        className="w-full mt-2"
-                    />
-                )}
+                <CustomSelect
+                    options={toolOptions}
+                    value={selectedTool}
+                    onChange={handleSelectTool}
+                    className="w-full mt-2"
+                />
                 <div className="flex flex-wrap gap-2 pt-2 w-full">
                     <AnimatePresence>
                         {selectedTools.length > 0 ? (
@@ -251,14 +231,14 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
-                                    className="flex items-center justify-center gap-0.5 pr-1 pl-2 h-6 rounded-md border border-sub-600 bg-white"
+                                    className="flex items-center justify-center gap-0.5 pr-1 pl-2 h-6 rounded-md border border-soft-200 bg-white"
                                 >
                                     <span className="text-sub-600 text-xs font-medium">{tool.name}</span>
                                     <button
                                         onClick={() => handleRemoveTool(tool.id)}
                                         className="flex items-center justify-center cursor-pointer"
                                     >
-                                        <Icons.close className="size-[14px] stroke-sub-600" />
+                                        <Icons.close className="size-[14px] stroke-soft-400" />
                                     </button>
                                 </motion.div>
                             ))

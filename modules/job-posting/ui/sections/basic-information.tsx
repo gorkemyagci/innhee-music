@@ -20,6 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useQueryState } from "nuqs";
+import { Separator } from "@/components/ui/separator";
 
 const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
@@ -32,7 +33,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
         // Initialize textarea value
         const detail = form.getValues("detail") || "";
         setText(detail);
-        
+
         // Initialize amount input
         const salary = form.getValues("salary");
         if (salary && salary > 0) {
@@ -52,7 +53,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
     const isOpen = tab === "basic-information";
 
     return (
-        <Card className={cn("w-full lg:w-full max-w-[350px] lg:w-[440px] border-soft-200 rounded-[20px] shadow-none", !isOpen && "pb-2")}>
+        <Card className={cn("w-full lg:w-[440px] border-soft-200 rounded-[20px] shadow-none", !isOpen && "pb-2")}>
             <CardHeader
                 onClick={toggleOpen}
                 className={cn("bg-transparent border-soft-200 pb-4 pr-6 pl-5 flex flex-row items-center justify-between cursor-pointer", !isOpen ? "border-b-none" : "border-b")}
@@ -214,7 +215,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                         control={form.control}
                                         name="budgetsActive"
                                         render={({ field }) => (
-                                            <FormItem className="flex items-center space-x-2.5">
+                                            <FormItem className="flex items-center space-x-2">
                                                 <FormControl>
                                                     <Switch
                                                         checked={field.value}
@@ -234,6 +235,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                 </form>
                             </Form>
                         </CardContent>
+                        <Separator className="bg-soft-200 my-5" />
                         <CardFooter className="flex justify-end p-5 pb-0 pt-0">
                             <SubmitButton text="Next" className="h-9 w-14 rounded-lg" onClick={() => setTab("select-category")} />
                         </CardFooter>

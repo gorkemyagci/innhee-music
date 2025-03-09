@@ -26,7 +26,7 @@ const Modal = ({ children, open = false, setOpen = () => { } }: ModalProps) => {
     return (
         <Dialog open={open} onOpenChange={setOpen} modal={true}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="sm:max-w-5xl p-0 h-[680px] overflow-hidden gap-0 z-50 w-full flex flex-col lg:flex-row items-start justify-start bg-white rounded-3xl">
+            <DialogContent className="sm:max-w-5xl p-0 h-[680px] z-[9999] overflow-hidden gap-0 w-full flex flex-col lg:flex-row items-start justify-start bg-white rounded-3xl">
                 <div className="lg:w-56 w-full flex flex-col items-start gap-2.5 p-6 border-r border-soft-200 lg:h-full">
                     <DialogHeader>
                         <DialogTitle className="text-soft-400 font-medium text-xs">SETTINGS</DialogTitle>

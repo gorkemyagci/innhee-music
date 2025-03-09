@@ -6,7 +6,6 @@ import Skills from "../sections/sidebar/skills";
 import Tags from "../sections/sidebar/tags";
 import About from "../sections/sidebar/about";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { Menu as MenuIcon, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,20 +30,14 @@ const Sidebar = () => {
 
     useEffect(() => {
         if (isMobile && isMobileOpen) {
-            // Disable scroll on body when sidebar is open
             document.body.style.overflow = 'hidden';
         } else {
-            // Enable scroll on body when sidebar is closed
             document.body.style.overflow = '';
         }
-
-        // Cleanup function to ensure scroll is re-enabled when component unmounts
         return () => {
             document.body.style.overflow = '';
         };
     }, [isMobile, isMobileOpen]);
-
-    // Close sidebar when clicking outside on mobile
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (isMobile && isMobileOpen) {
@@ -59,7 +52,6 @@ const Sidebar = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isMobile, isMobileOpen]);
 
-    // Don't render anything until we've determined if it's mobile or not
     if (isLoading) {
         return null;
     }
@@ -97,7 +89,7 @@ const Sidebar = () => {
             <motion.div 
                 id="sidebar"
                 className={cn(
-                    "border border-soft-200 pb-6 flex-[2] w-[300px] min-h-[calc(100vh-114px)] rounded-[20px] bg-white",
+                    "border border-soft-200 pb-6 w-[300px] lg:shrink-0 min-h-[calc(100vh-114px)] rounded-[20px] bg-white",
                     "transition-all duration-300 ease-in-out",
                     // Mobile styles
                     "lg:static lg:translate-x-0 lg:opacity-100 lg:pointer-events-auto",

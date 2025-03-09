@@ -147,10 +147,10 @@ const FilterSuspense = () => {
                     <motion.div
                         ref={filterRef}
                         className={cn(
-                            "bg-white border border-soft-200 xl:w-[314px] rounded-[20px] flex flex-col",
+                            "bg-white flex flex-col",
                             "transition-all duration-300",
                             // Desktop styles
-                            !isMobile && "min-w-[300px] flex-1 pb-4 min-h-[calc(100vh-114px)] static opacity-100 pointer-events-auto",
+                            !isMobile && "w-[342px] shrink-0 pb-4 min-h-[calc(100vh-114px)] static opacity-100 pointer-events-auto",
                             // Mobile styles
                             isMobile && "fixed inset-4 z-50 max-h-[90vh] overflow-hidden"
                         )}

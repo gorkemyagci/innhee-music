@@ -43,10 +43,10 @@ const JobPostingSuspense = () => {
     return (
         <div className="flex-1 mx-auto flex flex-col gap-5 justify-center items-center">
             <div className="flex flex-col items-center gap-1.5">
-                <span className="text-main-900 font-medium text-3xl">Create job</span>
+                <span className="text-main-900 font-medium text-[32px]">Create job</span>
                 <p className="text-[#525866] font-medium text-lg">Define details, set the budget and outline preferences</p>
             </div>
-            <div className="flex flex-col gap-4 pb-20 md:pb-0">
+            <div className="flex flex-col gap-8 pb-20 md:pb-0">
                 <BasicInformation form={form} />
                 <SelectCategory form={form} />
                 <Usage form={form} />

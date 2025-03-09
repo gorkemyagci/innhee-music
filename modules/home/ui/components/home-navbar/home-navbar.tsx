@@ -109,7 +109,7 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
     return (
         <>
             <div className="h-[4.5rem] w-full" />
-            <div className="fixed top-0 left-0 right-0 w-full z-[9999]">
+            <div className="fixed top-0 left-0 right-0 w-full z-50">
                 {isMobile ? (
                     <motion.nav
                         className={cn("h-[4.5rem] w-full bg-white",

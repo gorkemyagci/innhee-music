@@ -73,10 +73,10 @@ const Projects = () => {
     };
 
     return (
-        <div className="flex flex-col items-start gap-4 w-full pr-1">
+        <div className="flex flex-col items-start gap-4 pr-1 lg:w-[676px]">
             <div className="flex flex-col md:flex-row md:items-center w-full justify-between gap-4 md:gap-0">
                 <div className="flex items-center justify-between w-full md:w-auto">
-                    <p className="text-main-900 font-medium text-lg">Projects</p>
+                    <p className="text-main-900 font-medium text-base">Projects</p>
 
                     {/* Mobile more button */}
                     {isMobile && (
@@ -145,7 +145,7 @@ const Projects = () => {
                 </div>
 
                 {/* Desktop more link */}
-                <span className="hidden md:inline-block text-sub-600 font-medium text-sm cursor-pointer">
+                <span className="hidden md:inline-block border-b border-sub-600 text-sub-600 font-medium text-xs cursor-pointer">
                     More
                 </span>
             </div>

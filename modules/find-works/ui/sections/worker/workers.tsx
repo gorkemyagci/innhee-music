@@ -61,7 +61,7 @@ const Workers = () => {
                             />
                             <div className="flex flex-col items-start gap-1 sm:gap-1.5">
                                 <div className="flex flex-wrap items-center gap-1 sm:gap-2">
-                                    <span className="text-sub-600 font-medium text-sm">{item.name}</span>
+                                    <span className="text-sub-600 font-medium text-xs">{item.name}</span>
                                     <div className="flex items-center gap-0.5">
                                         <Icons.star className={isMobile ? "size-3" : ""} />
                                         <span className="text-sub-600 font-normal text-[10px] sm:text-xs">{item.rating}({item.reviewCount})</span>
@@ -69,15 +69,15 @@ const Workers = () => {
                                 </div>
                                 <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                                     <div className="flex items-center gap-1">
-                                        <Icons.google className="size-3.5 md:size-4" />
+                                        <Icons.dollar_square className="size-3.5 md:size-4" />
                                         <span className="text-sub-600 text-[10px] md:text-xs font-medium">{item.jobType}</span>
                                     </div>
                                     <div className="flex items-center gap-1">
-                                        <Icons.google className="size-3.5 md:size-4" />
+                                        <Icons.map className="size-3.5 md:size-4" />
                                         <span className="text-sub-600 text-[10px] md:text-xs font-medium">{item.workType}</span>
                                     </div>
                                     <div className="flex items-center gap-1">
-                                        <Icons.google className="size-3.5 md:size-4" />
+                                        <Icons.profile_star className="size-3.5 md:size-4 fill-[#253EA7]" />
                                         <span className="text-sub-600 text-[10px] md:text-xs font-medium">{item.specialization}</span>
                                     </div>
                                 </div>
@@ -119,7 +119,7 @@ const Workers = () => {
                                         exit={{ opacity: 0 }}
                                         className="absolute inset-0 rounded-md flex items-center justify-center"
                                     >
-                                        <Icons.heart className={cn(isMobile ? "size-5" : "size-6")} />
+                                        <Icons.heart className="size-5"/>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
