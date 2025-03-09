@@ -47,7 +47,7 @@ export const featuredJobs = [
     {
         id: 1,
         clientName: "Cleve Music",
-        clientAvatar: "/assets/images/profile.png",
+        clientAvatar: "/assets/images/avatar-3.png",
         rating: 4.9,
         reviewCount: 125,
         jobType: "Salary",
@@ -64,12 +64,12 @@ export const featuredJobs = [
     {
         id: 2,
         clientName: "Melody Studios",
-        clientAvatar: "/assets/images/profile.png",
+        clientAvatar: "/assets/images/avatar-3.png",
         rating: 4.8,
         reviewCount: 98,
-        jobType: "Hourly",
-        workType: "Remote",
-        specialization: "Expert",
+        jobType: "Salary",
+        workType: "Work",
+        specialization: "Specia",
         title: "Music producer needed for pop album",
         skills: ["Production", "Mixing", "Mastering", "Vocals", "Arrangement"],
         description: "Looking for an experienced music producer to help finalize our upcoming pop album. The ideal candidate will have experience with vocal production and modern pop arrangements...",
@@ -85,7 +85,7 @@ export const workers = [
     {
         id: 1,
         name: "Cleve Music",
-        avatar: "/assets/images/profile.png",
+        avatar: "/assets/images/avatar-3.png",
         rating: 4.9,
         reviewCount: 125,
         jobType: "Salary",
@@ -98,7 +98,7 @@ export const workers = [
     {
         id: 2,
         name: "Cleve Music",
-        avatar: "/assets/images/profile.png",
+        avatar: "/assets/images/avatar-3.png",
         rating: 4.9,
         reviewCount: 125,
         jobType: "Salary",
@@ -111,7 +111,7 @@ export const workers = [
     {
         id: 3,
         name: "Cleve Music",
-        avatar: "/assets/images/profile.png",
+        avatar: "/assets/images/avatar-3.png",
         rating: 4.9,
         reviewCount: 125,
         jobType: "Salary",
@@ -124,7 +124,7 @@ export const workers = [
     {
         id: 4,
         name: "Cleve Music",
-        avatar: "/assets/images/profile.png",
+        avatar: "/assets/images/avatar-3.png",
         rating: 4.9,
         reviewCount: 125,
         jobType: "Salary",
@@ -137,7 +137,7 @@ export const workers = [
     {
         id: 5,
         name: "Cleve Music",
-        avatar: "/assets/images/profile.png",
+        avatar: "/assets/images/avatar-3.png",
         rating: 4.9,
         reviewCount: 125,
         jobType: "Salary",
@@ -150,7 +150,7 @@ export const workers = [
     {
         id: 6,
         name: "Cleve Music",
-        avatar: "/assets/images/profile.png",
+        avatar: "/assets/images/avatars-3.png",
         rating: 4.9,
         reviewCount: 125,
         jobType: "Salary",

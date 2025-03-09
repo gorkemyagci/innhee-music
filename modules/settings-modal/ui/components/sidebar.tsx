@@ -11,7 +11,6 @@ const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
     const [isMobile, setIsMobile] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Check if we're on mobile when component mounts and when window resizes
     useEffect(() => {
         const checkIfMobile = () => {
             setIsMobile(window.innerWidth < 1024);
@@ -20,11 +19,9 @@ const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
         
         // Initial check
         checkIfMobile();
-        
-        // Add event listener for window resize
+
         window.addEventListener("resize", checkIfMobile);
         
-        // Cleanup
         return () => window.removeEventListener("resize", checkIfMobile);
     }, []);
 
@@ -38,7 +35,6 @@ const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
         { label: "Billing", icon: <Icons.dollar_circle className={cn(activeTab === "billing" && "fill-strong-950")} />, tab: "billing" }
     ];
 
-    // Don't render until we've determined if it's mobile or not
     if (isLoading) {
         return null;
     }

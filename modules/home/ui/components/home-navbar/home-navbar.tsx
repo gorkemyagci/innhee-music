@@ -41,27 +41,20 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
         <div className="max-w-[1440px] mx-auto w-full h-full flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-5">
                 <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="scale-90 sm:scale-100"
                 >
                     <Link href={pageUrls.HOME} prefetch>
                         <Icons.logo />
                     </Link>
                 </motion.div>
-                <ul className="hidden lg:flex items-center gap-0">
+                <ul className="hidden lg:flex items-center gap-1">
                     {navItems.map((item, index) => (
                         <motion.li
                             key={index}
-                            className={cn("py-2 px-3",
-                                pathname === item.href && "bg-weak-50 rounded-lg"
+                            className={cn("pr-3 pl-2 py-2 hover:bg-weak-50 transition-all duration-200 rounded-lg"
                             )}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
                         >
                             <Link href={item.href} prefetch className="flex items-center gap-1.5">
-                                {item.icon}
-                                <span className="text-black font-medium tracking-tight">{item.label}</span>
+                                <span className="text-sub-600 text-sm font-medium tracking-tight">{item.label}</span>
                             </Link>
                         </motion.li>
                     ))}
@@ -116,7 +109,7 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
     return (
         <>
             <div className="h-[4.5rem] w-full" />
-            <div className="fixed top-0 left-0 right-0 w-full z-30">
+            <div className="fixed top-0 left-0 right-0 w-full z-[9999]">
                 {isMobile ? (
                     <motion.nav
                         className={cn("h-[4.5rem] w-full bg-white",

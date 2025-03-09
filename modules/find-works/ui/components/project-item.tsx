@@ -20,13 +20,13 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
             setIsMobile(width < 640);
             setIsTablet(width >= 640 && width < 1024);
         };
-        
+
         // Initial check
         checkScreenSize();
-        
+
         // Add event listener for window resize
         window.addEventListener("resize", checkScreenSize);
-        
+
         // Cleanup
         return () => window.removeEventListener("resize", checkScreenSize);
     }, []);
@@ -42,11 +42,11 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
                     <UserAvatar
                         imageUrl={item.clientAvatar}
                         name={item.clientName}
-                        className="h-8 w-8 md:h-10 md:w-10"
+                        className="h-10 w-10 md:h-12 md:w-12"
                     />
                     <div className="flex flex-col items-start gap-1">
                         <div className="flex items-center gap-2">
-                            <p className="text-sub-600 font-medium text-xs">{item.clientName}</p>
+                            <p className="text-[#222530] font-medium text-sm">{item.clientName}</p>
                             <div className="flex items-center gap-1">
                                 <Icons.star />
                                 <span className="text-sub-600 font-normal text-xs">{item.rating}({item.reviewCount})</span>
@@ -55,11 +55,11 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
                         <div className="flex flex-wrap items-center gap-1.5 md:gap-2.5">
                             <div className="flex items-center gap-1">
                                 <Icons.dollar_square className="size-3 md:size-4" />
-                                <span className="text-sub-500 text-[10px] md:text-xs font-medium">{item.jobType}</span>
+                                <span className="text-sub-600 text-[10px] md:text-xs font-medium">{item.jobType}</span>
                             </div>
                             <div className="flex items-center gap-1">
                                 <Icons.map className="size-3 md:size-4" />
-                                <span className="text-sub-500 text-[10px] md:text-xs font-medium">{item.workType}</span>
+                                <span className="text-sub-600 text-[10px] md:text-xs font-medium">{item.workType}</span>
                             </div>
                             <div className="flex items-center gap-1">
                                 <Icons.star className="size-3 md:size-4 fill-blue-800" />
@@ -81,7 +81,7 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
                 {/* Left side - project details */}
                 <div className="flex flex-col items-start gap-3 md:gap-4 w-full">
                     <p className="text-strong-950 font-medium text-lg md:text-xl line-clamp-2">{item.title}</p>
-                    
+
                     {/* Skills */}
                     <div className="flex flex-wrap items-center gap-1.5 md:gap-2">
                         {item.skills.slice(0, isMobile ? 3 : undefined).map((skill, index) => (
@@ -95,25 +95,30 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
                             </div>
                         )}
                     </div>
-                    
+
                     {/* Description - hide on mobile */}
                     {!isMobile && (
-                        <p className="text-strong-950 font-normal text-sm line-clamp-2">{item.description}</p>
+                        <p className="text-strong-950 font-normal text-sm line-clamp-2 max-w-3/4">{item.description}</p>
                     )}
-                    
+
                     {/* Badges */}
                     <div className="flex flex-wrap items-center gap-1.5 md:gap-2">
-                        <Badge className="flex items-center gap-0.5 py-1 md:py-1.5 px-2 md:px-3 rounded-full bg-neutral-100 border border-neutral-200 text-sub-600 font-medium text-[10px] md:text-[11px] whitespace-nowrap">
+                        <Badge className="flex h-7 items-center gap-0.5 py-1 md:py-1.5 px-2 md:px-3 rounded-full bg-neutral-100 border border-neutral-200 text-sub-600 font-medium text-[10px] md:text-[11px] whitespace-nowrap">
                             <Icons.timeline className="size-3 md:size-3.5" /> {item.deadline}
                         </Badge>
                         {!isMobile && (
-                            <Badge className="flex items-center gap-0.5 py-1 md:py-1.5 px-2 md:px-3 rounded-full bg-neutral-100 border border-neutral-200 text-sub-600 font-medium text-[10px] md:text-[11px] whitespace-nowrap">
+                            <Badge className="flex h-7 items-center gap-0.5 py-1 md:py-1.5 px-2 md:px-3 rounded-full bg-neutral-100 border border-neutral-200 text-sub-600 font-medium text-[10px] md:text-[11px] whitespace-nowrap">
                                 <Icons.calendar_line className="size-3 md:size-3.5" />Deadline date
                             </Badge>
                         )}
-                        <Badge className="flex items-center gap-0.5 py-1 md:py-1.5 px-2 md:px-3 rounded-full bg-neutral-100 border border-neutral-200 text-sub-600 font-medium text-[10px] md:text-[11px] whitespace-nowrap">
-                            <Icons.users className="size-3 md:size-3.5" /> {item.proposalsSent} sent
+                        <Badge className="flex h-7 items-center gap-0.5 py-1 md:py-1.5 px-2 md:px-3 rounded-full bg-neutral-100 border border-neutral-200 text-sub-600 font-medium text-[10px] md:text-[11px] whitespace-nowrap">
+                            <Icons.users className="size-3 md:size-3.5" /> {item.proposalsSent} sent proposal
                         </Badge>
+                        {pathname === "/find-jobs" && (
+                            <Badge className="flex h-7 items-center gap-0.5 py-1 md:py-1.5 px-2 md:px-3 rounded-full bg-neutral-100 border border-neutral-200 text-sub-600 font-medium text-[10px] md:text-[11px] whitespace-nowrap">
+                                <Icons.group_line_users className="size-3 md:size-3.5" /> Business contract
+                            </Badge>
+                        )}
                     </div>
                 </div>
 
@@ -126,11 +131,13 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
                         "flex gap-2",
                         isMobile ? "flex-row items-center" : "flex-col items-end"
                     )}>
-                        <span className="text-[#525866] font-medium text-xs md:text-sm">{item.priceType}</span>
+                        <span className="text-[#525866] font-medium text-xs md:text-sm">
+                            {pathname !== "/" ? "Fixed Price" : "Budget"}
+                        </span>
                         <span className="text-strong-950 font-medium text-base md:text-xl">${typeof item.price === 'number' ? item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : item.price}</span>
                     </div>
-                    <Button 
-                        variant="outline" 
+                    <Button
+                        variant="outline"
                         size={isMobile ? "sm" : "default"}
                         className={cn(
                             "border border-soft-200 text-sub-600 font-medium text-sm",

@@ -36,11 +36,11 @@ const AudioWorkers = () => {
                             <div className="flex items-center gap-2">
                                 <div className="flex items-center gap-1">
                                     <Icons.dollar_square className="size-3.5 md:size-4" />
-                                    <span className="text-sub-500 text-[10px] md:text-xs font-medium">Salary</span>
+                                    <span className="text-sub-600 text-[10px] md:text-xs font-medium">Salary</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <Icons.map className="size-3.5 md:size-4" />
-                                    <span className="text-sub-500 text-[10px] md:text-xs font-medium">Work</span>
+                                    <span className="text-sub-600 text-[10px] md:text-xs font-medium">Work</span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <Icons.star className="size-3.5 md:size-4 fill-blue-800" />

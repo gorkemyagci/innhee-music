@@ -32,7 +32,7 @@ const Price = () => {
                             left: `${((priceRange[0] - minPrice) / (maxPrice - minPrice)) * 100}%` 
                         }}
                     >
-                        <div className="bg-strong-950 text-white px-3 py-1 rounded-md translate-x-1 text-xs font-medium relative">
+                        <div className="bg-strong-950 text-white px-3 py-1 rounded-md translate-x-1 text-xs font-normal relative">
                         {formatPrice(priceRange[0])}
                             <div className="absolute w-2 h-2 bg-strong-950 rotate-45 -bottom-1 left-1/2 transform -translate-x-1/2"></div>
                         </div>
@@ -44,7 +44,7 @@ const Price = () => {
                             left: `${((priceRange[1] - minPrice) / (maxPrice - minPrice)) * 100}%` 
                         }}
                     >
-                        <div className="bg-strong-950 text-white px-3 py-1 -translate-x-1 rounded-md text-xs font-medium relative">
+                        <div className="bg-strong-950 text-white px-3 py-1 -translate-x-1 rounded-md text-xs font-normal relative">
                         {formatPrice(priceRange[1])}
                             <div className="absolute w-2 h-2 bg-strong-950 rotate-45 -bottom-1 left-1/2 transform -translate-x-1/2"></div>
                         </div>

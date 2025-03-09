@@ -16,24 +16,19 @@ const Sidebar = () => {
     const [isMobile, setIsMobile] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Check if we're on mobile when component mounts and when window resizes
     useEffect(() => {
         const checkIfMobile = () => {
             setIsMobile(window.innerWidth < 1024);
             setIsLoading(false);
         };
-        
-        // Initial check
+    
         checkIfMobile();
         
-        // Add event listener for window resize
         window.addEventListener("resize", checkIfMobile);
         
-        // Cleanup
         return () => window.removeEventListener("resize", checkIfMobile);
     }, []);
 
-    // Toggle body scroll when sidebar is open/closed
     useEffect(() => {
         if (isMobile && isMobileOpen) {
             // Disable scroll on body when sidebar is open
@@ -102,7 +97,7 @@ const Sidebar = () => {
             <motion.div 
                 id="sidebar"
                 className={cn(
-                    "border border-soft-200 pb-6 flex-[2] max-w-[300px] min-h-[calc(100vh-114px)] rounded-[20px] bg-white",
+                    "border border-soft-200 pb-6 flex-[2] w-[300px] min-h-[calc(100vh-114px)] rounded-[20px] bg-white",
                     "transition-all duration-300 ease-in-out",
                     // Mobile styles
                     "lg:static lg:translate-x-0 lg:opacity-100 lg:pointer-events-auto",

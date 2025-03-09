@@ -62,7 +62,7 @@ const Slider = () => {
     }
 
     return (
-        <div className="relative w-full xl:max-w-[676px] h-[248px] rounded-2xl">
+        <div className="relative w-full xl:w-[676px] h-[248px] rounded-2xl">
             <Carousel
                 setApi={setApi}
                 opts={{
@@ -86,8 +86,8 @@ const Slider = () => {
                                  className="absolute bottom-0 right-0 z-10 opacity-10" 
                                 />
                                 <div className="absolute inset-0 bg-[#253337] z-0 flex flex-col justify-center p-8">
-                                    <h2 className="text-4xl font-medium text-white mb-2">{slide.title}</h2>
-                                    <p className="text-[#CDD0D5] text-sm max-w-[350px] line-clamp-2">{slide.description}</p>
+                                    <h2 className="text-[32px] font-medium text-white mb-2">{slide.title}</h2>
+                                    <p className="text-[#CDD0D5] text-sm font-medium max-w-[350px] line-clamp-2">{slide.description}</p>
                                 </div>
                             </div>
                         </CarouselItem>

@@ -110,7 +110,7 @@ const Calendar = () => {
                     "border border-soft-200 rounded-[20px] bg-white z-50",
                     "transition-all duration-300",
                     // Desktop styles
-                    "lg:static lg:flex-[2] lg:max-w-[352px] lg:min-h-[calc(100vh-114px)] lg:opacity-100 lg:pointer-events-auto",
+                    "lg:static lg:flex-[2] lg:w-[352px] lg:min-h-[calc(100vh-114px)] lg:opacity-100 lg:pointer-events-auto",
                     // Mobile and tablet styles - full screen when open
                     (isMobile || isTablet) && "fixed inset-4 shadow-xl"
                 )}
@@ -132,13 +132,13 @@ const Calendar = () => {
                         {(isMobile || isTablet) && (
                             <div className="p-4 flex items-center justify-between w-full">
                                 <div className="flex items-center gap-2">
-                                    <Icons.calendar_line className="size-5" />
+                                    <Icons.calendar_line className="size-6" />
                                     <span className="text-strong-950 font-medium">Calendar</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Button
                                         variant="outline"
-                                        className="border border-soft-200 p-1.5 h-8 w-16 flex items-center justify-center text-sub-600 font-medium text-sm"
+                                        className="border border-soft-200 p-1.5 h-8 w-[66px] flex items-center justify-center text-sub-600 font-medium text-sm"
                                     >
                                         See All
                                     </Button>

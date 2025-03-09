@@ -94,7 +94,7 @@ const DatePicker = () => {
         <div className="p-4 flex flex-col gap-4 items-start w-full">
             <div className="w-full flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <Icons.calendar_line className="size-5" />
+                    <Icons.calendar_line className="size-6" />
                     <span className="text-strong-950 font-medium">Calendar</span>
                 </div>
                 <Button

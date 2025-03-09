@@ -37,6 +37,20 @@ const mockMeetings: Meeting[] = [
         startDate: "JANUARY 28, 2025",
         amount: 253,
         status: "Overdue"
+    },
+    {
+        id: "4",
+        title: "Meeting with Arthur Taylor",
+        startDate: "JANUARY 28, 2025",
+        amount: 253,
+        status: "Overdue"
+    },
+    {
+        id: "5",
+        title: "Meeting with Arthur Taylor",
+        startDate: "JANUARY 28, 2025",
+        amount: 253,
+        status: "Overdue"
     }
 ];
 
@@ -58,7 +72,7 @@ const Timeline = () => {
             case "Overdue":
                 return (
                     <div className="flex items-center gap-1 text-white bg-error-base pr-2 pl-1 h-5 py-0.5 rounded-full">
-                        <Icons.warning className="size-4" />
+                        <Icons.overdue className="size-4" />
                         <span className="text-xs font-medium">Overdue</span>
                     </div>
                 );
@@ -112,7 +126,7 @@ const Timeline = () => {
                         className="bg-weak-50 rounded-[12px] p-4 flex flex-col gap-4"
                     >
                         <div>
-                            <h3 className="text-sm not-only-of-type:font-medium text-strong-950">{meeting.title}</h3>
+                            <h3 className="text-sm font-medium text-strong-950">{meeting.title}</h3>
                             <p className="text-soft-400 text-[11px]">STARTED ON {meeting.startDate}</p>
                         </div>
                         <div className="flex justify-between items-center">
