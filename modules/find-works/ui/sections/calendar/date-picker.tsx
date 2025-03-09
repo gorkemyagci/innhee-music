@@ -99,7 +99,7 @@ const DatePicker = () => {
                 </div>
                 <Button
                     variant="outline"
-                    className="border border-soft-200 p-1.5 h-8 w-16 flex items-center justify-center text-sub-600 font-medium text-sm"
+                    className="border border-soft-200 p-1.5 tracking-[-0.6%] h-8 w-16 flex items-center justify-center text-sub-600 font-medium text-sm"
                     onClick={() => {}}
                 >
                     {currentView === 'week' ? 'See All' : 'Week'}

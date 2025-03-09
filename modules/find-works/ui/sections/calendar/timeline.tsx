@@ -83,15 +83,15 @@ const Timeline = () => {
 
     return (
         <div className="w-full">
-            <Tabs 
-                defaultValue="7-days" 
+            <Tabs
+                defaultValue="7-days"
                 value={activeTab}
                 onValueChange={setActiveTab}
                 className="w-full max-w-md mx-auto border-b border-soft-200 flex items-center justify-center"
             >
                 <TabsList className="grid grid-cols-3 bg-transparent h-auto p-0">
-                    <TabsTrigger 
-                        value="7-days" 
+                    <TabsTrigger
+                        value="7-days"
                         className="relative cursor-pointer text-sm py-4 px-6 font-medium data-[state=active]:bg-transparent data-[state=active]:text-strong-950 data-[state=active]:shadow-none text-sub-600 hover:text-gray-700 rounded-none border-0 h-auto"
                     >
                         7 Days
@@ -99,8 +99,8 @@ const Timeline = () => {
                             <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900"></div>
                         )}
                     </TabsTrigger>
-                    <TabsTrigger 
-                        value="15-days" 
+                    <TabsTrigger
+                        value="15-days"
                         className="relative cursor-pointer text-sm py-4 px-6 font-medium data-[state=active]:bg-transparent data-[state=active]:text-strong-950 data-[state=active]:shadow-none text-sub-600 hover:text-gray-700 rounded-none border-0 h-auto"
                     >
                         15 Days
@@ -108,8 +108,8 @@ const Timeline = () => {
                             <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900"></div>
                         )}
                     </TabsTrigger>
-                    <TabsTrigger 
-                        value="30-days" 
+                    <TabsTrigger
+                        value="30-days"
                         className="relative cursor-pointer text-sm py-4 px-6 font-medium data-[state=active]:bg-transparent data-[state=active]:text-strong-950 data-[state=active]:shadow-none text-sub-600 hover:text-gray-700 rounded-none border-0 h-auto"
                     >
                         30 Days
@@ -121,8 +121,8 @@ const Timeline = () => {
             </Tabs>
             <div className="flex flex-col p-4 gap-2.5">
                 {mockMeetings.map((meeting) => (
-                    <div 
-                        key={meeting.id} 
+                    <div
+                        key={meeting.id}
                         className="bg-weak-50 rounded-[12px] p-4 flex flex-col gap-4"
                     >
                         <div>
