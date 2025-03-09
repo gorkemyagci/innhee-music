@@ -126,8 +126,8 @@ const Timeline = () => {
                         className="bg-weak-50 rounded-[12px] p-4 flex flex-col gap-4"
                     >
                         <div>
-                            <h3 className="text-sm font-medium text-strong-950">{meeting.title}</h3>
-                            <p className="text-soft-400 text-[11px]">STARTED ON {meeting.startDate}</p>
+                            <h3 className="text-sm font-medium text-strong-950 tracking-[-0.6%]">{meeting.title}</h3>
+                            <p className="text-soft-400 text-[11px] tracking-[2%]">STARTED ON {meeting.startDate}</p>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-xs font-normal text-sub-600">${meeting.amount.toLocaleString()}</span>
