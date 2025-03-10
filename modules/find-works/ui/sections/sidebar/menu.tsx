@@ -4,7 +4,7 @@ import Link from "next/link";
 const Menu = () => {
     const menuItems = [
         { label: "My Home", icon: <Icons.home_line className="fill-current" />, href: "#" },
-        { label: "Order", icon: <Icons.briefcase_line className="fill-current" />, href: "/orders" },
+        { label: "Order", icon: <Icons.briefcase_line className="fill-current" />, href: "/settings/orders" },
         { label: "Chat", icon: <Icons.building className="stroke-current" />, href: "#" },
         { label: "Collection", icon: <Icons.article_line className="fill-current" />, href: "#" },
     ]

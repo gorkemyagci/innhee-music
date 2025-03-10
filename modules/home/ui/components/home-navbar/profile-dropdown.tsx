@@ -18,8 +18,10 @@ import {
 import { useAuthStore } from "@/store/auth-store"
 import { pageUrls } from "@/lib/constants/page-urls"
 import SettingsModal from "@/components/custom/modals/settings"
+import { useRouter } from "next/navigation"
 
 const ProfileDropdown = ({ children }: { children: React.ReactNode }) => {
+    const router = useRouter();
     const [isDarkMode, setIsDarkMode] = useState(false)
     const [isCopied, setIsCopied] = useState(false)
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
@@ -98,7 +100,9 @@ const ProfileDropdown = ({ children }: { children: React.ReactNode }) => {
                             <span className="text-sm font-normal text-strong-950">Integrations</span>
                         </DropdownMenuItem>
 
-                        <DropdownMenuItem className="flex items-center gap-3 px-4 py-2">
+                        <DropdownMenuItem
+                            onClick={() => router.push("/settings")}
+                            className="flex items-center gap-3 px-4 py-2">
                             <Icons.settings />
                             <span className="text-sm font-normal text-strong-950">Settings</span>
                         </DropdownMenuItem>

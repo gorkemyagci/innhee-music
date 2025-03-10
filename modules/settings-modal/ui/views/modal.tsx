@@ -47,34 +47,3 @@ const Modal = ({ children, open = false, setOpen = () => { } }: ModalProps) => {
 }
 
 export default Modal;
-
-{/* 
-
-
-const Modal = ({ children, open = false, setOpen = () => { } }: ModalProps) => {
-    const [activeTab, setActiveTab] = useState<string>("profile");
-    return (
-        <Dialog open={open} onOpenChange={setOpen} modal={true}>
-            <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="sm:max-w-5xl p-0 h-[680px] overflow-hidden gap-0 z-50 w-full flex flex-col items-start justify-start bg-white rounded-3xl">
-                <div className="lg:w-56 w-full flex flex-col items-start gap-2.5 p-6 border-r border-soft-200 lg:h-full">
-                    <DialogHeader>
-                        <DialogTitle className="text-soft-400 font-medium text-xs">SETTINGS</DialogTitle>
-                    </DialogHeader>
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                </div>
-                <div className="flex-1 py-4 custom-scroll overflow-y-auto h-full w-full">
-                    {activeTab === "profile" && <Profile />}
-                    {activeTab === "security" && <Security />}
-                    {activeTab === "company" && <Company />}
-                    {activeTab === "notifications" && <Notifications />}
-                    {activeTab === "orders" && <Orders />}
-                    {activeTab === "billing" && <Billing />}
-                </div>
-            </DialogContent>
-        </Dialog>
-    )
-}
-
-export default Modal;
-*/}

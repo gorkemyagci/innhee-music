@@ -58,7 +58,6 @@ const Notifications = () => {
     return (
         <div className="w-full">
             <Head heading="Notification Settings" subHeading="Personalize your privacy settings and enhance the security of your account." />
-
             <div className="w-full px-6 pt-6">
                 <div className="max-w-[800px] mx-auto flex flex-col gap-8">
                     {/* Mobile Phone Notifications */}
