@@ -26,10 +26,17 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    const navItems = [
+    const navItemsAuthed = [
         { label: "Find Works", icon: <Icons.layout_grid className={cn("size-5", pathname === "/find-works" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/find-works" },
         { label: "Find jobs", icon: <Icons.calendar_line className={cn("size-5", pathname === "/find-jobs" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/find-jobs" },
         { label: "Beats Market", icon: <Icons.timer className={cn("size-5", pathname === "/beats-market" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/beats-market" },
+        { label: "Referral", icon: <Icons.folders className={cn("size-5", pathname === "/referral" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/referral" }
+    ]
+
+    const navItems = [
+        { label: "Works", icon: <Icons.layout_grid className={cn("size-5", pathname === "/find-works" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/find-works" },
+        { label: "Project", icon: <Icons.calendar_line className={cn("size-5", pathname === "/find-jobs" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/find-jobs" },
+        { label: "Beats", icon: <Icons.timer className={cn("size-5", pathname === "/beats-market" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/beats-market" },
         { label: "Referral", icon: <Icons.folders className={cn("size-5", pathname === "/referral" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/referral" }
     ]
 
@@ -47,7 +54,18 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                     </Link>
                 </motion.div>
                 <ul className="hidden lg:flex items-center gap-1">
-                    {navItems.map((item, index) => (
+                    {isAuthenticated && navItemsAuthed.map((item, index) => (
+                        <motion.li
+                            key={index}
+                            className={cn("pr-3 pl-2 py-2 hover:bg-weak-50 transition-all duration-200 rounded-lg"
+                            )}
+                        >
+                            <Link href={item.href} prefetch className="flex items-center gap-1.5">
+                                <span className="text-sub-600 text-sm font-medium tracking-tight">{item.label}</span>
+                            </Link>
+                        </motion.li>
+                    ))}
+                    {!isAuthenticated && navItems.map((item, index) => (
                         <motion.li
                             key={index}
                             className={cn("pr-3 pl-2 py-2 hover:bg-weak-50 transition-all duration-200 rounded-lg"
@@ -64,31 +82,18 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                 <div className="hidden lg:block">
                     <SearchInput />
                 </div>
+                {!isAuthenticated && (
+                    <Icons.flash_light />
+                )}
                 {!isAuthenticated ? (
-                    <>
-                        <motion.span
-                            className="cursor-pointer hidden sm:block"
-                        >
-                            <Icons.sunline />
-                        </motion.span>
-                        <div className="hidden lg:flex items-center gap-4">
-                            <Link href={pageUrls.SIGN_IN} prefetch>
-                                <motion.span
-                                    className="text-black font-medium tracking-tight cursor-pointer"
-                                >
-                                    Login
-                                </motion.span>
-                            </Link>
-                            <Link href={pageUrls.SIGN_UP} prefetch>
-                                <motion.div
-                                >
-                                    <Button className="rounded-xl w-[101px] h-[40px] bg-[#20232D]">
-                                        Get Started
-                                    </Button>
-                                </motion.div>
-                            </Link>
-                        </div>
-                    </>
+                    <Link href={pageUrls.SIGN_IN} prefetch>
+                        <Button
+                            type="button"
+                            className={cn("w-full h-10 disabled:cursor-auto group rounded-[10px] text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]")}>
+                            <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
+                            Start Now
+                        </Button>
+                    </Link>
                 ) : (
                     <AuthedNavbar />
                 )}
@@ -146,7 +151,26 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                                     <SearchInput />
                                 </div>
                                 <ul className="flex flex-col gap-3 sm:gap-4">
-                                    {navItems.map((item, index) => (
+                                    {isAuthenticated && navItemsAuthed.map((item, index) => (
+                                        <motion.li
+                                            key={index}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{
+                                                opacity: 1,
+                                                x: 0,
+                                                transition: { delay: index * 0.1 }
+                                            }}
+                                            className={cn("py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg",
+                                                pathname === item.href && "bg-weak-50"
+                                            )}
+                                        >
+                                            <Link href={item.href} prefetch className="flex items-center gap-2 sm:gap-3" onClick={closeMenu}>
+                                                {item.icon}
+                                                <span className="text-sm sm:text-base text-black font-medium tracking-tight">{item.label}</span>
+                                            </Link>
+                                        </motion.li>
+                                    ))}
+                                    {!isAuthenticated && navItems.map((item, index) => (
                                         <motion.li
                                             key={index}
                                             initial={{ opacity: 0, x: -20 }}
@@ -166,28 +190,6 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                                         </motion.li>
                                     ))}
                                 </ul>
-                                {!isAuthenticated && (
-                                    <div className="flex flex-col gap-3 sm:gap-4 mt-2 sm:mt-4">
-                                        <Link href={pageUrls.SIGN_IN} prefetch onClick={closeMenu}>
-                                            <motion.div
-                                                whileTap={{ scale: 0.95 }}
-                                                className="w-full h-9 sm:h-10 flex items-center justify-center px-3 sm:px-4 text-center text-sm sm:text-base text-black font-medium tracking-tight rounded-lg border border-gray-200"
-                                            >
-                                                Login
-                                            </motion.div>
-                                        </Link>
-                                        <Link href={pageUrls.SIGN_UP} prefetch onClick={closeMenu}>
-                                            <motion.div
-                                                whileTap={{ scale: 0.95 }}
-                                                className="w-full"
-                                            >
-                                                <Button className="w-full flex items-center justify-center px-3 sm:px-4 h-9 sm:h-10 text-sm sm:text-base rounded-xl bg-[#20232D]">
-                                                    Get Started
-                                                </Button>
-                                            </motion.div>
-                                        </Link>
-                                    </div>
-                                )}
                             </div>
                         </motion.div>
                     )}

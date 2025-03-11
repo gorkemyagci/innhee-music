@@ -27,7 +27,7 @@ interface UserAvatarProps extends VariantProps<typeof avatarVariants> {
 const UserAvatar = ({ imageUrl, name, className, onClick, size }: UserAvatarProps) => {
     return (
         <Avatar className={cn(avatarVariants({ size }), className)} onClick={onClick}>
-            <AvatarImage src={imageUrl} alt={name} />
+            <AvatarImage src={imageUrl} alt={name} className="object-contain shrink-0" />
         </Avatar>
     )
 }

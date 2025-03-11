@@ -724,5 +724,10 @@ export const Icons = {
             <path d="M16.2421 14.9824H13.7588" stroke="#868C98" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M15 13.7656V16.2573" stroke="#868C98" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
+    ),
+    flash_light: (props: IconProps) => (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+            <path d="M10.75 7.75H16.75L9.25 19V12.25H4L10.75 1V7.75ZM9.25 9.25V6.415L6.649 10.75H10.75V14.0455L13.9473 9.25H9.25Z" fill="#525866" />
+        </svg>
     )
 }
