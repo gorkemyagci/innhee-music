@@ -1,11 +1,11 @@
 import { Icons } from "@/components/icons";
 
-const Skills = () => {
+const Skills = ({ edit = true }: { edit?: boolean }) => {
     return (
         <div className="p-4 flex flex-col items-start gap-3">
             <div className="flex items-center w-full justify-between">
                 <span className="text-main-900 font-medium text-xs">Skills</span>
-                <Icons.pencil className="size-5 cursor-pointer" />
+                {edit && <Icons.pencil className="size-5 cursor-pointer" />}
             </div>
             <div className="flex flex-col items-start gap-2">
                 <div className="flex flex-col items-start gap-1">
