@@ -169,3 +169,66 @@ export const jobPostingMenu = [
     { id: 3, title: "Usage", value: "usage" },
     { id: 4, title: "Preview", value: "preview" },
 ];
+
+export const buyerOrders = [
+    {
+        id: 1,
+        title: "Write professional resume, cover letter, and linkedin writing services",
+        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+        price: 1400,
+        priceType: "Fixed Price",
+        status: "Apply Now",
+        description: "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually appealing and user-friendly websites that meet our clients' needs.",
+        timeline: {
+            daysAgo: 3,
+            deadlineDate: true,
+            sentProposal: 1,
+            businessContract: true
+        }
+    },
+    {
+        id: 2,
+        title: "Write professional resume, cover letter, and linkedin writing services",
+        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+        price: 1400,
+        priceType: "Fixed Price",
+        status: "Apply Now",
+        description: "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually appealing and user-friendly websites that meet our clients' needs.",
+        timeline: {
+            daysAgo: 3,
+            deadlineDate: true,
+            sentProposal: 1,
+            businessContract: true
+        }
+    },
+    {
+        id: 3,
+        title: "Write professional resume, cover letter, and linkedin writing services",
+        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+        price: 1400,
+        priceType: "Fixed Price",
+        status: "In progress",
+        description: "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually appealing and user-friendly websites that meet our clients' needs.",
+        timeline: {
+            daysAgo: 3,
+            deadlineDate: true,
+            sentProposal: 1,
+            businessContract: true
+        }
+    },
+    {
+        id: 4,
+        title: "Write professional resume, cover letter, and linkedin writing services",
+        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+        price: 1400,
+        priceType: "Fixed Price",
+        status: "In progress",
+        description: "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually appealing and user-friendly websites that meet our clients' needs.",
+        timeline: {
+            daysAgo: 3,
+            deadlineDate: true,
+            sentProposal: 1,
+            businessContract: true
+        }
+    }
+];
