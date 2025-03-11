@@ -1,0 +1,82 @@
+import { Icons } from "@/components/icons";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import UserAvatar from "@/components/user-avatar";
+import About from "@/modules/find-works/ui/sections/sidebar/about";
+import Skills from "@/modules/find-works/ui/sections/sidebar/skills";
+import Awards from "./awards";
+
+const Sidebar = () => {
+    return <div className="w-[352px] shrink-0 min-h-[calc(100vh-120px)] shadow-sm bg-white border border-soft-200 rounded-[20px] pb-6">
+        <div className="p-4 relative flex flex-col items-center gap-5">
+            <div className="flex flex-col items-center gap-2">
+                <Icons.heart className="absolute top-4 right-4 size-5" />
+                <div className="flex flex-col items-center gap-1">
+                    <UserAvatar
+                        imageUrl="/assets/images/avatar2.png"
+                        name="Cleve Music"
+                        className="w-20 h-20 shrink-0 p-0.5"
+                    />
+                    <p className="text-base font-medium text-sub-600">Cleve Music</p>
+                    <div className="flex items-center gap-0.5">
+                        <Icons.star />
+                        <span className="text-sub-600 font-normal text-xs">4.9(125)</span>
+                    </div>
+                    <div className="flex items-center gap-2.5 pt-1">
+                        <div className="flex items-center gap-1">
+                            <Icons.google className="size-3.5 md:size-4" />
+                            <span className="text-sub-600 text-xs font-medium">Google</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <Icons.google className="size-3.5 md:size-4" />
+                            <span className="text-sub-600 text-xs font-medium">Google</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex items-center gap-5">
+                <Button variant="outline" className="w-[69px] h-8 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
+                    Hire <Icons.chevron_short_right className="fill-sub-600 size-3" />
+                </Button>
+                <Button
+                    type="button"
+                    className="w-[83px] h-8 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
+                    <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
+                    Touch <Icons.send className="stroke-white" />
+                </Button>
+            </div>
+            <div className="flex items-center w-full justify-between">
+                <div className="flex items-center gap-1.5">
+                    <Icons.profile_star />
+                    <span className="text-main-900 font-normal text-sm">Recent reviews</span>
+                </div>
+                <div className="bg-white rounded-full py-0.5 pr-2.5 pl-0.5 flex items-center shadow-sm">
+                    <UserAvatar
+                        imageUrl="/assets/images/avatar-3.png"
+                        name="User Name"
+                        className="w-8 h-8 border-2 border-white"
+                    />
+                    <UserAvatar
+                        imageUrl="/assets/images/Avatar-5.png"
+                        name="User Name"
+                        className="w-8 h-8 border-2 border-white -translate-x-2"
+                    />
+                    <UserAvatar
+                        imageUrl="/assets/images/Avatar-6.png"
+                        name="User Name"
+                        className="w-8 h-8 border-2 border-white -translate-x-4"
+                    />
+                    <span className="text-sub-600 font-normal text-sm -translate-x-1">+4</span>
+                </div>
+            </div>
+        </div>
+        <Separator className="bg-soft-200" />
+        <Skills edit={false} />
+        <Separator className="bg-soft-200" />
+        <Awards />
+        <Separator className="bg-soft-200" />
+        <About edit={false} />
+    </div>
+}
+
+export default Sidebar;
