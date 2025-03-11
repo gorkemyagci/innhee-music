@@ -1,8 +1,8 @@
 import { Icons } from "@/components/icons";
 
-const WokerItem = () => {
+const WokerItem = ({ index }: { index: any }) => {
     return (
-        <div className="w-full flex items-center justify-between">
+        <div key={index} className="w-full flex items-center justify-between">
             <div className="flex items-center gap-2">
                 <Icons.play_pause />
                 <div className="flex flex-col items-start gap-1">
