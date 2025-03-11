@@ -18,16 +18,12 @@ const Profile = () => {
             </div>
             <div className="flex items-center gap-2.5 pt-1">
                 <div className="flex items-center gap-1">
-                    <Icons.dollar_square className="size-3.5 md:size-4" />
-                    <span className="text-sub-600 text-xs font-medium">Salary</span>
+                    <Icons.google className="size-3.5 md:size-4" />
+                    <span className="text-sub-600 text-xs font-medium">Google</span>
                 </div>
                 <div className="flex items-center gap-1">
-                    <Icons.map className="size-3.5 md:size-4" />
-                    <span className="text-sub-600 text-xs font-medium">Work</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <Icons.star className="size-3.5 md:size-4 fill-blue-800" />
-                    <span className="text-sub-600 text-xs font-medium">Specia</span>
+                    <Icons.google className="size-3.5 md:size-4" />
+                    <span className="text-sub-600 text-xs font-medium">Google</span>
                 </div>
             </div>
         </div>

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
+import TransactionMethodDetails from "@/components/custom/modals/transaction-method-details";
 
 interface SkillLevel {
     id: string;
@@ -21,48 +22,49 @@ const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
     const { data: skillsData } = trpc.jobPosting.getAllSkillLevels.useQuery();
     const { data: toolsData } = trpc.jobPosting.getAllCandidateSources.useQuery();
     const utils = trpc.useUtils();
-    
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const [selectedSkillLevels, setSelectedSkillLevels] = useState<SkillLevel[]>([]);
     const [selectedTools, setSelectedTools] = useState<SkillLevel[]>([]);
-    
+
     // Watch for changes in form values
     useEffect(() => {
         const subscription = form.watch((value) => {
             // Update skill levels when form values change
             if (skillsData && Array.isArray(skillsData) && value.skillLevelIds && Array.isArray(value.skillLevelIds)) {
-                const selectedLevels = skillsData.filter(level => 
+                const selectedLevels = skillsData.filter(level =>
                     value.skillLevelIds!.includes(level.id)
                 );
                 setSelectedSkillLevels(selectedLevels);
             }
-            
+
             // Update tools when form values change
             if (toolsData && Array.isArray(toolsData) && value.candidateSourceIds && Array.isArray(value.candidateSourceIds)) {
-                const selectedToolItems = toolsData.filter(tool => 
+                const selectedToolItems = toolsData.filter(tool =>
                     value.candidateSourceIds!.includes(tool.id)
                 );
                 setSelectedTools(selectedToolItems);
             }
         });
-        
+
         return () => subscription.unsubscribe();
     }, [form, skillsData, toolsData]);
-    
+
     // Initial load of skill levels and tools data
     useEffect(() => {
         if (skillsData && Array.isArray(skillsData)) {
             const formSkillLevelIds = form.getValues("skillLevelIds");
-            const selectedLevels = skillsData.filter(level => 
+            const selectedLevels = skillsData.filter(level =>
                 formSkillLevelIds.includes(level.id)
             );
             setSelectedSkillLevels(selectedLevels);
         }
     }, [skillsData, form]);
-    
+
     useEffect(() => {
         if (toolsData && Array.isArray(toolsData)) {
             const formCandidateSourceIds = form.getValues("candidateSourceIds");
-            const selectedToolItems = toolsData.filter(tool => 
+            const selectedToolItems = toolsData.filter(tool =>
                 formCandidateSourceIds.includes(tool.id)
             );
             setSelectedTools(selectedToolItems);
@@ -73,13 +75,14 @@ const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
         onSuccess: (data) => {
             toast.success("Job posting created successfully");
             utils.jobPosting.getMyJobPosts.invalidate();
+            setIsModalOpen(true);
         },
         onError: (error) => {
             console.log(error.message);
             toast.error(error.message || "Failed to create job posting");
         }
     })
-    
+
     const handleSubmit = () => {
         const formData = form.getValues();
         create.mutate({
@@ -89,16 +92,17 @@ const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
             usage: formData.usage ? formData.usage.toUpperCase() : "PRIVATE",
             privacy: formData.privacy ? formData.privacy.toUpperCase() : "PRIVATE",
         });
+
     }
-    
-    const formattedDeadline = form.getValues("deadline") 
+
+    const formattedDeadline = form.getValues("deadline")
         ? format(new Date(form.getValues("deadline")), "dd MMM, yyyy")
         : "Not set";
-        
-    const formattedAmount = form.getValues("salary") 
+
+    const formattedAmount = form.getValues("salary")
         ? `¥ ${form.getValues("salary")}`
         : "Not set";
-    
+
     return <CardLayout isOpen={isOpen} toggleOpen={() => setTab(tab === "preview" ? "" : "preview")} item={item} onSubmit={handleSubmit} loading={create.isPending}>
         <div className="w-full flex flex-col gap-0">
             <div className="flex flex-col gap-0">
@@ -186,7 +190,7 @@ const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
                             <p className="text-sub-600 font-medium text-sm">No usage type selected</p>
                         </div>
                     )}
-                    
+
                     {form.getValues("privacy") === "public" && (
                         <div className="flex flex-col items-start gap-2.5">
                             <p className="text-sub-600 font-medium text-sm">Public</p>
@@ -229,6 +233,7 @@ const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
                 </div>
             </div>
         </div>
+        <TransactionMethodDetails open={isModalOpen} setOpen={setIsModalOpen} />
     </CardLayout>
 }
 

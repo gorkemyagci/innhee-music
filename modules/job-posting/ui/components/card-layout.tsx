@@ -7,6 +7,7 @@ import SubmitButton from "@/modules/auth/ui/components/submit-button";
 import { useQueryState } from "nuqs";
 import { jobPostingMenu } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
+import TransactionMethodDetails from "@/components/custom/modals/transaction-method-details";
 
 interface CardLayoutProps {
     isOpen: boolean;
