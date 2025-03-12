@@ -132,7 +132,7 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
                         isMobile ? "flex-row items-center" : "flex-col items-end"
                     )}>
                         <span className="text-[#525866] font-medium text-xs md:text-sm">
-                            Fixed Price
+                            {pathname.includes("jobs") ? "Budget" : "Fixed Price"}
                         </span>
                         <span className="text-strong-950 font-medium text-base md:text-xl">${typeof item.price === 'number' ? item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : item.price}</span>
                     </div>
