@@ -118,7 +118,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                                         <Textarea
                                                             value={text}
                                                             placeholder="Please describe your needs"
-                                                            className="w-full min-h-[120px] border-soft-200 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-sub-400 resize-none pr-16"
+                                                            className="w-full min-h-[120px] border-soft-200 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-sub-400 resize-none pr-3"
                                                             onChange={(e) => {
                                                                 const newText = e.target.value;
                                                                 setText(newText);

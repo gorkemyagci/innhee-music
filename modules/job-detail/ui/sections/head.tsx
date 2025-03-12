@@ -1,3 +1,4 @@
+import ReportMessage from "@/components/custom/modals/report-message";
 import { Icons } from "@/components/icons";
 
 const Head = () => {
@@ -7,9 +8,11 @@ const Head = () => {
             <Icons.chevron_short_right />
             <span className="text-sub-600 font-medium text-sm">Project Detail</span>
         </div>
-        <span className="cursor-pointer">
-            <Icons.flag_line />
-        </span>
+        <ReportMessage>
+            <span className="cursor-pointer">
+                <Icons.flag_line />
+            </span>
+        </ReportMessage>
     </div>
 }
 
