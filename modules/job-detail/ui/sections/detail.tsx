@@ -4,15 +4,15 @@ import { Separator } from "@/components/ui/separator";
 import FAQ from "../components/FAQ";
 
 const Detail = () => {
-    return <div className="w-full rounded-[20px] p-6 border border-[#E2E4E9] shadow-sm flex flex-col gap-6">
-        <div className="flex items-center w-full justify-between">
-            <div className="flex items-center gap-4">
-                <p className="text-strong-950 font-medium text-2xl">Write professional resume, cover letter</p>
-                <Badge className="flex h-7 items-center gap-0.5 py-1 md:py-1.5 px-2 md:px-3 rounded-full bg-neutral-100 border border-neutral-200 text-sub-600 font-medium text-[10px] md:text-[11px] whitespace-nowrap">
+    return <div className="w-full rounded-[20px] p-4 md:p-6 border border-[#E2E4E9] shadow-sm flex flex-col gap-4 md:gap-6">
+        <div className="flex flex-col md:flex-row md:items-center w-full md:justify-between gap-3 md:gap-0">
+            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                <p className="text-strong-950 font-medium text-xl md:text-2xl">Write professional resume, cover letter</p>
+                <Badge className="flex h-7 w-fit items-center gap-0.5 py-1 md:py-1.5 px-2 md:px-3 rounded-full bg-neutral-100 border border-neutral-200 text-sub-600 font-medium text-[10px] md:text-[11px] whitespace-nowrap">
                     <Icons.group_line_users className="size-3 md:size-3.5" /> Business contract
                 </Badge>
             </div>
-            <Icons.save />
+            <Icons.save className="cursor-pointer" />
         </div>
         <Separator className="bg-soft-200" />
         <div className="flex flex-col items-start gap-3">
@@ -33,7 +33,7 @@ const Detail = () => {
         <Separator className="bg-soft-200" />
         <div className="w-full flex flex-col items-start gap-3">
             <span className="text-[#161922] font-semibold text-base tracking-[-1.5%]">Skills</span>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
                 <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs">
                     Mixing
                 </div>
@@ -57,9 +57,9 @@ const Detail = () => {
         <Separator className="bg-soft-200" />
         <div className="w-full flex flex-col items-start gap-3">
             <span className="text-[#161922] font-semibold text-base tracking-[-1.5%]">Attachments</span>
-            <div className="border border-soft-200 w-[248px] bg-[#FDFDFD] rounded-[12px] p-[14px] h-14 flex items-center justify-between gap-3">
+            <div className="border border-soft-200 w-full md:w-[248px] bg-[#FDFDFD] rounded-[12px] p-[14px] h-14 flex items-center justify-between gap-3">
                 <span className="text-sub-600 font-medium text-sm">Audio Script.mp3</span>
-                <Icons.play_pause className="size-7" />
+                <Icons.play_pause className="size-7 flex-shrink-0" />
             </div>
         </div>
         <Separator className="bg-soft-200" />

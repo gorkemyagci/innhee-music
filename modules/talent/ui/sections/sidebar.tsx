@@ -1,3 +1,4 @@
+"use client";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -7,10 +8,10 @@ import Skills from "@/modules/find-works/ui/sections/sidebar/skills";
 import Awards from "./awards";
 
 const Sidebar = () => {
-    return <div className="w-[352px] shrink-0 min-h-[calc(100vh-120px)] shadow-sm bg-white border border-soft-200 rounded-[20px] pb-6">
+    return <div className="w-full md:w-[352px] shrink-0 min-h-[calc(100vh-120px)] shadow-sm bg-white border border-soft-200 rounded-[20px] pb-6">
         <div className="p-4 relative flex flex-col items-center gap-5">
             <div className="flex flex-col items-center gap-2">
-                <Icons.heart className="absolute top-4 right-4 size-5" />
+                <Icons.heart className="absolute top-4 right-4 size-5 cursor-pointer" />
                 <div className="flex flex-col items-center gap-1">
                     <UserAvatar
                         imageUrl="/assets/images/avatar2.png"
@@ -45,6 +46,7 @@ const Sidebar = () => {
                     Touch <Icons.send className="stroke-white" />
                 </Button>
             </div>
+
             <div className="flex items-center w-full justify-between">
                 <div className="flex items-center gap-1.5">
                     <Icons.profile_star />

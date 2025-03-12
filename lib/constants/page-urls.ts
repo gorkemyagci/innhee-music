@@ -5,4 +5,5 @@ export const pageUrls = {
     FORGOT: "/auth/forgot-password",
     FIND_WORKS: "/find-works",
     JOB_POSTING: "/job-posting",
+    JOB_DETAIL: "/jobs/details",
 }

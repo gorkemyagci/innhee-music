@@ -7,6 +7,8 @@ import { ProjectItemProps } from "@/lib/types";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { pageUrls } from "@/lib/constants/page-urls";
 
 const ProjectItem = ({ item }: ProjectItemProps) => {
     const pathname = usePathname();
@@ -136,19 +138,21 @@ const ProjectItem = ({ item }: ProjectItemProps) => {
                         </span>
                         <span className="text-strong-950 font-medium text-base md:text-xl">${typeof item.price === 'number' ? item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : item.price}</span>
                     </div>
-                    <Button
-                        variant="outline"
-                        size={isMobile ? "sm" : "default"}
-                        className={cn(
-                            "border border-soft-200 text-sub-600 font-medium text-sm",
-                            isMobile ? "h-8 rounded-lg px-3" : "h-10 rounded-[10px] p-2.5"
-                        )}
-                    >
-                        Apply Now
-                        {pathname === "/find-jobs" && (
-                            <Icons.chevron_short_right className="size-2.5 ml-1" />
-                        )}
-                    </Button>
+                    <Link href={`${pageUrls.JOB_DETAIL}/${item.id}`}>
+                        <Button
+                            variant="outline"
+                            size={isMobile ? "sm" : "default"}
+                            className={cn(
+                                "border border-soft-200 text-sub-600 font-medium text-sm",
+                                isMobile ? "h-8 rounded-lg px-3" : "h-10 rounded-[10px] p-2.5"
+                            )}
+                        >
+                            Apply Now
+                            {pathname === "/find-jobs" && (
+                                <Icons.chevron_short_right className="size-2.5 ml-1" />
+                            )}
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </div>
