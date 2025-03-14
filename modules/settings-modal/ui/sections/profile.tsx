@@ -9,6 +9,15 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { trpc } from "@/trpc/client";
+import { useAuthStore } from "@/store/auth-store";
+import { jwtDecode, JwtPayload } from "jwt-decode";
+
+interface DecodedToken extends JwtPayload {
+    nickname?: string;
+    email?: string;
+    [key: string]: any;
+}
 
 const Profile = () => {
     const [nickname, setNickname] = useState("Arthur Taylor");
@@ -23,8 +32,37 @@ const Profile = () => {
     const [isTablet, setIsTablet] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
 
-    // Check screen size when component mounts and when window resizes
+    useEffect(() => {
+        useAuthStore.getState().initializeFromToken();
+    }, []);
+
+    const { token, user } = useAuthStore();
+
+    useEffect(() => {
+        if (token) {
+            try {
+                const tokenValue = token.startsWith('Bearer ') ? token.substring(7) : token;
+                const decoded = jwtDecode<DecodedToken>(tokenValue);
+                setDecodedToken(decoded);
+                if (decoded && decoded.nickname) {
+                    setNickname(decoded.nickname);
+                    setTempNickname(decoded.nickname);
+                }
+            } catch {}
+        }
+    }, [token]);
+
+    const update = trpc.user.update.useMutation({
+        onSuccess: (data) => {
+            toast.success("Profile updated successfully");
+        },
+        onError: (error) => {
+            toast.error("Failed to update profile");
+        }
+    });
+
     useEffect(() => {
         const checkScreenSize = () => {
             const width = window.innerWidth;
@@ -32,14 +70,11 @@ const Profile = () => {
             setIsTablet(width >= 640 && width < 1024);
             setIsLoading(false);
         };
-        
-        // Initial check
+
         checkScreenSize();
-        
-        // Add event listener for window resize
+
         window.addEventListener("resize", checkScreenSize);
-        
-        // Cleanup
+
         return () => window.removeEventListener("resize", checkScreenSize);
     }, []);
 
@@ -54,6 +89,7 @@ const Profile = () => {
     };
 
     const handleSaveNickname = () => {
+        update.mutate({ nickname: tempNickname });
         setNickname(tempNickname);
         setIsEditingNickname(false);
         toast.success("Nickname updated successfully");
@@ -73,13 +109,11 @@ const Profile = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Check file type
         if (!file.type.startsWith('image/')) {
             toast.error("Please select an image file");
             return;
         }
 
-        // Check file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
             toast.error("Image size should be less than 5MB");
             return;
@@ -89,7 +123,6 @@ const Profile = () => {
         const reader = new FileReader();
 
         reader.onload = (event) => {
-            // Simulate upload delay
             setTimeout(() => {
                 if (event.target?.result) {
                     setProfileImage(event.target.result as string);
@@ -107,7 +140,6 @@ const Profile = () => {
         reader.readAsDataURL(file);
     };
 
-    // Don't render until we've determined the screen size
     if (isLoading) {
         return null;
     }

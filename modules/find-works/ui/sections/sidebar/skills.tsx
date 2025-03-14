@@ -1,6 +1,6 @@
 import { Icons } from "@/components/icons";
 
-const Skills = ({ edit = true }: { edit?: boolean }) => {
+const Skills = ({ edit = true, skills }: { edit?: boolean, skills?: any[] }) => {
     return (
         <div className="p-4 flex flex-col items-start gap-3">
             <div className="flex items-center w-full justify-between">
@@ -8,22 +8,12 @@ const Skills = ({ edit = true }: { edit?: boolean }) => {
                 {edit && <Icons.pencil className="size-5 cursor-pointer" />}
             </div>
             <div className="flex flex-col items-start gap-2">
-                <div className="flex flex-col items-start gap-1">
-                    <p className="text-strong-950 font-medium text-xs">Singer - Female</p>
-                    <span className="text-sub-600 font-normal text-xs">Average price - $350 per song</span>
-                </div>
-                <div className="flex flex-col items-start gap-1">
-                    <p className="text-strong-950 font-medium text-xs">Songwriter - Lyric</p>
-                    <span className="text-sub-600 font-normal text-xs">Contact for pricing</span>
-                </div>
-                <div className="flex flex-col items-start gap-1">
-                    <p className="text-strong-950 font-medium text-xs">Top line writer (vocal melody)</p>
-                    <span className="text-sub-600 font-normal text-xs">Contact for pricing</span>
-                </div>
-                <div className="flex flex-col items-start gap-1">
-                    <p className="text-strong-950 font-medium text-xs">Vocal Tuning</p>
-                    <span className="text-sub-600 font-normal text-xs">Contact for pricing</span>
-                </div>
+                {skills?.map((item, index) => (
+                    <div key={index} className="flex flex-col items-start gap-1">
+                        <p className="text-strong-950 font-medium text-xs">{item?.name}</p>
+                        <span className="text-sub-600 font-normal text-xs">Average price - $350 per song</span>
+                    </div>
+                ))}
             </div>
         </div>
     )

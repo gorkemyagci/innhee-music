@@ -18,8 +18,9 @@ import SendCodeButton from "../components/send-code-button";
 import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth-store";
-import { useRouter } from "next/navigation";
 import { PasswordInput } from "@/components/custom/form-elements/password-input";
+import { jwtDecode } from "jwt-decode";
+import { DecodedToken } from "@/lib/types";
 
 const signinSchema = z.object({
     account: z.string().email(),
@@ -40,7 +41,6 @@ interface SignInFormProps {
 }
 
 const SignInForm = ({ activeTab }: SignInFormProps) => {
-    const router = useRouter();
     const form = useForm<SignIn>({
         mode: "onSubmit",
         reValidateMode: "onChange",
@@ -54,13 +54,33 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
         }
     });
 
+    const redirectBasedOnRole = (token: string) => {
+        try {
+            const decodedToken = jwtDecode<DecodedToken>(token);
+            if (decodedToken.roles && Array.isArray(decodedToken.roles)) {
+                const hasUserRole = decodedToken.roles.some(role =>
+                    role.name === "USER"
+                );
+                if (hasUserRole) {
+                    typeof window !== "undefined" && window.location.replace(pageUrls.FIND_WORKS);
+                } else {
+                    typeof window !== "undefined" && window.location.replace(pageUrls.FIND_JOBS);
+                }
+            } else {
+                typeof window !== "undefined" && window.location.replace(pageUrls.FIND_JOBS);
+            }
+        } catch (error) {
+            typeof window !== "undefined" && window.location.replace(pageUrls.FIND_JOBS);
+        }
+    };
+
     const login = trpc.auth.login.useMutation({
         onSuccess: (data) => {
             toast.success("Login successful");
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
             useAuthStore.getState().setToken(access_token, keep_logged);
-            typeof window !== "undefined" && window.location.replace(pageUrls.FIND_WORKS);
+            redirectBasedOnRole(access_token);
         },
         onError: (error) => {
             toast.error(error.message || "Failed to login");
@@ -73,7 +93,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
             useAuthStore.getState().setToken(access_token, keep_logged);
-            typeof window !== "undefined" && window.location.replace(pageUrls.FIND_WORKS);
+            redirectBasedOnRole(access_token);
         },
         onError: (error) => {
             toast.error(error.message || "Failed to verify OTP");
@@ -94,7 +114,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
         const code = form.getValues("code");
         const password = form.getValues("password");
         const terms = form.getValues("terms");
-        
+
         if (!account) {
             toast.error("Please enter your email or phone number");
             return;
@@ -223,8 +243,8 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                                 render={({ field }) => (
                                     <FormItem className="flex shrink-0 items-center gap-2">
                                         <FormControl>
-                                            <Checkbox 
-                                                id="keep_logged" 
+                                            <Checkbox
+                                                id="keep_logged"
                                                 className="border w-[18px] h-[18px] border-soft-200 hover:shadow-sm"
                                                 checked={field.value}
                                                 onCheckedChange={field.onChange}
@@ -252,8 +272,8 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                         render={({ field }) => (
                             <FormItem className="flex items-center gap-2">
                                 <FormControl>
-                                    <Checkbox 
-                                        id="terms" 
+                                    <Checkbox
+                                        id="terms"
                                         className="border w-[18px] h-[18px] border-soft-200 hover:shadow-sm"
                                         checked={field.value}
                                         onCheckedChange={field.onChange}

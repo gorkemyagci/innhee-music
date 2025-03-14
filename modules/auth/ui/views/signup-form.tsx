@@ -34,9 +34,7 @@ const SignUpForm = () => {
         resolver: zodResolver(signupSchema),
     });
 
-    const onSubmit = (data: Signup) => {
-        console.log(data);
-    }
+    const onSubmit = (data: Signup) => {}
 
     return (
         <Form {...form}>

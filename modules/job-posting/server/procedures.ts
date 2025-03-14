@@ -137,6 +137,35 @@ export const jobPostsProcedures = createTRPCRouter({
       });
     }
   }),
+  getSkills: baseProcedure.query(async () => {
+    try {
+      const token = await getTokenFromCookie();
+      const response = await fetch(`${SERVICE_URL}/skill`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: errorData.message || "Failed to fetch skills",
+        });
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          error instanceof Error ? error.message : "Failed to fetch skills",
+      });
+    }
+  }),
   getAllCandidateSources: protectedProcedure.query(async () => {
     try {
       const token = await getTokenFromCookie();
@@ -168,4 +197,100 @@ export const jobPostsProcedures = createTRPCRouter({
       });
     }
   }),
+  getJobPosts: baseProcedure.query(async () => {
+    try {
+      const token = await getTokenFromCookie();
+      const response = await fetch(`${SERVICE_URL}/job-post`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to get user information",
+      });
+    }
+  }),
+  getJobPostById: baseProcedure.input(z.string()).query(async ({ input }) => {
+    try {
+      const token = await getTokenFromCookie();
+      const id = input;
+      const response = await fetch(`${SERVICE_URL}/job-post/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to get job post by id",
+      });
+    }
+  }),
+  addAttachmentsToJobPost: protectedProcedure
+    .input(
+      z.object({
+        jobPostId: z.string(),
+        attachments: z.array(z.any())
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const { jobPostId, attachments } = input;
+        const token = ctx.token;
+        
+        if (!token) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "You must be logged in to add attachments",
+          });
+        }
+
+        const formData = new FormData();
+        
+        attachments.forEach((attachment, index) => {
+          formData.append('attachments', attachment);
+        });
+        
+        const response = await fetch(`${SERVICE_URL}/job-post/${jobPostId}/attachments`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: errorData.message || "Failed to add attachments to job post",
+          });
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            error instanceof Error
+              ? error.message
+              : "Failed to add attachments to job post",
+        });
+      }
+    }),
 });

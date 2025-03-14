@@ -1,3 +1,4 @@
+import { getTokenFromCookie } from "@/app/server/action";
 import {
   baseProcedure,
   createTRPCRouter,
@@ -291,10 +292,16 @@ export const authProcedures = createTRPCRouter({
     }),
   getMe: protectedProcedure.query(async () => {
     try {
+      const token = await getTokenFromCookie();
       const response = await fetch(`${SERVICE_URL}/auth/me`, {
         method: "GET",
-      });
-      return response;
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }); 
+      const data = await response.json();
+      return data;
     } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

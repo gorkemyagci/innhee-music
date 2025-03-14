@@ -7,7 +7,7 @@ import About from "@/modules/find-works/ui/sections/sidebar/about";
 import Skills from "@/modules/find-works/ui/sections/sidebar/skills";
 import Awards from "./awards";
 
-const Sidebar = () => {
+const Sidebar = ({ data }: { data: any }) => {
     return <div className="w-full md:w-[352px] shrink-0 min-h-[calc(100vh-120px)] shadow-sm bg-white border border-soft-200 rounded-[20px] pb-6">
         <div className="p-4 relative flex flex-col items-center gap-5">
             <div className="flex flex-col items-center gap-2">
@@ -15,10 +15,10 @@ const Sidebar = () => {
                 <div className="flex flex-col items-center gap-1">
                     <UserAvatar
                         imageUrl="/assets/images/avatar2.png"
-                        name="Cleve Music"
+                        name={data?.user?.nickname}
                         className="w-20 h-20 shrink-0 p-0.5"
                     />
-                    <p className="text-base font-medium text-sub-600">Cleve Music</p>
+                    <p className="text-base font-medium text-sub-600">{data?.user?.nickname}</p>
                     <div className="flex items-center gap-0.5">
                         <Icons.star />
                         <span className="text-sub-600 font-normal text-xs">4.9(125)</span>
@@ -73,11 +73,19 @@ const Sidebar = () => {
             </div>
         </div>
         <Separator className="bg-soft-200" />
-        <Skills edit={false} />
-        <Separator className="bg-soft-200" />
+        {data?.skills && (
+            <>
+                <Skills edit={false} skills={data?.skills} />
+                <Separator className="bg-soft-200" />
+            </>
+        )}
         <Awards />
-        <Separator className="bg-soft-200" />
-        <About edit={false} />
+        {data?.about && (
+            <>
+                <Separator className="bg-soft-200" />
+                <About edit={false} aboutText={data?.about} />
+            </>
+        )}
     </div>
 }
 

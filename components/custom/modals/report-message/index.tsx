@@ -41,7 +41,8 @@ const ReportMessage = ({ children }: ReportMessageProps) => {
     });
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         console.log(values);
-    }
+    };
+    
     return (
         <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>

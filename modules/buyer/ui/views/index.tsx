@@ -4,36 +4,40 @@ import { useQueryState } from "nuqs";
 import BuyerTabs from "../components/tabs";
 import Orders from "./orders";
 import Review from "./review";
-import { useEffect, useState } from "react";
+import SidebarLayout from "../sections/sidebar-layout";
+import Sidebar from "../sections/sidebar";
+import { trpc } from "@/trpc/client";
+import { notFound } from "next/navigation";
 
-const BuyerPage = () => {
+interface BuyerPageProps {
+    employerId: string;
+}
+
+const BuyerPage = ({ employerId }: BuyerPageProps) => {
     const [activeTab, setActiveTab] = useQueryState("tab", {
         defaultValue: "orders",
     });
-    
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkIsMobile = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
-        
-        checkIsMobile();
-        window.addEventListener("resize", checkIsMobile);
-        
-        return () => {
-            window.removeEventListener("resize", checkIsMobile);
-        };
-    }, []);
-    
+    const { data, isPending } = trpc.employer.getEmployerById.useQuery(employerId);
+    if (!data?.id && !isPending) {
+        return notFound();
+    }
+    console.log(data);
     return (
-        <div className="flex flex-col w-full items-start gap-4 md:gap-6 overflow-hidden">
-            <div className="w-full flex items-start md:items-center justify-between overflow-visible">
-                <BuyerTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        <div className="flex flex-col md:flex-row items-start gap-8">
+            <SidebarLayout />
+            <div className="md:block hidden">
+                <Sidebar />
             </div>
-            <div className="w-full overflow-x-hidden">
-                {activeTab === "orders" && <Orders />}
-                {activeTab === "review" && <Review />}
+            <div className="w-full">
+                <div className="flex flex-col w-full items-start gap-4 md:gap-6 overflow-hidden">
+                    <div className="w-full flex items-start md:items-center justify-between overflow-visible">
+                        <BuyerTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+                    </div>
+                    <div className="w-full overflow-x-hidden">
+                        {activeTab === "orders" && <Orders />}
+                        {activeTab === "review" && <Review />}
+                    </div>
+                </div>
             </div>
         </div>
     );

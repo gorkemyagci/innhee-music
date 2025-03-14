@@ -21,12 +21,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useQueryState } from "nuqs";
 import { Separator } from "@/components/ui/separator";
+import { trpc } from "@/trpc/client";
+import { toast } from "sonner";
 
 const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
+    const [id, setId] = useQueryState("id", { defaultValue: "" });
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
     const [text, setText] = useState("");
     const [amountInput, setAmountInput] = useState('');
-    const maxChars = 200; // Karakter sınırı
+    const maxChars = 200;
+    const utils = trpc.useUtils();
 
     // Initialize values from form
     useEffect(() => {
@@ -42,7 +46,6 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
     }, [form]);
 
     const onSubmit = (data: jobPostingFormSchema) => {
-        console.log(data);
         setTab("select-category");
     };
 
@@ -51,6 +54,38 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
     };
 
     const isOpen = tab === "basic-information";
+
+    const create = trpc.jobPosting.createJob.useMutation({
+        onSuccess: (data) => {
+            toast.success("Job posting created successfully");
+            utils.jobPosting.getMyJobPosts.invalidate();
+            setTab("select-category");
+            setId(data.id);
+        },
+        onError: (error) => {
+            toast.error(error.message || "Failed to create job posting");
+        }
+    })
+
+    const handleNext = () => {
+        if (!id) {
+            const data = {
+                "subject": form.getValues("subject"),
+                "detail": form.getValues("detail"),
+                "salary": form.getValues("salary"),
+                "salaryCurrency": form.getValues("salaryCurrency") || "CNY",
+                "deadline": form.getValues("deadline").toISOString(),
+                "budgetsActive": form.getValues("budgetsActive"),
+                "usage": form.getValues("usage") ? form.getValues("usage").toUpperCase() : "PRIVATE",
+                "privacy": form.getValues("privacy") ? form.getValues("privacy").toUpperCase() : "PRIVATE",
+                "skillLevelIds": form.getValues("skillLevelIds"),
+                "candidateSourceIds": form.getValues("candidateSourceIds")
+            }
+            create.mutate(data);
+            return;
+        }
+        setTab("select-category");
+    }
 
     return (
         <Card className={cn("w-full lg:w-[440px] border-soft-200 rounded-[20px] shadow-none", !isOpen && "pb-2")}>
@@ -237,7 +272,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                         </CardContent>
                         <Separator className="bg-soft-200 my-5" />
                         <CardFooter className="flex justify-end p-5 pb-0 pt-0">
-                            <SubmitButton text="Next" className="h-9 w-14 rounded-lg" onClick={() => setTab("select-category")} />
+                            <SubmitButton text="Next" className="h-9 w-14 rounded-lg" onClick={handleNext} loading={create.isPending} disabled={create.isPending} />
                         </CardFooter>
                     </motion.div>
                 )}

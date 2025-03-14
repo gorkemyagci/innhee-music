@@ -1,11 +1,12 @@
 import { Icons } from "@/components/icons";
+import { pageUrls } from "@/lib/constants/page-urls";
 import Link from "next/link";
 
-const Menu = () => {
+const Menu = ({ userId }: { userId: string }) => {
     const menuItems = [
-        { label: "My Home", icon: <Icons.home_line className="fill-current" />, href: "#" },
-        { label: "Order", icon: <Icons.briefcase_line className="fill-current" />, href: "/settings/orders" },
-        { label: "Chat", icon: <Icons.building className="stroke-current" />, href: "#" },
+        { label: "My Home", icon: <Icons.home_line className="fill-current" />, href: `${pageUrls.TALENT}/${userId}` },
+        { label: "Order", icon: <Icons.briefcase_line className="fill-current" />, href: pageUrls.ORDERS },
+        { label: "Chat", icon: <Icons.building className="stroke-current" />, href: pageUrls.CHAT },
         { label: "Collection", icon: <Icons.article_line className="fill-current" />, href: "#" },
     ]
     return (

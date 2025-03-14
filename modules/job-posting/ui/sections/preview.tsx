@@ -78,7 +78,6 @@ const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
             setIsModalOpen(true);
         },
         onError: (error) => {
-            console.log(error.message);
             toast.error(error.message || "Failed to create job posting");
         }
     })

@@ -1,6 +1,10 @@
 import FindJobs from "@/modules/find-jobs/ui/views";
+import { trpc } from "@/trpc/server";
 
-const Page = () => {
+export const dynamic = "force-dynamic";
+
+const Page = async () => {
+    void trpc.jobPosting.getJobPosts.prefetchInfinite();
     return <FindJobs />
 }
 

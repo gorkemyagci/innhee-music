@@ -72,10 +72,7 @@ const Company = () => {
         form.setValue("portfolio", []);
     };
 
-    const onSubmit = (data: Company) => {
-        console.log(data);
-        // Handle form submission
-    };
+    const onSubmit = (data: Company) => {};
 
     return (
         <div>

@@ -35,8 +35,7 @@ interface EditTagsProps {
 }
 
 const EditTags = ({ children, initialTags = [], onSave }: EditTagsProps) => {
-    const { data: tags } = trpc.jobPosting.getAllSkillLevels.useQuery();
-    
+    const { data: tags } = trpc.jobPosting.getSkills.useQuery();    
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearching, setIsSearching] = useState(false);
     const [isFocused, setIsFocused] = useState(false);

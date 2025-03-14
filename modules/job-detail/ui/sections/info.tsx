@@ -2,8 +2,10 @@ import ApplyJob from "@/components/custom/modals/apply-job";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/user-avatar";
+import { ProjectItemType } from "@/lib/types";
+import moment from "moment";
 
-const Info = () => {
+const Info = ({ item }: { item: ProjectItemType }) => {
     return <div className="border w-full border-soft-200 rounded-[20px] bg-white shadow-sm p-4 md:p-5 flex flex-col items-center gap-4 md:gap-5">
         <div className="border-b border-soft-200 pb-4 md:pb-5 w-full relative flex flex-col items-center gap-2">
             <div className="absolute top-0 right-0">
@@ -15,7 +17,7 @@ const Info = () => {
                     name="John Doe"
                     className="w-16 h-16 md:w-18 md:h-18 p-0.5 shrink-0"
                 />
-                <p className="text-[#0d0d10] font-medium text-base">Cleve Music</p>
+                <p className="text-[#0d0d10] font-medium text-base">{item?.employer.nickname || "Unknown"}</p>
                 <div className="flex items-center gap-0.5">
                     <Icons.star />
                     <span className="text-sub-600 font-normal text-xs">4.9(125)</span>
@@ -38,7 +40,7 @@ const Info = () => {
                     <Icons.exchange_cny_fill />
                     <p className="text-sub-600 font-normal text-sm">Budget</p>
                 </div>
-                <span className="text-strong-950 font-medium text-xl md:text-2xl">$140</span>
+                <span className="text-strong-950 font-medium text-xl md:text-2xl">${item?.salary}</span>
             </div>
             <div className="flex items-center justify-between w-full">
                 <div className="flex items-center gap-1.5">
@@ -52,7 +54,7 @@ const Info = () => {
                     <Icons.calendar_line className="fill-sub-600 size-4.5" />
                     <p className="text-sub-600 font-normal text-sm">Deadline</p>
                 </div>
-                <span className="text-sub-600 font-medium text-sm">28 Feb, 2025</span>
+                <span className="text-sub-600 font-medium text-sm">{moment(item?.deadline).format("MMM DD, YYYY")}</span>
             </div>
             <div className="flex items-center justify-between w-full">
                 <div className="flex items-center gap-1.5">

@@ -268,9 +268,7 @@ const Orders = () => {
         return () => window.removeEventListener("resize", checkScreenSize);
     }, []);
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log(data);
-    }
+    const onSubmit = (data: z.infer<typeof formSchema>) => {}
 
     const filteredOrders = mockBilling.filter(order => {
         if (tab === "all") return true;

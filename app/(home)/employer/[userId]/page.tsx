@@ -1,4 +1,4 @@
-import TalentPage from "@/modules/talent/ui/views";
+import BuyerPage from "@/modules/buyer/ui/views";
 import { trpc } from "@/trpc/server";
 
 interface PageProps {
@@ -7,12 +7,12 @@ interface PageProps {
 
 const Page = async ({ params }: PageProps) => {
     const { userId } = await params;
-    void trpc.talent.getWorkerById.prefetch(userId);
+    void trpc.employer.getEmployerById.prefetch(userId);
     return (
         <>
-            <TalentPage workerId={userId} />
+            <BuyerPage employerId={userId} />
         </>
-    )
+    );
 }
 
 export default Page;

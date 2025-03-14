@@ -3,17 +3,16 @@ import CardLayout from "../components/card-layout";
 import { useQueryState } from "nuqs";
 import { jobPostingMenu } from "@/lib/mockData";
 import CustomSelect from "@/components/custom/select";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Icons } from "@/components/icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import Image from "next/image";
-import { X } from "lucide-react";
 import { trpc } from "@/trpc/client";
 import { UseFormReturn } from "react-hook-form";
 import { jobPostingFormSchema } from "../views/job-posting";
+import { toast } from "sonner";
 
 interface SkillLevel {
     id: string;
@@ -22,6 +21,18 @@ interface SkillLevel {
 const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
     const { data: skillsData } = trpc.jobPosting.getAllSkillLevels.useQuery();
     const { data: toolsData } = trpc.jobPosting.getAllCandidateSources.useQuery();
+    const addAttachmentsMutation = trpc.jobPosting.addAttachmentsToJobPost.useMutation({
+        onSuccess: (data) => {
+            setIsUploading(false);
+            setUploadProgress(100);
+            toast.success("Files uploaded successfully");
+        },
+        onError: (error) => {
+            setIsUploading(false);
+            toast.error(`Upload failed: ${error.message}`);
+        }
+    });
+    
     const [skillLevels, setSkillLevels] = useState<SkillLevel[]>([]);
     const [tools, setTools] = useState<SkillLevel[]>([]);
     const [selectedSkillLevels, setSelectedSkillLevels] = useState<SkillLevel[]>([]);
@@ -30,10 +41,15 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
     const [selectedTool, setSelectedTool] = useState<string>("");
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
 
-    // PDF upload states
-    const [pdfFiles, setPdfFiles] = useState<File[]>([]);
+    // File upload states
+    const [files, setFiles] = useState<File[]>([]);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
+    const [jobPostId, setJobPostId] = useQueryState("id", { defaultValue: "" });
+    
+    // Audio player states
+    const [playingFile, setPlayingFile] = useState<number | null>(null);
+    const audioRef = useRef<HTMLAudioElement>(null);
 
     // Initialize from form values if they exist
     useEffect(() => {
@@ -128,44 +144,130 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
         setSelectedTools([]);
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
-            const newFile = e.target.files[0];
-
-            // Check if file is PDF
-            if (!newFile.type.includes('pdf')) {
-                alert('Please upload a PDF file');
+            const newFiles = Array.from(e.target.files);
+            
+            // Validate files (type and size)
+            const invalidFiles = newFiles.filter(file => 
+                !file.type.includes('audio/mpeg') && 
+                !file.type.includes('audio/mp3') && 
+                !file.type.includes('video/mp4')
+            );
+            
+            if (invalidFiles.length > 0) {
+                toast.error('Please upload only MP3 or MP4 files');
                 return;
             }
-
-            // Check file size (max 25MB)
-            if (newFile.size > 25 * 1024 * 1024) {
-                alert('File size should not exceed 25MB');
+            
+            const oversizedFiles = newFiles.filter(file => 
+                file.size > 25 * 1024 * 1024
+            );
+            
+            if (oversizedFiles.length > 0) {
+                toast.error('File size should not exceed 25MB');
                 return;
             }
-
-            setPdfFiles([newFile]);
-
-            // Simulate upload progress
+            
+            // Check if total files don't exceed 3
+            if (files.length + newFiles.length > 3) {
+                toast.error('You can upload a maximum of 3 files');
+                return;
+            }
+            
+            // Add files to state
+            setFiles(prev => [...prev, ...newFiles]);
+            
+            // Start upload process
             setIsUploading(true);
             setUploadProgress(0);
-
-            const interval = setInterval(() => {
+            
+            // In a real application, you would get the job post ID from the form or API
+            // For now, we'll use the state variable
+            if (!jobPostId) {
+                toast.error("Please save the job post first before uploading attachments");
+                setIsUploading(false);
+                return;
+            }
+            
+            // Simulate progress while preparing the upload
+            const progressInterval = setInterval(() => {
                 setUploadProgress(prev => {
-                    if (prev >= 100) {
-                        clearInterval(interval);
-                        setIsUploading(false);
-                        return 100;
+                    if (prev >= 90) {
+                        clearInterval(progressInterval);
+                        return 90;
                     }
                     return prev + 10;
                 });
             }, 300);
+            
+            try {
+                // Use the TRPC mutation to upload files
+                await addAttachmentsMutation.mutateAsync({
+                    jobPostId: jobPostId,
+                    attachments: newFiles
+                });
+                
+                // Clear the interval when done
+                clearInterval(progressInterval);
+                setUploadProgress(100);
+                
+            } catch (error) {
+                // Error is handled by the mutation's onError
+                clearInterval(progressInterval);
+                setUploadProgress(0);
+            }
         }
     };
 
-    const removeFile = () => {
-        setPdfFiles([]);
-        setUploadProgress(0);
+    const removeFile = (index: number) => {
+        if (playingFile === index) {
+            // Stop playing if removing the currently playing file
+            if (audioRef.current) {
+                audioRef.current.pause();
+            }
+            setPlayingFile(null);
+        } else if (playingFile !== null && playingFile > index) {
+            // Adjust the playing file index if removing a file before it
+            setPlayingFile(playingFile - 1);
+        }
+        setFiles(prev => prev.filter((_, i) => i !== index));
+    };
+    
+    // Function to toggle play/pause for audio files
+    const togglePlay = (index: number) => {
+        if (playingFile === index) {
+            // Pause the current file
+            if (audioRef.current) {
+                audioRef.current.pause();
+            }
+            setPlayingFile(null);
+        } else {
+            // Stop any currently playing file
+            if (audioRef.current) {
+                audioRef.current.pause();
+            }
+            
+            // Play the selected file
+            setPlayingFile(index);
+            
+            // Create a URL for the file and play it
+            if (audioRef.current) {
+                audioRef.current.src = URL.createObjectURL(files[index]);
+                audioRef.current.play().catch(error => {
+                    console.error("Error playing audio:", error);
+                    toast.error("Failed to play audio file");
+                    setPlayingFile(null);
+                });
+            }
+        }
+    };
+    
+    // Check if a file is audio or video
+    const isPlayableFile = (file: File) => {
+        return file.type.includes('audio/mpeg') || 
+               file.type.includes('audio/mp3') || 
+               file.type.includes('video/mp4');
     };
 
     return <CardLayout isOpen={isOpen} toggleOpen={() => setTab(tab === "select-category" ? "" : "select-category")} item={item}>
@@ -259,49 +361,73 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
                     <Button
                         variant="outline"
                         className="h-8 w-[68px] rounded-lg p-1.5 border-soft-200 text-sub-600 text-sm font-medium"
-                        onClick={() => document.getElementById('pdf-upload')?.click()}
+                        onClick={() => document.getElementById('file-upload')?.click()}
+                        disabled={files.length >= 3 || isUploading}
                     >
                         Upload
                     </Button>
                     <Input
                         type="file"
-                        id="pdf-upload"
+                        id="file-upload"
                         className="hidden"
                         onChange={handleFileChange}
-                        accept=".pdf"
+                        accept=".mp3,.mp4,audio/mpeg,video/mp4"
+                        disabled={files.length >= 3}
                     />
                 </div>
 
-                {pdfFiles.length > 0 && (
-                    <div className="mt-2 border border-soft-200 rounded-xl p-4 w-full">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                                <div className="flex flex-col items-start gap-1">
-                                    <p className="text-sm font-medium">{pdfFiles[0].name}</p>
-                                    <p className="text-xs flex items-center gap-1 text-gray-500">
-                                        {Math.round(pdfFiles[0].size / 1024)} KB •
-                                        {isUploading ?
-                                            <span className="flex items-center gap-1">
-                                                <Icons.uploading className="animate-spin" />
-                                                Uploading...
-                                            </span> :
-                                            <span className="flex items-center gap-1">
-                                                <Icons.select_box_circle />
-                                                Uploaded
-                                            </span>
-                                        }
-                                    </p>
+                {/* Hidden audio element for playing files */}
+                <audio ref={audioRef} className="hidden" onEnded={() => setPlayingFile(null)} />
+
+                {files.length > 0 && (
+                    <div className="mt-2 w-full space-y-3">
+                        {files.map((file, index) => (
+                            <div key={index} className="border border-soft-200 rounded-xl p-4 w-full">
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                        {isPlayableFile(file) ? (
+                                            <div 
+                                                className="cursor-pointer hover:opacity-80 transition-opacity"
+                                                onClick={() => togglePlay(index)}
+                                            >
+                                                {playingFile === index ? (
+                                                    <Icons.pause_fill className="text-sub-600" />
+                                                ) : (
+                                                    <Icons.play_mini_fill className="text-sub-600" />
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <Icons.file className="text-sub-600" />
+                                        )}
+                                        <div className="flex flex-col items-start gap-1">
+                                            <p className="text-sm font-medium">{file.name}</p>
+                                            <p className="text-xs flex items-center gap-1 text-gray-500">
+                                                {Math.round(file.size / 1024)} KB •
+                                                {isUploading ?
+                                                    <span className="flex items-center gap-1">
+                                                        <Icons.uploading className="animate-spin" />
+                                                        Uploading...
+                                                    </span> :
+                                                    <span className="flex items-center gap-1">
+                                                        <Icons.select_box_circle />
+                                                        Uploaded
+                                                    </span>
+                                                }
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeFile(index)}
+                                        className="cursor-pointer"
+                                        disabled={isUploading}
+                                    >
+                                        <Icons.trash />
+                                    </button>
                                 </div>
+                                {isUploading && <Progress value={uploadProgress} className="h-1" />}
                             </div>
-                            <button
-                                type="button"
-                                onClick={removeFile}
-                                className="cursor-pointer"
-                            >
-                                <Icons.trash />
-                            </button>
-                        </div>
-                        <Progress value={uploadProgress} className="h-1" />
+                        ))}
                     </div>
                 )}
             </div>

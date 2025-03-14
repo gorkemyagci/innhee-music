@@ -44,7 +44,7 @@ interface FormValues {
 }
 
 const FileUploadModal = ({ children }: FileUploadModalProps) => {
-    const { data: skillTags } = trpc.jobPosting.getAllSkillLevels.useQuery();
+    const { data: skillTags } = trpc.jobPosting.getSkills.useQuery();
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearching, setIsSearching] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -151,9 +151,7 @@ const FileUploadModal = ({ children }: FileUploadModalProps) => {
 
     const shouldShowList = (isFocused && searchQuery === "") || isSearching;
 
-    const onSubmit = (data: FormValues) => {
-        console.log("Form submitted:", data);
-    };
+    const onSubmit = (data: FormValues) => {};
 
     return (
         <Dialog>

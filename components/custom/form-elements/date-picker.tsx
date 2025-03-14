@@ -174,8 +174,8 @@ export function DatePickerForm({
                     selected={field.value}
                     month={calendarDate}
                     captionLayout="dropdown-buttons"
-                    fromDate={new Date("1900-01-01")}
-                    toDate={new Date()}
+                    fromDate={new Date()}
+                    toDate={new Date("2100-01-01")}
                     onSelect={(date) => {
                       field.onChange(date);
                       if (date) {
@@ -185,9 +185,11 @@ export function DatePickerForm({
                       }
                     }}
                     onMonthChange={setCalendarDate}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
+                    disabled={(date) => {
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      return date < today;
+                    }}
                     initialFocus
                   />
                 </PopoverContent>
