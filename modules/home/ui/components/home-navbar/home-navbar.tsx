@@ -27,14 +27,14 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
     }, []);
 
     const navItemsAuthed = [
-        { label: "Find Works", icon: <Icons.layout_grid className={cn("size-5", pathname === "/find-works" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/find-works" },
+        { label: "Find Works", icon: <Icons.layout_grid className={cn("size-5", pathname === "/dashboard" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/dashboard" },
         { label: "Find jobs", icon: <Icons.calendar_line className={cn("size-5", pathname === "/find-jobs" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/find-jobs" },
         { label: "Beats Market", icon: <Icons.timer className={cn("size-5", pathname === "/beats-market" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/beats-market" },
         { label: "Referral", icon: <Icons.folders className={cn("size-5", pathname === "/referral" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/referral" }
     ]
 
     const navItems = [
-        { label: "Works", icon: <Icons.layout_grid className={cn("size-5", pathname === "/find-works" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/find-works" },
+        { label: "Works", icon: <Icons.layout_grid className={cn("size-5", pathname === "/dashboard" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/dashboard" },
         { label: "Project", icon: <Icons.calendar_line className={cn("size-5", pathname === "/find-jobs" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/find-jobs" },
         { label: "Beats", icon: <Icons.timer className={cn("size-5", pathname === "/beats-market" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/beats-market" },
         { label: "Referral", icon: <Icons.folders className={cn("size-5", pathname === "/referral" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/referral" }

@@ -28,8 +28,6 @@ const BuyerPage = ({ employerId }: BuyerPageProps) => {
         return notFound();
     }
 
-    console.log(data);
-
     return (
         <div className="flex flex-col md:flex-row items-start gap-8">
             <SidebarLayout data={data} />

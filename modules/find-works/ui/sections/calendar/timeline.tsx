@@ -54,6 +54,13 @@ const mockMeetings: Meeting[] = [
     }
 ];
 
+// Sayıları biçimlendirmek için yardımcı fonksiyon
+// Sunucu ve istemci tarafında tutarlı biçimlendirme sağlar
+const formatNumber = (num: number): string => {
+    // 'en-US' locale'ini kullanarak nokta ile ayırma yapıyoruz
+    return num.toLocaleString('en-US');
+};
+
 const Timeline = () => {
     const [activeTab, setActiveTab] = useState("7-days");
 
@@ -130,7 +137,7 @@ const Timeline = () => {
                             <p className="text-soft-400 text-[11px] tracking-[2%]">STARTED ON {meeting.startDate}</p>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span className="text-xs font-normal text-sub-600">${meeting.amount.toLocaleString()}</span>
+                            <span className="text-xs font-normal text-sub-600">${formatNumber(meeting.amount)}</span>
                             {getStatusBadge(meeting.status)}
                         </div>
                     </div>

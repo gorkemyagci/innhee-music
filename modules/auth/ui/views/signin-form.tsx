@@ -54,33 +54,13 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
         }
     });
 
-    const redirectBasedOnRole = (token: string) => {
-        try {
-            const decodedToken = jwtDecode<DecodedToken>(token);
-            if (decodedToken.roles && Array.isArray(decodedToken.roles)) {
-                const hasUserRole = decodedToken.roles.some(role =>
-                    role.name === "USER"
-                );
-                if (hasUserRole) {
-                    typeof window !== "undefined" && window.location.replace(pageUrls.FIND_WORKS);
-                } else {
-                    typeof window !== "undefined" && window.location.replace(pageUrls.FIND_JOBS);
-                }
-            } else {
-                typeof window !== "undefined" && window.location.replace(pageUrls.FIND_JOBS);
-            }
-        } catch (error) {
-            typeof window !== "undefined" && window.location.replace(pageUrls.FIND_JOBS);
-        }
-    };
-
     const login = trpc.auth.login.useMutation({
         onSuccess: (data) => {
             toast.success("Login successful");
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
             useAuthStore.getState().setToken(access_token, keep_logged);
-            redirectBasedOnRole(access_token);
+            typeof window !== "undefined" && window.location.replace(pageUrls.DASHBOARD);
         },
         onError: (error) => {
             toast.error(error.message || "Failed to login");
@@ -93,7 +73,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
             useAuthStore.getState().setToken(access_token, keep_logged);
-            redirectBasedOnRole(access_token);
+            typeof window !== "undefined" && window.location.replace(pageUrls.DASHBOARD);
         },
         onError: (error) => {
             toast.error(error.message || "Failed to verify OTP");

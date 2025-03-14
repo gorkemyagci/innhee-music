@@ -5,7 +5,7 @@ export const pageUrls = {
     SIGN_IN: "/auth/sign-in",
     SIGN_UP: "/auth/sign-up",
     FORGOT: "/auth/forgot-password",
-    FIND_WORKS: "/find-works",
+    FIND_WORKS: "/dashboard",
     FIND_JOBS: "/find-jobs",
     JOB_POSTING: "/job-posting",
     JOB_DETAIL: "/jobs/details",
