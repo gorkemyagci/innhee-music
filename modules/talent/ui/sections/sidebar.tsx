@@ -3,8 +3,8 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/user-avatar";
-import About from "@/modules/find-works/ui/sections/sidebar/about";
-import Skills from "@/modules/find-works/ui/sections/sidebar/skills";
+import About from "@/modules/dashboard/ui/sections/sidebar/about";
+import Skills from "@/modules/dashboard/ui/sections/sidebar/skills";
 import Awards from "./awards";
 
 const Sidebar = ({ data }: { data: any }) => {
@@ -18,7 +18,7 @@ const Sidebar = ({ data }: { data: any }) => {
                         name={data?.user?.nickname}
                         className="w-20 h-20 shrink-0 p-0.5"
                     />
-                    <p className="text-base font-medium text-sub-600">{data?.user?.nickname}</p>
+                    <p className="text-base font-medium text-sub-600">{data?.user?.nickname || "Unknown"}</p>
                     <div className="flex items-center gap-0.5">
                         <Icons.star />
                         <span className="text-sub-600 font-normal text-xs">4.9(125)</span>

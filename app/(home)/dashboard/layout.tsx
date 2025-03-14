@@ -1,4 +1,4 @@
-import Sidebar from "@/modules/find-works/ui/components/sidebar";
+import Sidebar from "@/modules/dashboard/ui/components/sidebar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     return (

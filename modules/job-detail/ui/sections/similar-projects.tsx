@@ -1,6 +1,6 @@
 "use client"
 import { ProjectItemType } from "@/lib/types";
-import ProjectItem from "@/modules/find-works/ui/components/project-item";
+import ProjectItem from "@/modules/dashboard/ui/components/project-item";
 import { trpc } from "@/trpc/client";
 
 const SimilarProjects = () => {

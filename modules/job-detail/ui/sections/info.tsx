@@ -68,7 +68,7 @@ const Info = ({ item }: { item: ProjectItemType }) => {
             <Button variant="outline" className="h-9 flex-1 border-soft-200 rounded-lg bg-white flex items-center justify-center gap-1.5 text-sub-600 font-medium text-xs md:text-sm">
                 Message <Icons.send className="flex-shrink-0" />
             </Button>
-            <ApplyJob>
+            <ApplyJob jobId={item?.id}>
                 <Button
                     type="button"
                     className="h-9 flex-1 disabled:cursor-auto group rounded-lg text-white text-xs md:text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">

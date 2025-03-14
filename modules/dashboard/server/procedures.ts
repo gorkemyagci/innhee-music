@@ -3,17 +3,15 @@ import {
   createTRPCRouter,
 } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 
 const SERVICE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   "https://music-upwork-project-production.up.railway.app";
 
-export const talentProcedure = createTRPCRouter({
-  getWorkerById: baseProcedure.input(z.string()).query(async ({ input }) => {
+export const dashboardProcedure = createTRPCRouter({
+  getAllWorkers: baseProcedure.query(async () => {
     try {
-      const talentId = input;
-      const response = await fetch(`${SERVICE_URL}/worker/${talentId}`, {
+      const response = await fetch(`${SERVICE_URL}/worker`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -12,26 +12,31 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import InputElement from "../../form-elements/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { trpc } from "@/trpc/client";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface ApplyJobProps {
     children: React.ReactNode;
+    jobId: string;
 }
 
 const formSchema = z.object({
-    amount: z.number().min(1),
+    amount: z.coerce.number().min(1, "Amount must be greater than 0"),
     description: z.string().optional(),
     hide: z.boolean().optional(),
 })
 
-const ApplyJob = ({ children }: ApplyJobProps) => {
+const ApplyJob = ({ children, jobId }: ApplyJobProps) => {
     const [text, setText] = useState("");
+    const [open, setOpen] = useState(false);
     const maxChars = 200;
+    const utils = trpc.useUtils();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -40,12 +45,41 @@ const ApplyJob = ({ children }: ApplyJobProps) => {
             hide: false,
         },
     });
+
+    const create = trpc.jobDetail.createJobApplication.useMutation({
+        onSuccess: () => {
+            toast.success("Job application created successfully");
+            utils.jobPosting.getJobPosts.invalidate();
+            setOpen(false);
+            form.reset();
+            setText("");
+        },
+        onError: (error) => {
+            console.log(error);
+            toast.error(error.message);
+        }
+    });
+
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values);
+        const amount = Number(values.amount);
+        if (isNaN(amount) || amount <= 0) {
+            toast.error("Please enter a valid amount");
+            return;
+        }
+        create.mutate({
+            jobPostId: jobId,
+            description: values.description || text || "",
+            amount: amount,
+            messagingSettings: values.hide || false,
+            matchingScore: values.hide || false,
+        });
     }
+
     return (
-        <Dialog>
-            <DialogTrigger asChild>{children}</DialogTrigger>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                {children}
+            </DialogTrigger>
             <DialogContent className="sm:max-w-[400px] bg-white rounded-3xl p-0 gap-0 overflow-hidden">
                 <DialogHeader className="p-0 flex items-start border-b border-soft-200 justify-between w-full">
                     <div className="p-4 flex items-center gap-3">
@@ -68,18 +102,18 @@ const ApplyJob = ({ children }: ApplyJobProps) => {
                         <FormField
                             control={form.control}
                             name="amount"
-                            render={() => (
+                            render={({ field }) => (
                                 <FormItem className="w-full px-4">
                                     <FormLabel className="text-sub-600 font-medium">Enter Amount <Icons.info /></FormLabel>
                                     <FormControl className="w-full">
                                         <div className="relative flex items-center gap-2 p-2.5 pl-3 h-10 justify-center w-full border border-soft-200 rounded-[10px]">
                                             <span className="text-soft-400 font-normal text-sm">￥</span>
-                                            <InputElement
+                                            <input
                                                 placeholder="0.00"
-                                                form={form}
-                                                name="amount"
-                                                className="border-none shadow-none flex-1 h-full -translate-y-1 pl-1 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                                 type="number"
+                                                className="border-none shadow-none flex-1 h-full -translate-y-1 pl-1 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                                value={field.value}
+                                                onChange={(e) => field.onChange(Number(e.target.value))}
                                             />
                                         </div>
                                     </FormControl>
@@ -89,7 +123,7 @@ const ApplyJob = ({ children }: ApplyJobProps) => {
                         <FormField
                             control={form.control}
                             name="description"
-                            render={() => (
+                            render={({ field }) => (
                                 <FormItem className="w-full px-4">
                                     <FormLabel className="text-sub-600 font-medium">Description <span className="text-sub-600 font-normal text-sm">(Optional)</span> </FormLabel>
                                     <FormControl className="w-full">
@@ -101,6 +135,7 @@ const ApplyJob = ({ children }: ApplyJobProps) => {
                                                 onChange={(e) => {
                                                     const newText = e.target.value;
                                                     setText(newText);
+                                                    field.onChange(newText);
                                                 }}
                                                 maxLength={maxChars}
                                             />
@@ -137,10 +172,11 @@ const ApplyJob = ({ children }: ApplyJobProps) => {
                                 </Button>
                             </DialogClose>
                             <Button
-                                type="button"
+                                type="submit"
+                                disabled={create.isPending}
                                 className="h-9 flex-1 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
                                 <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                                Confirm
+                                {create.isPending ? <Loader2 className="size-4 animate-spin" /> : "Confirm"}
                             </Button>
                         </div>
                     </form>

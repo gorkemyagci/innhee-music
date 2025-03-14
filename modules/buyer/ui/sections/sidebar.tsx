@@ -2,7 +2,7 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/user-avatar";
-import About from "@/modules/find-works/ui/sections/sidebar/about";
+import About from "@/modules/dashboard/ui/sections/sidebar/about";
 import CommonTags from "./common-tags";
 import { useEffect, useState } from "react";
 

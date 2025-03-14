@@ -1,11 +1,13 @@
 "use client"
 import Search from "../sections/search";
-import Workers from "@/modules/find-works/ui/sections/worker/workers";
+import Workers from "@/modules/dashboard/ui/sections/worker/workers";
+import { trpc } from "@/trpc/client";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const FindJobsWorkers = () => {
     const [isLoaded, setIsLoaded] = useState(false);
+    const { data: workers, isPending } = trpc.dashboard.getAllWorkers.useQuery();
 
     useEffect(() => {
         setIsLoaded(true);
@@ -29,7 +31,7 @@ const FindJobsWorkers = () => {
                 animate={isLoaded ? "visible" : "hidden"}
                 variants={containerVariants}
             >
-                <Workers />
+                <Workers workers={workers} isPending={isPending} />
             </motion.div>
         </div>
     );

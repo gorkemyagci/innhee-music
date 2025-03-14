@@ -1,6 +1,6 @@
 import { getTokenFromCookie } from "@/app/server/action";
-import BuyerDashboard from "@/modules/find-works/ui/views/buyer-dashboard";
-import WorkerDashboard from "@/modules/find-works/ui/views/worker-dashboard";
+import BuyerDashboard from "@/modules/dashboard/ui/views/buyer-dashboard";
+import WorkerDashboard from "@/modules/dashboard/ui/views/worker-dashboard";
 import { HydrateClient, trpc } from "@/trpc/server";
 import { jwtDecode } from "jwt-decode";
 
@@ -16,13 +16,14 @@ interface DecodedToken {
 }
 
 const Page = async () => {
-    await trpc.jobPosting.getJobPosts.prefetchInfinite();
+    void trpc.jobPosting.getJobPosts.prefetchInfinite();
+    void trpc.dashboard.getAllWorkers.prefetch();
     const token = await getTokenFromCookie();
     let decodedToken: DecodedToken | null = null;
     if (token) {
         try {
             decodedToken = jwtDecode<DecodedToken>(token);
-            await trpc.auth.getMe.prefetch();
+            void trpc.auth.getMe.prefetch();
         } catch {}
     }
     return (
