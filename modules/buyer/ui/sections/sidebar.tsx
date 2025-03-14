@@ -6,17 +6,21 @@ import About from "@/modules/find-works/ui/sections/sidebar/about";
 import CommonTags from "./common-tags";
 import { useEffect, useState } from "react";
 
-const Sidebar = () => {
+interface SidebarProps {
+    data: any;
+}
+
+const Sidebar = ({ data }: SidebarProps) => {
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         const checkIsMobile = () => {
             setIsMobile(window.innerWidth < 768);
         };
-        
+
         checkIsMobile();
         window.addEventListener("resize", checkIsMobile);
-        
+
         return () => {
             window.removeEventListener("resize", checkIsMobile);
         };
@@ -29,10 +33,10 @@ const Sidebar = () => {
                     <div className="flex flex-col items-center gap-1">
                         <UserAvatar
                             imageUrl="/assets/images/avatar2.png"
-                            name="Cleve Music"
+                            name={data?.user?.nickname}
                             className={`${isMobile ? 'w-16 h-16' : 'w-20 h-20'} shrink-0 p-0.5`}
                         />
-                        <p className={`${isMobile ? 'text-sm' : 'text-base'} font-medium text-sub-600`}>Cleve Music</p>
+                        <p className={`${isMobile ? 'text-sm' : 'text-base'} font-medium text-sub-600`}>{data?.user?.nickname}</p>
                         <div className="flex items-center gap-0.5">
                             <Icons.star className={isMobile ? 'size-3.5' : 'size-4'} />
                             <span className="text-sub-600 font-normal text-xs">4.9(125)</span>
@@ -87,8 +91,12 @@ const Sidebar = () => {
             </div>
             <Separator className="bg-soft-200" />
             <CommonTags />
-            <Separator className="bg-soft-200" />
-            <About edit={false} />
+            {data?.about && (
+                <>
+                    <Separator className="bg-soft-200" />
+                    <About edit={false} aboutText={data?.about} />
+                </>
+            )}
         </div>
     );
 }

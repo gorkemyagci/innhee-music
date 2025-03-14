@@ -8,6 +8,7 @@ import SidebarLayout from "../sections/sidebar-layout";
 import Sidebar from "../sections/sidebar";
 import { trpc } from "@/trpc/client";
 import { notFound } from "next/navigation";
+import BuyerPageSkeleton from "@/components/skeletons/employer";
 
 interface BuyerPageProps {
     employerId: string;
@@ -18,15 +19,22 @@ const BuyerPage = ({ employerId }: BuyerPageProps) => {
         defaultValue: "orders",
     });
     const { data, isPending } = trpc.employer.getEmployerById.useQuery(employerId);
+
+    if (isPending) {
+        return <BuyerPageSkeleton />;
+    }
+
     if (!data?.id && !isPending) {
         return notFound();
     }
+
     console.log(data);
+
     return (
         <div className="flex flex-col md:flex-row items-start gap-8">
-            <SidebarLayout />
+            <SidebarLayout data={data} />
             <div className="md:block hidden">
-                <Sidebar />
+                <Sidebar data={data} />
             </div>
             <div className="w-full">
                 <div className="flex flex-col w-full items-start gap-4 md:gap-6 overflow-hidden">
