@@ -31,11 +31,102 @@ export const talentProcedure = createTRPCRouter({
     }
   }),
 
-  getPortfolioByWorkerId: protectedProcedure
+  getPortfolioById: protectedProcedure
+    .input(z.string())
+    .query(async ({ input }) => {
+      try {
+        const portfolioId = input;
+        const token = await getTokenFromCookie();
+
+        if (!token) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "You must be logged in to view this portfolio",
+          });
+        }
+
+        const response = await fetch(
+          `${SERVICE_URL}/portfolio/${portfolioId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => null);
+          throw new TRPCError({
+            code: response.status === 404 ? "NOT_FOUND" : "BAD_REQUEST",
+            message: errorData?.message || "Failed to fetch portfolio",
+          });
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            error instanceof Error
+              ? error.message
+              : "An unknown error occurred",
+        });
+      }
+    }),
+
+  getWorkerPortfolio: protectedProcedure
     .input(z.string())
     .query(async ({ input }) => {
       try {
         const workerId = input;
+        const token = await getTokenFromCookie();
+        if (!token) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "You must be logged in to view this portfolio",
+          });
+        }
+        const response = await fetch(`${SERVICE_URL}/portfolio/${workerId}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => null);
+          throw new TRPCError({
+            code: response.status === 404 ? "NOT_FOUND" : "BAD_REQUEST",
+            message: errorData?.message || "Failed to fetch worker's portfolio",
+          });
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            error instanceof Error
+              ? error.message
+              : "An unknown error occurred",
+        });
+      }
+    }),
+  getPortfolioByWorkerId: protectedProcedure
+    .input(z.string())
+    .query(async ({ input }) => {
+      const workerId = input;
+      try {
         const token = await getTokenFromCookie();
         if (!token) {
           throw new TRPCError({
@@ -169,8 +260,14 @@ export const talentProcedure = createTRPCRouter({
               startDate: input.startDate,
               endDate: input.endDate,
               tagIds: input.tagIds || [],
-              displayOnProfile: input.displayOnProfile !== undefined ? input.displayOnProfile : true,
-              disableComments: input.disableComments !== undefined ? input.disableComments : false,
+              displayOnProfile:
+                input.displayOnProfile !== undefined
+                  ? input.displayOnProfile
+                  : true,
+              disableComments:
+                input.disableComments !== undefined
+                  ? input.disableComments
+                  : false,
             }),
           }
         );

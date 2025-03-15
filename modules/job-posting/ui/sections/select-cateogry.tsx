@@ -41,22 +41,18 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
     const [selectedTool, setSelectedTool] = useState<string>("");
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
 
-    // File upload states
     const [files, setFiles] = useState<File[]>([]);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
     const [jobPostId, setJobPostId] = useQueryState("id", { defaultValue: "" });
     
-    // Audio player states
     const [playingFile, setPlayingFile] = useState<number | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
 
-    // Initialize from form values if they exist
     useEffect(() => {
         const formSkillLevelIds = form.getValues("skillLevelIds");
         const formCandidateSourceIds = form.getValues("candidateSourceIds");
 
-        // If we have form values and API data, initialize selected items
         if (skillsData && Array.isArray(skillsData) && formSkillLevelIds.length > 0) {
             const selectedLevels = skillsData.filter(level =>
                 formSkillLevelIds.includes(level.id)
@@ -84,7 +80,6 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
         }
     }, [toolsData]);
 
-    // Update form values when selections change
     useEffect(() => {
         const skillLevelIds = selectedSkillLevels.map(level => level.id);
         form.setValue("skillLevelIds", skillLevelIds);
@@ -148,7 +143,6 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
         if (e.target.files && e.target.files.length > 0) {
             const newFiles = Array.from(e.target.files);
             
-            // Validate files (type and size)
             const invalidFiles = newFiles.filter(file => 
                 !file.type.includes('audio/mpeg') && 
                 !file.type.includes('audio/mp3') && 
@@ -169,28 +163,22 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
                 return;
             }
             
-            // Check if total files don't exceed 3
             if (files.length + newFiles.length > 3) {
                 toast.error('You can upload a maximum of 3 files');
                 return;
             }
             
-            // Add files to state
             setFiles(prev => [...prev, ...newFiles]);
             
-            // Start upload process
             setIsUploading(true);
             setUploadProgress(0);
             
-            // In a real application, you would get the job post ID from the form or API
-            // For now, we'll use the state variable
             if (!jobPostId) {
                 toast.error("Please save the job post first before uploading attachments");
                 setIsUploading(false);
                 return;
             }
             
-            // Simulate progress while preparing the upload
             const progressInterval = setInterval(() => {
                 setUploadProgress(prev => {
                     if (prev >= 90) {
@@ -202,18 +190,15 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
             }, 300);
             
             try {
-                // Use the TRPC mutation to upload files
                 await addAttachmentsMutation.mutateAsync({
                     jobPostId: jobPostId,
                     attachments: newFiles
                 });
                 
-                // Clear the interval when done
                 clearInterval(progressInterval);
                 setUploadProgress(100);
                 
             } catch (error) {
-                // Error is handled by the mutation's onError
                 clearInterval(progressInterval);
                 setUploadProgress(0);
             }
@@ -228,34 +213,27 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
             }
             setPlayingFile(null);
         } else if (playingFile !== null && playingFile > index) {
-            // Adjust the playing file index if removing a file before it
             setPlayingFile(playingFile - 1);
         }
         setFiles(prev => prev.filter((_, i) => i !== index));
     };
     
-    // Function to toggle play/pause for audio files
     const togglePlay = (index: number) => {
         if (playingFile === index) {
-            // Pause the current file
             if (audioRef.current) {
                 audioRef.current.pause();
             }
             setPlayingFile(null);
         } else {
-            // Stop any currently playing file
             if (audioRef.current) {
                 audioRef.current.pause();
             }
             
-            // Play the selected file
             setPlayingFile(index);
             
-            // Create a URL for the file and play it
             if (audioRef.current) {
                 audioRef.current.src = URL.createObjectURL(files[index]);
                 audioRef.current.play().catch(error => {
-                    console.error("Error playing audio:", error);
                     toast.error("Failed to play audio file");
                     setPlayingFile(null);
                 });
@@ -263,7 +241,6 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
         }
     };
     
-    // Check if a file is audio or video
     const isPlayableFile = (file: File) => {
         return file.type.includes('audio/mpeg') || 
                file.type.includes('audio/mp3') || 

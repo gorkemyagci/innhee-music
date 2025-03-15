@@ -22,6 +22,7 @@ const Page = async ({ params }: PageProps) => {
         } catch {}
     }
     void trpc.talent.getWorkerById.prefetch(userId);
+    void trpc.talent.getWorkerPortfolio.prefetch(userId);
     
     return (
         <>

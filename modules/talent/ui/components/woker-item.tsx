@@ -4,8 +4,61 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 
-const WokerItem = ({ index }: { index: any }) => {
+// Define TypeScript interfaces for the data structure
+interface Attachment {
+  id: string;
+  filename: string;
+  path: string;
+  url: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface PortfolioItem {
+  id: string;
+  portfolioId: string;
+  title: string;
+  description: string;
+  displayOnProfile: boolean;
+  disableComments: boolean;
+  createdAt: string;
+  updatedAt: string;
+  attachments?: Attachment[];
+}
+
+const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
     const [expanded, setExpanded] = useState(false);
+
+    // Function to determine if the attachment is audio, video, or document
+    const getFileType = (filename: string) => {
+        if (!filename) return 'unknown';
+        const extension = filename.split('_').pop()?.split('.').pop()?.toLowerCase();
+        
+        if (extension === 'mp3' || extension === 'wav' || extension === 'ogg') return 'audio';
+        if (extension === 'mp4' || extension === 'webm' || extension === 'mov') return 'video';
+        if (extension === 'pdf') return 'pdf';
+        return 'unknown';
+    };
+
+    // Get the first attachment if it exists
+    const firstAttachment = item?.attachments && item.attachments.length > 0 ? item.attachments[0] : null;
+    const fileType = firstAttachment ? getFileType(firstAttachment.filename) : 'unknown';
+
+    // Function to get a display name for the attachment
+    const getAttachmentDisplayName = (filename: string) => {
+        const parts = filename.split('_');
+        if (parts.length > 1) {
+            return parts[parts.length - 1]; // Get the last part after splitting by underscore
+        }
+        return filename;
+    };
+
+    // Handle opening attachments
+    const handleOpenAttachment = (url: string) => {
+        if (url) {
+            window.open(url, '_blank');
+        }
+    };
 
     return (
         <div key={index} className="w-full">
@@ -24,8 +77,13 @@ const WokerItem = ({ index }: { index: any }) => {
                             )}
                         </div>
                         <div className="flex flex-col items-start gap-1">
-                            <span className="text-main-900 font-medium text-sm">Funky Bounce Logo</span>
-                            <span className="text-soft-400 font-medium text-xs">WORKER REMARKS TEXT</span>
+                            <span className="text-main-900 font-medium text-sm">{item?.title || 'Untitled'}</span>
+                            <span className="text-soft-400 font-medium text-xs">{item?.description || 'No description'}</span>
+                            {firstAttachment && (
+                                <span className="text-soft-400 font-medium text-xs">
+                                    {fileType === 'pdf' ? 'PDF Document' : fileType === 'audio' ? 'Audio File' : fileType === 'video' ? 'Video File' : 'Attachment'}
+                                </span>
+                            )}
                         </div>
                     </div>
                     <Button 
@@ -66,6 +124,34 @@ const WokerItem = ({ index }: { index: any }) => {
                             className="overflow-hidden"
                         >
                             <div className="py-3 px-2 mb-3 flex flex-col gap-4 bg-gray-50 rounded-lg">
+                                {/* Display attachments */}
+                                {item?.attachments && item.attachments.length > 0 && (
+                                    <div className="flex flex-col gap-2">
+                                        <span className="text-soft-400 font-medium text-xs">Attachments:</span>
+                                        {item.attachments.map((attachment, idx) => {
+                                            const attFileType = getFileType(attachment.filename);
+                                            
+                                            return (
+                                                <div key={idx} className="flex items-center gap-2 p-1 rounded">
+                                                    <div className="relative">
+                                                        {attFileType === 'pdf' && <Icons.profile_star className="size-4" />}
+                                                        {attFileType === 'audio' && <Icons.play_pause className="size-4" />}
+                                                        {attFileType === 'video' && <Icons.play_pause className="size-4" />}
+                                                    </div>
+                                                    <a 
+                                                        href={attachment.url} 
+                                                        target="_blank" 
+                                                        rel="noopener noreferrer"
+                                                        className="text-blue-500 hover:underline text-xs truncate max-w-[200px]"
+                                                    >
+                                                        {getAttachmentDisplayName(attachment.filename)}
+                                                    </a>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                                
                                 <div className="flex flex-wrap items-center gap-1.5">
                                     <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs bg-white">
                                         Mixing
@@ -115,8 +201,13 @@ const WokerItem = ({ index }: { index: any }) => {
                 <div className="flex items-center gap-2">
                     <Icons.play_pause className="flex-shrink-0 cursor-pointer" />
                     <div className="flex flex-col items-start gap-1">
-                        <span className="text-main-900 font-medium">Funky Bounce Logo</span>
-                        <span className="text-soft-400 font-medium text-xs">WORKER REMARKS TEXT</span>
+                        <span className="text-main-900 font-medium">{item?.title || 'Untitled'}</span>
+                        <span className="text-soft-400 font-medium text-xs">{item?.description || 'No description'}</span>
+                        {firstAttachment && (
+                            <span className="text-soft-400 font-medium text-xs">
+                                {fileType === 'pdf' ? 'PDF Document' : fileType === 'audio' ? 'Audio File' : fileType === 'video' ? 'Video File' : 'Attachment'}
+                            </span>
+                        )}
                     </div>
                 </div>
                 <div className="flex items-center gap-2">

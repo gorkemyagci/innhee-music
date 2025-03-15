@@ -55,7 +55,6 @@ const ApplyJob = ({ children, jobId }: ApplyJobProps) => {
             setText("");
         },
         onError: (error) => {
-            console.log(error);
             toast.error(error.message);
         }
     });
