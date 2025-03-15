@@ -19,7 +19,7 @@ function getUrl() {
   const base = (() => {
     if (typeof window !== "undefined") return "";
     if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-    return "http://localhost:3000";
+    return "https://music-upwork-project-production.up.railway.app";
   })();
   return `${base}/api/trpc`;
 }

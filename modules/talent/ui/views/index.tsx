@@ -41,7 +41,7 @@ const TalentPage = ({ workerId, userId }: TalentPageProps) => {
                 <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
                     <TalentTabs activeTab={activeTab} setActiveTab={setActiveTab} />
                     {data?.id === userId && (
-                        <FileUploadModal>
+                        <FileUploadModal workerId={data.id} nickname={data?.user?.nickname || "Unknown"}>
                             <Button
                                 type="button"
                                 className="h-9 p-1.5 px-2 w-[90px] flex items-center gap-1 disabled:cursor-auto group rounded-[10px] text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">

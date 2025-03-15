@@ -23,6 +23,9 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/trpc/client";
 import { Separator } from "@/components/ui/separator";
+import { getTokenFromCookie } from "@/app/server/action";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 interface Tag {
     id: string;
@@ -31,6 +34,8 @@ interface Tag {
 
 interface FileUploadModalProps {
     children: React.ReactNode;
+    workerId: string;
+    nickname: string;
 }
 
 interface FormValues {
@@ -43,12 +48,13 @@ interface FormValues {
     };
 }
 
-const FileUploadModal = ({ children }: FileUploadModalProps) => {
+const FileUploadModal = ({ children, workerId, nickname }: FileUploadModalProps) => {
     const { data: skillTags } = trpc.jobPosting.getSkills.useQuery();
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearching, setIsSearching] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const commandRef = useRef<HTMLDivElement>(null);
+    const [open, setOpen] = useState(false);
 
     const form = useForm<FormValues>({
         defaultValues: {
@@ -66,6 +72,7 @@ const FileUploadModal = ({ children }: FileUploadModalProps) => {
     const tags = form.watch("tags");
     const [uploading, setUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadingAttachments, setUploadingAttachments] = useState(false);
 
     const availableTags: Tag[] = skillTags && Array.isArray(skillTags)
         ? skillTags.map(tag => ({
@@ -151,11 +158,86 @@ const FileUploadModal = ({ children }: FileUploadModalProps) => {
 
     const shouldShowList = (isFocused && searchQuery === "") || isSearching;
 
-    const onSubmit = (data: FormValues) => {};
+    const { data: portfolio } = trpc.talent.getPortfolioByWorkerId.useQuery(workerId);
+
+    const createPortfolio = trpc.talent.createPortfolio.useMutation({
+        onSuccess: () => { },
+        onError: () => { }
+    });
+
+    const createPortfolioItem = trpc.talent.createPortfolioItem.useMutation({
+        onSuccess: async (data) => {
+            const portfolioItemId = data.id;
+            const formData = new FormData();
+            formData.append("attachments", file!, file!.name);
+            const token = await getTokenFromCookie();
+
+            try {
+                const res = await fetch(`http://localhost:3000/portfolio/${portfolio.id}/portfolio-items/${portfolioItemId}/attachments`, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    throw new Error(`Upload failed with status: ${res.status}`);
+                }
+                const dataResponse = await res.json();
+                if (dataResponse) {
+                    toast.success("File uploaded successfully");
+                    setUploading(false);
+                    setUploadProgress(0);
+                    form.setValue("file", null);
+                    setOpen(false);
+                }
+            } catch { }
+            finally {
+                setUploadingAttachments(false);
+            }
+        },
+        onError: () => { }
+    });
+
+    const onSubmit = (data: FormValues) => {
+        setUploadingAttachments(true);
+        if (portfolio?.statusCode === 404) {
+            return createPortfolio.mutate({
+                workerId,
+                title: `${nickname}'s Portfolio`,
+                description: data.subject || "No description",
+            }, {
+                onSuccess: (portfolioData) => {
+                    createPortfolioItem.mutate({
+                        portfolioId: portfolioData.id,
+                        title: data.subject || "Untitled Portfolio",
+                        description: data.subject || "No description",
+                        startDate: new Date().toISOString(),
+                        endDate: new Date().toISOString(),
+                        tagIds: data.tags.map(tag => tag.id),
+                        displayOnProfile: data.displayPreferences.displayOnProfile,
+                        disableComments: data.displayPreferences.disableCommenting,
+                    });
+                }
+            });
+        }
+
+        return createPortfolioItem.mutate({
+            portfolioId: portfolio.id,
+            title: data.subject || "Untitled Portfolio",
+            description: data.subject || "No description",
+            startDate: new Date().toISOString(),
+            endDate: new Date().toISOString(),
+            tagIds: data.tags.map(tag => tag.id),
+            displayOnProfile: data.displayPreferences.displayOnProfile,
+            disableComments: data.displayPreferences.disableCommenting,
+        });
+    };
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>{children}</DialogTrigger>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild onClick={() => setOpen(true)}>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[425px] lg:max-h-[750px] overflow-y-auto custom-scroll bg-white rounded-3xl p-0">
                 <DialogHeader className="p-4 flex items-start border-b border-soft-200 justify-between w-full">
                     <div className="flex items-center gap-3">
@@ -400,9 +482,10 @@ const FileUploadModal = ({ children }: FileUploadModalProps) => {
                                 </Button>
                                 <Button
                                     type="submit"
+                                    disabled={uploadingAttachments}
                                     className="flex-1 h-9 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
                                     <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                                    Upload
+                                    {uploadingAttachments ? <Loader2 className="size-4 animate-spin" /> : "Upload"}
                                 </Button>
                             </div>
                         </div>
