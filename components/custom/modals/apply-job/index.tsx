@@ -111,7 +111,7 @@ const ApplyJob = ({ children, jobId }: ApplyJobProps) => {
                                             <input
                                                 placeholder="0.00"
                                                 type="number"
-                                                className="border-none shadow-none flex-1 h-full -translate-y-1 pl-1 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                                className="border-none outline-0 focus:outline-none shadow-none flex-1 h-full flex items-center justify-center pl-1 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                                 value={field.value}
                                                 onChange={(e) => field.onChange(Number(e.target.value))}
                                             />
