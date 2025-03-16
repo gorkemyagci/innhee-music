@@ -14,6 +14,7 @@ import { MobileSidebarSkeleton, SidebarSkeleton } from "@/components/skeletons/s
 const Sidebar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { data: user, isLoading } = trpc.auth.getMe.useQuery();
+    console.log(user);
 
     const isUserAvailable = !isLoading && user?.id;
 
@@ -38,11 +39,11 @@ const Sidebar = () => {
                         <Separator className="bg-soft-200" />
                         <Menu userId={user.id} />
                         <Separator className="bg-soft-200" />
-                        <Skills />
+                        <Skills skills={user.worker?.skills || []} />
                         <Separator className="bg-soft-200" />
-                        <Tags />
+                        <Tags tags={user.worker?.tags || []} />
                         <Separator className="bg-soft-200" />
-                        <About />
+                        <About aboutText={user.worker?.about || "No about text"} />
                     </div>
                 ) : (
                     <SidebarSkeleton />
@@ -87,11 +88,11 @@ const Sidebar = () => {
                                         <Separator className="bg-soft-200" />
                                         <Menu userId={user.id} />
                                         <Separator className="bg-soft-200" />
-                                        <Skills />
+                                        <Skills skills={user.worker?.skills || []} />
                                         <Separator className="bg-soft-200" />
-                                        <Tags />
+                                        <Tags tags={user.worker?.tags || []} />
                                         <Separator className="bg-soft-200" />
-                                        <About />
+                                        <About aboutText={user.worker?.about || "No about text"} />
                                     </>
                                 ) : (
                                     <MobileSidebarSkeleton />

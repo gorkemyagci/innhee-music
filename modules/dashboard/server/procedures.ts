@@ -26,4 +26,22 @@ export const dashboardProcedure = createTRPCRouter({
       });
     }
   }),
+  
+  getAllTags: baseProcedure.query(async () => {
+    try {
+      const response = await fetch(`${SERVICE_URL}/tag`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to fetch tag data",
+      });
+    }
+  }),
 });
