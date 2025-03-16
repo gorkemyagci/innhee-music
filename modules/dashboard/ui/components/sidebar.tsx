@@ -14,8 +14,6 @@ import { MobileSidebarSkeleton, SidebarSkeleton } from "@/components/skeletons/s
 const Sidebar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { data: user, isLoading } = trpc.auth.getMe.useQuery();
-    console.log(user);
-
     const isUserAvailable = !isLoading && user?.id;
 
     return (

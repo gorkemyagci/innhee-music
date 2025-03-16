@@ -12,7 +12,10 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { trpc } from "@/trpc/client";
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface EditAboutProps {
     children: React.ReactNode;
@@ -22,10 +25,53 @@ interface EditAboutProps {
 
 const EditAbout = ({ children, initialText = "", onSave }: EditAboutProps) => {
     const [text, setText] = useState(initialText);
-    const maxChars = 200; // Karakter sınırı
+    const [isOpen, setIsOpen] = useState(false);
+    const maxChars = 200;
+    const utils = trpc.useUtils();
+
+    const { data: userData } = trpc.auth.getMe.useQuery(undefined, {
+        enabled: isOpen
+    });
+
+    useEffect(() => {
+        if (initialText) {
+            setText(initialText);
+        }
+    }, [initialText]);
+
+
+    useEffect(() => {
+        if (userData && userData.about) {
+            setText(userData.about);
+        }
+    }, [userData]);
+
+    useEffect(() => {
+        if (isOpen && userData?.about) {
+            setText(userData.about);
+        }
+    }, [isOpen, userData]);
+
+    const updateMutation = trpc.user.update.useMutation({
+        onSuccess: () => {
+            toast.success("About information updated successfully");
+            utils.auth.getMe.invalidate();
+            if (onSave) onSave(text);
+            setIsOpen(false);
+        },
+        onError: (error) => {
+            toast.error(error.message || "Failed to update about information");
+        }
+    });
+
+    const handleSave = () => {
+        updateMutation.mutate({
+            about: text
+        });
+    };
 
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[425px] p-0 bg-white border-soft-200 rounded-3xl">
                 <DialogHeader className="p-4 flex items-start border-b border-soft-200 justify-between w-full">
@@ -63,9 +109,10 @@ const EditAbout = ({ children, initialText = "", onSave }: EditAboutProps) => {
                         </DialogClose>
                         <Button 
                             className="h-9 rounded-lg text-white flex-1 font-medium text-sm bg-neutral-950"
-                            onClick={() => onSave && onSave(text)}
+                            onClick={handleSave}
+                            disabled={updateMutation.isPending}
                         >
-                            Save
+                            {updateMutation.isPending ? <Loader2 className="size-4 animate-spin" /> : "Save"}
                         </Button>
                     </div>
                 </div>

@@ -15,14 +15,27 @@ export const userProcedures = createTRPCRouter({
   update: protectedProcedure
     .input(
       z.object({
-        nickname: z.string(),
+        nickname: z.string().optional(),
+        about: z.string().optional(),
+      }).refine(data => data.nickname !== undefined || data.about !== undefined, {
+        message: "At least one of nickname or about must be provided"
       })
     )
     .mutation(async ({ input }) => {
       try {
         const token = await getTokenFromCookie();
-        const { nickname } = input;
-        const requestBody = { nickname };
+        
+        // Create a properly typed request body
+        const requestBody: { nickname?: string; about?: string } = {};
+        
+        if (input.nickname !== undefined) {
+          requestBody.nickname = input.nickname;
+        }
+        
+        if (input.about !== undefined) {
+          requestBody.about = input.about;
+        }
+        
         const response = await fetch(`${SERVICE_URL}/user/me`, {
           method: "PUT",
           headers: {

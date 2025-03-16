@@ -55,6 +55,7 @@ const FileUploadModal = ({ children, workerId, nickname }: FileUploadModalProps)
     const [isFocused, setIsFocused] = useState(false);
     const commandRef = useRef<HTMLDivElement>(null);
     const [open, setOpen] = useState(false);
+    const utils = trpc.useUtils();
 
     const form = useForm<FormValues>({
         defaultValues: {
@@ -187,6 +188,8 @@ const FileUploadModal = ({ children, workerId, nickname }: FileUploadModalProps)
                 const dataResponse = await res.json();
                 if (dataResponse) {
                     toast.success("File uploaded successfully");
+                    utils.talent.getWorkerPortfolio.invalidate();
+                    utils.talent.getPortfolioByWorkerId.invalidate();
                     setUploading(false);
                     setUploadProgress(0);
                     form.setValue("file", null);
