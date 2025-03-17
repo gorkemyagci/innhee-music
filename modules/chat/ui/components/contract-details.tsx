@@ -78,7 +78,7 @@ const ContractDetails = ({
             </div>
 
             {/* Contract Details */}
-            <div className="flex flex-col gap-2 w-full">
+            <div className="flex flex-col gap-2 w-full mt-3">
                 <div className="flex flex-col w-full gap-2">
                     <div
                         className="flex items-center h-8 lg:h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-3 lg:px-4 py-1.5 text-left"
