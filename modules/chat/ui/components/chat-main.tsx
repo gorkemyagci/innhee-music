@@ -3,11 +3,17 @@
 import { useState, useRef, useEffect } from "react";
 import { Message, User, Offer } from "@/modules/chat/types";
 import { format } from "date-fns";
-import { Paperclip, Send, Smile, X } from "lucide-react";
+import { ChevronLeft, Loader2, Paperclip, Send, Smile, User2, UserRound, X } from "lucide-react";
 import MessageItem from "@/modules/chat/ui/components/message-item";
 import OfferModal from "@/modules/chat/ui/sections/offer-modal";
 import Image from "next/image";
 import { Icons } from "@/components/icons";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import ContractDetails from "@/modules/chat/ui/components/contract-details";
+import { contractDetailsData } from "@/lib/chatMockData";
 
 interface ChatMainProps {
     messages: Message[];
@@ -15,6 +21,14 @@ interface ChatMainProps {
     currentUser: User;
     onSendMessage: (content: string, attachments?: File[]) => void;
     onSendOffer: (offer: Offer) => void;
+    onBack?: () => void;
+}
+
+interface UploadingFile {
+    progress: number;
+    name: string;
+    size: number;
+    preview?: string;
 }
 
 const ChatMain = ({
@@ -23,10 +37,14 @@ const ChatMain = ({
     currentUser,
     onSendMessage,
     onSendOffer,
+    onBack,
 }: ChatMainProps) => {
     const [messageText, setMessageText] = useState("");
     const [attachments, setAttachments] = useState<File[]>([]);
     const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
+    const [isContractDetailsOpen, setIsContractDetailsOpen] = useState(false);
+    const [uploadingFiles, setUploadingFiles] = useState<Record<string, UploadingFile>>({});
+    const [filePreview, setFilePreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -36,7 +54,6 @@ const ChatMain = ({
     }, [messages]);
 
     useEffect(() => {
-        // Auto-resize textarea based on content
         if (textareaRef.current) {
             textareaRef.current.style.height = "auto";
             textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 150)}px`;
@@ -62,10 +79,72 @@ const ChatMain = ({
         }
     };
 
+    const getFilePreview = (file: File): Promise<string> => {
+        return new Promise((resolve) => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    resolve(e.target?.result as string);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                resolve('/file-icon.png');
+            }
+        });
+    };
+
+    const simulateFileUpload = async (file: File) => {
+        const fileId = Math.random().toString(36).substring(7);
+        const preview = await getFilePreview(file);
+
+        setUploadingFiles(prev => ({
+            ...prev,
+            [fileId]: {
+                progress: 0,
+                name: file.name,
+                size: file.size
+            }
+        }));
+
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            setUploadingFiles(prev => ({
+                ...prev,
+                [fileId]: {
+                    ...prev[fileId],
+                    progress: progress
+                }
+            }));
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                setUploadingFiles(prev => {
+                    const newState = { ...prev };
+                    delete newState[fileId];
+                    return newState;
+                });
+                setAttachments(prev => [...prev, Object.assign(file, { preview })]);
+            }
+        }, 200);
+    };
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             const newFiles = Array.from(e.target.files);
-            setAttachments((prev) => [...prev, ...newFiles]);
+            newFiles.forEach(file => {
+                simulateFileUpload(file);
+            });
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        }
+    };
+
+    const handleAttachmentClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+            fileInputRef.current.click();
         }
     };
 
@@ -88,41 +167,52 @@ const ChatMain = ({
 
     return (
         <div className="flex-1 flex flex-col h-full">
-            {/* Chat header */}
-            <div className="h-16 py-2 px-[14px] border-b border-soft-200 flex items-center justify-between">
+            <div className="h-16 py-2 px-3 sm:px-[14px] border-b border-soft-200 flex items-center justify-between">
                 <div className="flex items-center">
+                    {onBack && (
+                        <button
+                            onClick={onBack}
+                            className="mr-2 p-1 rounded-full md:hidden"
+                        >
+                            <ChevronLeft className="w-5 h-5 text-sub-600" />
+                        </button>
+                    )}
                     <div className="relative">
-                        <div className="w-11 h-11 p-0.5 flex items-center justify-center rounded-full overflow-hidden">
+                        <div className="w-9 h-9 sm:w-11 sm:h-11 p-0.5 flex items-center justify-center rounded-full overflow-hidden">
                             <Image
                                 src={selectedUser.avatar}
                                 alt={selectedUser.name}
-                                className="w-11 h-11 object-contain"
+                                className="w-9 h-9 sm:w-11 sm:h-11 object-contain"
                                 width={44}
                                 height={44}
                             />
                         </div>
                         {selectedUser.online && (
-                            <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
+                            <div className="absolute bottom-0 right-0 w-2 sm:w-2.5 h-2 sm:h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
                         )}
                     </div>
-                    <div className="ml-3">
-                        <h3 className="font-medium text-sub-600 text-xs">{selectedUser.name}</h3>
-                        <p className="text-xs text-sub-600 font-normal">
+                    <div className="ml-2 sm:ml-3">
+                        <h3 className="font-medium text-sub-600 text-[11px] sm:text-xs">{selectedUser.name}</h3>
+                        <p className="text-[11px] sm:text-xs text-sub-600 font-normal">
                             {selectedUser.online ? "Online" : "Offline"}
                         </p>
                     </div>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center gap-2 flex-row-reverse">
                     <button
                         onClick={() => setIsOfferModalOpen(true)}
+                        className="p-1 sm:p-2"
                     >
-                        <Icons.hamburger_menu />
+                        <Icons.hamburger_menu className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
+                    <span
+                        onClick={() => setIsContractDetailsOpen(true)}
+                        className="text-strong-950 font-medium text-sm md:hidden">
+                        Contract Details
+                    </span>
                 </div>
             </div>
-
-            {/* Messages area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-soft-50">
+            <div className="flex-1 overflow-y-auto custom-scroll p-2 sm:p-4 space-y-3 sm:space-y-4 bg-soft-50">
                 {messages.map((message) => (
                     <MessageItem
                         key={message.id}
@@ -138,81 +228,148 @@ const ChatMain = ({
                 <div ref={messagesEndRef} />
             </div>
 
-            {/* Input area */}
-            <div className="border-t border-soft-200 p-4 bg-white">
-                {attachments.length > 0 && (
-                    <div className="mb-3 flex flex-wrap gap-2">
-                        {attachments.map((file, index) => (
-                            <div
-                                key={index}
-                                className="flex items-center bg-soft-100 rounded-md p-2 pr-3"
+            <div className="p-2 sm:p-4">
+                <div className="border border-soft-200 rounded-xl sm:rounded-2xl p-3 sm:p-2 pt-2 bg-white">
+                    <AnimatePresence>
+                        {(uploadingFiles && Object.keys(uploadingFiles).length > 0) || attachments.length > 0 ? (
+                            <motion.div
+                                initial={{ height: 0, opacity: 0, marginBottom: 0 }}
+                                animate={{ height: "auto", opacity: 1, marginBottom: 8 }}
+                                exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                className="overflow-hidden"
                             >
-                                <div className="w-10 h-10 bg-soft-200 rounded-md flex items-center justify-center mr-2">
-                                    <Paperclip size={16} />
+                                <div className="flex mb-2 flex-wrap gap-2 sm:gap-4">
+                                    {Object.entries(uploadingFiles).map(([id, file]) => (
+                                        <motion.div
+                                            initial={{ scale: 0.8, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            exit={{ scale: 0.8, opacity: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                            key={id}
+                                            className="bg-white relative border border-soft-200 p-2 sm:p-3 flex flex-col items-center gap-1 sm:gap-2 rounded-[12px] shadow-sm w-[100px] sm:w-[124px] h-[90px] sm:h-[114px]"
+                                        >
+                                            <Icons.close className="absolute top-1 sm:top-2 right-1 sm:right-2 size-4 sm:size-[18px] text-sub-600" />
+                                            <div className="flex flex-col items-center gap-0.5 sm:gap-1">
+                                                <Icons.loader className="animate-spin w-5 h-5 sm:w-6 sm:h-6" />
+                                                <span className="text-strong-950 font-normal text-[10px] sm:text-xs">Uploading</span>
+                                            </div>
+                                            <div className="flex flex-col items-center gap-0.5 sm:gap-1 pb-0.5 w-full">
+                                                <span className="text-strong-950 font-medium text-xs sm:text-sm w-full truncate px-1">{file.name}</span>
+                                                <span className="text-sub-600 font-normal text-[10px] sm:text-xs">{(file.size / 1024).toFixed(2)} KB</span>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                    {attachments.length > 0 && attachments?.map((file: File & { preview?: string }, index) => (
+                                        <motion.div
+                                            initial={{ scale: 0.8, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            exit={{ scale: 0.8, opacity: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                            key={index}
+                                            className="flex flex-col items-start gap-1 sm:gap-2 w-[100px] sm:w-[124px]"
+                                        >
+                                            <div className="relative group w-full">
+                                                <div className={cn(
+                                                    "rounded-[12px] overflow-hidden"
+                                                )}>
+                                                    <div className="absolute inset-0 bg-black/50 rounded-lg" />
+                                                    {file.preview ? (
+                                                        <img
+                                                            src={file.preview}
+                                                            alt={file.name}
+                                                            className="w-full h-[90px] sm:h-[104px] object-cover"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-full h-[90px] sm:h-[104px] flex items-center justify-center">
+                                                            <Paperclip size={20} className="text-gray-400 sm:size-24" />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <button
+                                                    onClick={() => removeAttachment(index)}
+                                                    className="text-white cursor-pointer absolute top-1 sm:top-2 right-1 sm:right-2"
+                                                >
+                                                    <Icons.close className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                </button>
+                                            </div>
+                                            <div className="w-full px-1">
+                                                <p className="text-[11px] sm:text-xs font-medium text-main-900 truncate">
+                                                    {file.name}
+                                                </p>
+                                                <p className="text-[10px] sm:text-xs text-sub-600">
+                                                    {(file.size / 1024).toFixed(2)} KB
+                                                </p>
+                                            </div>
+                                        </motion.div>
+                                    ))}
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-medium text-main-900 truncate">
-                                        {file.name}
-                                    </p>
-                                    <p className="text-xs text-sub-600">
-                                        {(file.size / 1024).toFixed(2)} KB
-                                    </p>
-                                </div>
-                                <button
-                                    onClick={() => removeAttachment(index)}
-                                    className="ml-2 text-sub-600 hover:text-main-900"
-                                >
-                                    <X size={16} />
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                )}
-                <div className="flex items-end gap-2">
-                    <div className="flex-1 border border-soft-200 rounded-lg overflow-hidden">
-                        <textarea
-                            ref={textareaRef}
-                            value={messageText}
-                            onChange={(e) => setMessageText(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            placeholder="Type a message..."
-                            className="w-full p-3 resize-none focus:outline-none text-sm max-h-[150px] overflow-y-auto"
-                            rows={1}
-                        />
-                        <div className="flex items-center px-3 py-2 border-t border-soft-200">
-                            <button
-                                onClick={() => fileInputRef.current?.click()}
-                                className="text-sub-600 hover:text-main-900 mr-3"
-                            >
-                                <Paperclip size={18} />
-                            </button>
-                            <input
-                                type="file"
-                                ref={fileInputRef}
-                                onChange={handleFileChange}
-                                className="hidden"
-                                multiple
+                            </motion.div>
+                        ) : null}
+                    </AnimatePresence>
+
+                    <div className="flex items-end gap-2">
+                        <div className="flex-1 overflow-hidden rounded-xl">
+                            <textarea
+                                ref={textareaRef}
+                                value={messageText}
+                                onChange={(e) => setMessageText(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                placeholder="Type a message..."
+                                className="w-full px-3 pt-2.5 resize-none focus:outline-none text-xs sm:text-sm max-h-[120px] sm:max-h-[150px] overflow-y-auto custom-scroll min-h-[40px]"
+                                rows={1}
                             />
-                            <button className="text-sub-600 hover:text-main-900">
-                                <Smile size={18} />
-                            </button>
+                            <div className="flex items-center justify-between px-2 py-1.5">
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        className="text-sub-600 hover:text-main-900 cursor-pointer p-1"
+                                    >
+                                        <Icons.emotion_happy_line className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
+                                    </button>
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        onChange={handleFileChange}
+                                        onClick={(e) => {
+                                            (e.target as HTMLInputElement).value = '';
+                                        }}
+                                        className="hidden"
+                                        multiple
+                                        accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.mp3,.mp4"
+                                    />
+                                    <button
+                                        onClick={handleAttachmentClick}
+                                        className="text-sub-600 hover:text-main-900 cursor-pointer p-1"
+                                    >
+                                        <Icons.attachment_line className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
+                                    </button>
+                                </div>
+                                <Button
+                                    type="submit"
+                                    onClick={handleSendMessage}
+                                    className="h-7 sm:h-8 w-[60px] sm:w-[70px] disabled:cursor-auto group rounded-lg text-white text-xs sm:text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
+                                    <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
+                                    <div className="flex items-center justify-center gap-1">
+                                        Send <Icons.send className="stroke-white w-3 h-3 sm:w-4 sm:h-4" />
+                                    </div>
+                                </Button>
+                            </div>
                         </div>
                     </div>
-                    <button
-                        onClick={handleSendMessage}
-                        className="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700"
-                    >
-                        <Send size={18} />
-                    </button>
                 </div>
             </div>
 
-            {/* Offer Modal */}
             <OfferModal
                 isOpen={isOfferModalOpen}
                 onClose={() => setIsOfferModalOpen(false)}
                 onSubmit={handleOfferSubmit}
             />
+
+            <Dialog open={isContractDetailsOpen} onOpenChange={setIsContractDetailsOpen}>
+                <DialogContent className="sm:max-w-[425px] p-0">
+                    <ContractDetails {...contractDetailsData} />
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };

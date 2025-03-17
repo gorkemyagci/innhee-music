@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { Offer } from "../../types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Form } from "@/components/ui/form";
+import InputElement from "@/components/custom/form-elements/input";
 
 interface OfferModalProps {
   isOpen: boolean;
@@ -15,142 +16,131 @@ interface OfferModalProps {
   onSubmit: (offer: Offer) => void;
 }
 
-const OfferModal = ({ isOpen, onClose, onSubmit }: OfferModalProps) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState("");
-  const [deliveryDays, setDeliveryDays] = useState("");
+const formSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  amount: z.string().min(1, "Amount is required").refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+    message: "Amount must be greater than 0",
+  }),
+  deliveryDays: z.string().min(1, "Delivery days is required").refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+    message: "Delivery days must be greater than 0",
+  }),
+});
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!title || !description || !amount || !deliveryDays) {
-      return;
-    }
-    
-    const amountValue = parseFloat(amount);
-    const daysValue = parseInt(deliveryDays);
-    
-    if (amountValue <= 0 || daysValue <= 0) {
-      return;
-    }
-    
+type FormValues = z.infer<typeof formSchema>;
+
+const OfferModal = ({ isOpen, onClose, onSubmit }: OfferModalProps) => {
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      amount: "",
+      deliveryDays: "",
+    },
+  });
+
+  const handleSubmit = (values: FormValues) => {
     const offer: Offer = {
       id: `offer-${Date.now()}`,
-      title,
-      description,
-      amount: amountValue,
+      title: values.title,
+      description: values.description,
+      amount: parseFloat(values.amount),
       currency: "US$",
-      deliveryDays: daysValue,
+      deliveryDays: parseInt(values.deliveryDays),
     };
-    
+
     onSubmit(offer);
-    resetForm();
-  };
-  
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setAmount("");
-    setDeliveryDays("");
-  };
-  
-  const handleClose = () => {
-    resetForm();
+    form.reset();
     onClose();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px] p-0 bg-white border-soft-200 rounded-3xl">
-        <DialogHeader className="p-4 border-b border-soft-200">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[500px] p-0 bg-white border-soft-200 rounded-3xl overflow-hidden">
+        <DialogHeader className="p-6 border-b border-soft-200">
           <div className="flex items-center justify-between w-full">
             <DialogTitle className="text-main-900 font-medium">Create an Offer</DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleClose}
-              className="h-8 w-8 rounded-full"
-            >
-              <X size={18} />
-            </Button>
           </div>
         </DialogHeader>
-        
-        <form onSubmit={handleSubmit} className="p-4 space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="I will migrate any website from one platform to another"
-              required
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe what you'll deliver..."
-              rows={3}
-              required
-            />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="amount">Price</Label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sub-600">
-                  US$
-                </span>
-                <Input
-                  id="amount"
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  placeholder="100"
-                  className="pl-10"
-                  required
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+            <div className="w-full p-6 pt-2 flex flex-col gap-6">
+              <div className="flex flex-col space-y-2">
+                <InputElement
+                  form={form}
+                  name="title"
+                  label="Title"
+                  placeholder="I will migrate any website from one platform to another"
+                  className="h-11 hover:bg-weak-50 border-soft-200 transition-colors"
                 />
+                <p className="text-xs text-sub-600 px-0.5">
+                  Enter a clear and concise title for your offer
+                </p>
               </div>
-              <p className="text-xs text-sub-600">Minimum price: $1</p>
+
+              <div className="flex flex-col space-y-2">
+                <InputElement
+                  form={form}
+                  name="description"
+                  label="Description"
+                  type="textarea"
+                  placeholder="Describe what you'll deliver..."
+                  className="min-h-[120px] hover:bg-weak-50 border-soft-200 transition-colors"
+                />
+                <p className="text-xs text-sub-600 px-0.5">
+                  Provide detailed information about your offer
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div className="flex flex-col space-y-2">
+                  <InputElement
+                    form={form}
+                    name="amount"
+                    label="Price"
+                    type="price"
+                    placeholder="100"
+                    prefix="US$"
+                    className="h-11 hover:bg-weak-50 border-soft-200 transition-colors"
+                  />
+                  <p className="text-xs text-sub-600 px-0.5">
+                    Minimum price: $1
+                  </p>
+                </div>
+
+                <div className="flex flex-col space-y-2">
+                  <InputElement
+                    form={form}
+                    name="deliveryDays"
+                    label="Delivery Time (Days)"
+                    type="number"
+                    placeholder="7"
+                    className="h-11 hover:bg-weak-50 border-soft-200 transition-colors"
+                  />
+                  <p className="text-xs text-sub-600 px-0.5">
+                    Minimum: 1 day
+                  </p>
+                </div>
+              </div>
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="deliveryDays">Delivery Time (Days)</Label>
-              <Input
-                id="deliveryDays"
-                type="number"
-                value={deliveryDays}
-                onChange={(e) => setDeliveryDays(e.target.value)}
-                placeholder="7"
-                required
-              />
-              <p className="text-xs text-sub-600">Minimum: 1 day</p>
+            <div className="flex justify-end space-x-3 p-4 border-t border-soft-200">
+              <Button type="button"
+                onClick={onClose}
+                variant="outline" className="h-9 flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="h-10 flex-1 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
+                <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
+                Send Offer
+              </Button>
             </div>
-          </div>
-          
-          <div className="flex justify-end space-x-3 pt-4 border-t border-soft-200">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClose}
-              className="border-soft-200"
-            >
-              Cancel
-            </Button>
-            <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
-              Send Offer
-            </Button>
-          </div>
-        </form>
+          </form>
+        </Form>
       </DialogContent>
-    </Dialog>
+    </Dialog >
   );
 };
 

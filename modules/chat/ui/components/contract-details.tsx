@@ -60,9 +60,9 @@ const ContractDetails = ({
     };
 
     return (
-        <div className="w-[328px] p-6 flex-col gap-6 border-l border-soft-200 h-full overflow-auto custom-scroll hidden lg:flex">
-            <div className="flex flex-col items-center gap-4">
-                <div className="w-16 h-16 rounded-full p-0.5 overflow-hidden">
+        <div className="w-full lg:w-[328px] p-4 lg:p-6 flex-col gap-4 lg:gap-6 border-t lg:border-l border-soft-200 h-full overflow-auto custom-scroll">
+            <div className="flex flex-col items-center gap-3 lg:gap-4">
+                <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-full p-0.5 overflow-hidden">
                     <Image
                         src="/assets/images/Avatar-4.png"
                         alt="James Brown"
@@ -72,7 +72,7 @@ const ContractDetails = ({
                     />
                 </div>
                 <div className="flex flex-col gap-1 items-center">
-                    <h3 className="font-medium text-sub-600">James Brown</h3>
+                    <h3 className="font-medium text-sub-600 text-sm lg:text-base">James Brown</h3>
                     <p className="text-xs font-normal text-sub-600">CEO</p>
                 </div>
             </div>
@@ -81,10 +81,10 @@ const ContractDetails = ({
             <div className="flex flex-col gap-2 w-full">
                 <div className="flex flex-col w-full gap-2">
                     <div
-                        className="flex items-center h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-4 py-1.5 text-left"
+                        className="flex items-center h-8 lg:h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-3 lg:px-4 py-1.5 text-left"
                         onClick={() => setIsContractOpen(!isContractOpen)}
                     >
-                        <h3 className="font-medium text-[#525866]">Contract details</h3>
+                        <h3 className="font-medium text-[#525866] text-sm lg:text-base">Contract details</h3>
                         <motion.div
                             animate={{ rotate: isContractOpen ? 180 : 0 }}
                             transition={{ duration: 0.3 }}
@@ -101,7 +101,7 @@ const ContractDetails = ({
                                 variants={contentVariants}
                                 className="overflow-hidden"
                             >
-                                <div className="p-[14px] space-y-2">
+                                <div className="p-3 lg:p-[14px] space-y-2">
                                     <div className="flex justify-between">
                                         <span className="text-xs font-medium text-sub-600">Contract</span>
                                         <span className="text-xs text-sub-600 font-medium truncate max-w-[150px]">
@@ -132,7 +132,7 @@ const ContractDetails = ({
                                     <Separator className="bg-soft-200" />
                                     <div className="flex justify-between">
                                         <span className="text-xs font-medium text-sub-600">Amount</span>
-                                        <span className="text-base font-medium">
+                                        <span className="text-sm lg:text-base font-medium">
                                             ${typeof amount === 'number' ? amount.toFixed(2) : '0.00'}
                                         </span>
                                     </div>
@@ -144,10 +144,10 @@ const ContractDetails = ({
 
                 {/* Files */}
                 <div className="border-b border-soft-200">
-                    <div className="flex items-center h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-4 py-1.5 text-left"
+                    <div className="flex items-center h-8 lg:h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-3 lg:px-4 py-1.5 text-left"
                         onClick={() => setIsFilesOpen(!isFilesOpen)}
                     >
-                        <h3 className="font-medium text-[#525866]">Files</h3>
+                        <h3 className="font-medium text-[#525866] text-sm lg:text-base">Files</h3>
                         <motion.div
                             animate={{ rotate: isFilesOpen ? 180 : 0 }}
                             transition={{ duration: 0.3 }}
@@ -164,7 +164,7 @@ const ContractDetails = ({
                                 variants={contentVariants}
                                 className="overflow-hidden"
                             >
-                                <div className="p-[14px] space-y-2">
+                                <div className="p-3 lg:p-[14px] space-y-2">
                                     {files.map((file, index) => (
                                         <div key={index} className="flex justify-between items-center">
                                             <div className="flex items-center">
@@ -185,10 +185,10 @@ const ContractDetails = ({
 
                 {/* People */}
                 <div className="mt-2.5">
-                    <div className="flex items-center h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-4 py-1.5 text-left"
+                    <div className="flex items-center h-8 lg:h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-3 lg:px-4 py-1.5 text-left"
                         onClick={() => setIsPeopleOpen(!isPeopleOpen)}
                     >
-                        <h3 className="font-medium text-[#525866]">People</h3>
+                        <h3 className="font-medium text-[#525866] text-sm lg:text-base">People</h3>
                         <motion.div
                             animate={{ rotate: isPeopleOpen ? 180 : 0 }}
                             transition={{ duration: 0.3 }}
@@ -205,24 +205,24 @@ const ContractDetails = ({
                                 variants={contentVariants}
                                 className="overflow-hidden"
                             >
-                                <div className="p-[14px] space-y-2">
+                                <div className="p-3 lg:p-[14px] space-y-2">
                                     {people.map((person, index) => (
                                         <div key={index} className="flex hover:bg-weak-50 p-2 rounded-[10px] transition-all duration-300 cursor-pointer justify-between items-center">
                                             <div className="flex gap-2 items-center">
-                                                <div className="w-11 h-11 p-0.5 rounded-full overflow-hidden">
+                                                <div className="w-9 h-9 lg:w-11 lg:h-11 p-0.5 rounded-full overflow-hidden">
                                                     <Image
                                                         src={person.avatar}
                                                         alt={person.name}
-                                                        className="w-11 h-11 object-contain"
+                                                        className="w-9 h-9 lg:w-11 lg:h-11 object-contain"
                                                         width={44}
                                                         height={44}
                                                     />
                                                 </div>
                                                 <div className="flex flex-col gap-1">
-                                                    <p className="text-sm text-sub-600 font-medium">
+                                                    <p className="text-xs lg:text-sm text-sub-600 font-medium">
                                                         {person.name}
                                                     </p>
-                                                    <p className="text-xs text-sub-600 font-medium">{person.role}</p>
+                                                    <p className="text-[10px] lg:text-xs text-sub-600 font-medium">{person.role}</p>
                                                 </div>
                                             </div>
                                             {person?.status === "offline" && (

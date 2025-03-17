@@ -13,7 +13,7 @@ interface ChatSidebarProps {
 
 const ChatSidebar = ({ users, selectedChat, onSelectChat }: ChatSidebarProps) => {
   return (
-    <div className="w-full lg:w-[200px] p-4 border-r border-soft-200 flex flex-col gap-4 h-full overflow-hidden">
+    <div className="w-full md:w-[200px] p-4 border-r border-soft-200 flex flex-col gap-4 h-full overflow-hidden">
       <div>
         <h1 className="text-2xl font-medium text-strong-950">Chat</h1>
       </div>

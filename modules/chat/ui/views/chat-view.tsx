@@ -64,8 +64,7 @@ const ChatView = () => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-80px)] bg-white px-8">
-      {/* Mobile view: Only show sidebar or main content based on selection */}
+    <div className="flex h-[calc(100vh-80px)] bg-white lg:px-8">
       <div className="md:hidden w-full">
         {!selectedChat ? (
           <ChatSidebar 
@@ -80,11 +79,11 @@ const ChatView = () => {
             currentUser={currentUser}
             onSendMessage={handleSendMessage}
             onSendOffer={handleSendOffer}
+            onBack={() => setSelectedChat(null)}
           />
         )}
       </div>
 
-      {/* Desktop view: Show all components */}
       <div className="hidden md:flex w-full h-full">
         <ChatSidebar 
           users={users} 

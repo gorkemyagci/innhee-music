@@ -2,10 +2,15 @@
 
 import { Message, User } from "../../types";
 import { format } from "date-fns";
-import { Check, File } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import UserAvatar from "@/components/user-avatar";
+import { Icons } from "@/components/icons";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import ContractDetailsModal from "@/components/custom/modals/contract-details";
 
 interface MessageItemProps {
   message: Message;
@@ -16,7 +21,6 @@ interface MessageItemProps {
 const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
   const [showContractDetails, setShowContractDetails] = useState(false);
 
-  // Animation variants
   const modalVariants = {
     hidden: {
       opacity: 0,
@@ -103,7 +107,7 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 hover:underline text-sub-600 text-xs font-normal"
+          className="text-blue-600 hover:underline text-xs font-normal"
         >
           {url}
         </a>
@@ -141,58 +145,23 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
             </button>
           </div>
         ) : (
-          <div className="bg-soft-100 text-sub-600 text-xs px-3 py-1 rounded-full mb-2">
-            {message.content}
-          </div>
+          message.content !== "Activated the milestone" && (
+            <div className="bg-soft-100 text-sub-600 text-xs px-3 py-1 rounded-full mb-2">
+              {message.content}
+            </div>
+          )
         )}
-        <AnimatePresence>
-          {showContractDetails && (
-            <motion.div
-              className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-              onClick={() => setShowContractDetails(false)}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              variants={backdropVariants}
-            >
-              <motion.div
-                className="bg-white rounded-lg p-6 max-w-md w-full"
-                onClick={(e) => e.stopPropagation()}
-                variants={modalVariants}
-              >
-                <h3 className="text-lg font-medium mb-4">Contract Details</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Contract ID</span>
-                    <span className="text-sm font-medium">#126895</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Contract Name</span>
-                    <span className="text-sm font-medium">Contract name here...</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Start Date</span>
-                    <span className="text-sm font-medium">10 March, 2025</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Deadline</span>
-                    <span className="text-sm font-medium">15 March, 2025</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Total Amount</span>
-                    <span className="text-sm font-medium">$240.00</span>
-                  </div>
-                </div>
-                <button
-                  className="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-                  onClick={() => setShowContractDetails(false)}
-                >
-                  Close
-                </button>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <ContractDetailsModal
+          isOpen={showContractDetails}
+          onClose={() => setShowContractDetails(false)}
+          contractData={{
+            contractId: "126895",
+            contractName: "Contract name here...",
+            startDate: "10 March, 2025",
+            deadline: "15 March, 2025",
+            amount: 240.00
+          }}
+        />
       </div>
     );
   }
@@ -206,97 +175,82 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
           isOwn ? "justify-end" : "justify-start"
         )}
       >
-        <div
-          className={cn(
-            "max-w-[80%] rounded-lg p-4",
-            isOwn ? "bg-blue-50 text-main-900" : "bg-white border border-soft-200"
-          )}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-sub-600">Offer</span>
-            <span className="text-xs text-sub-600">{formatTime(message.timestamp)}</span>
-          </div>
-          <h4 className="font-medium text-sm mb-1">{message.offer?.title}</h4>
-          <p className="text-xs text-sub-600 mb-2">{message.offer?.description}</p>
-          <div className="flex justify-between items-center">
-            <span className="font-bold text-sm">{message.offer?.currency}{message.offer?.amount}</span>
-            <div className="text-xs text-sub-600 flex items-center">
-              <span className="mr-1">{message.offer?.deliveryDays} Days Delivery</span>
+        <div className="max-w-[80%] flex flex-row gap-2.5">
+          <UserAvatar
+            imageUrl={sender.avatar}
+            name={sender.name}
+            className="w-10 h-10 rounded-full p-1"
+          />
+          <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-2.5">
+              <div className="flex items-center gap-0.5 text-xs">
+                <span className="font-medium text-sub-600">James</span>
+                <span className="font-normal text-soft-400">10:32 PM</span>
+              </div>
+              <span className="text-sub-600 font-normal text-xs flex items-center gap-1">Offer <Icons.information_line /></span>
             </div>
-          </div>
-          {!isOwn && message.content.includes("Accepted") ? (
-            <div className="mt-3">
-              <button
-                className="text-blue-600 text-xs font-medium hover:underline"
-                onClick={handleViewContract}
-              >
-                View contract
-              </button>
-            </div>
-          ) : !isOwn && (
-            <div className="mt-3 flex gap-2">
-              <button className="bg-white border border-soft-200 text-sub-600 px-4 py-1 rounded text-xs font-medium">
-                Decline
-              </button>
-              <button className="bg-blue-600 text-white px-4 py-1 rounded text-xs font-medium">
-                Accept
-              </button>
-            </div>
-          )}
-        </div>
-
-        <AnimatePresence>
-          {showContractDetails && (
-            <motion.div
-              className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-              onClick={() => setShowContractDetails(false)}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              variants={backdropVariants}
+            <div
+              className={cn(
+                "lg:w-[360px] w-full rounded-2xl border border-soft-200"
+              )}
             >
-              <motion.div
-                className="bg-white rounded-lg p-6 max-w-md w-full"
-                onClick={(e) => e.stopPropagation()}
-                variants={modalVariants}
-              >
-                <h3 className="text-lg font-medium mb-4">Contract Details</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Contract ID</span>
-                    <span className="text-sm font-medium">#126895</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Contract Name</span>
-                    <span className="text-sm font-medium">Contract name here...</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Start Date</span>
-                    <span className="text-sm font-medium">10 March, 2025</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Deadline</span>
-                    <span className="text-sm font-medium">15 March, 2025</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Total Amount</span>
-                    <span className="text-sm font-medium">$240.00</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Offer Amount</span>
-                    <span className="text-sm font-medium">{message.offer?.currency}{message.offer?.amount}</span>
+              <div className="p-4 bg-weak-50 rounded-t-2xl flex items-center justify-between">
+                <span className="font-medium text-sm text-strong-950">
+                  {message.offer?.title}
+                </span>
+                <span className="font-medium text-base text-strong-950">
+                  {message.offer?.currency}{message.offer?.amount}
+                </span>
+              </div>
+              <div className="flex flex-col items-start gap-3 p-4">
+                <span className="text-strong-950 font-normal text-xs">{message.offer?.description}</span>
+                <Separator className="bg-soft-200" />
+                <div className="flex flex-col items-start gap-1">
+                  <span className="text-strong-950 text-xs font-medium">
+                    Your offer includes
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <Icons.time_line />
+                    <span className="text-sub-600 text-xs font-normal">12 Days Delivery</span>
                   </div>
                 </div>
-                <button
-                  className="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-                  onClick={() => setShowContractDetails(false)}
-                >
-                  Close
-                </button>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </div>
+              {!isOwn && message.content.includes("Accepted") ? (
+                <div className="mt-3">
+                  <button
+                    className="text-blue-600 text-xs font-medium hover:underline"
+                    onClick={handleViewContract}
+                  >
+                    View contract
+                  </button>
+                </div>
+              ) : !isOwn && (
+                <div className="p-4 flex gap-3 items-center border-t border-soft-200">
+                  <Button variant="outline" className="h-9 flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
+                    Cancel
+                  </Button>
+                  <Button
+                    className="h-9 flex-1 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
+                    <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
+                    Accept
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <ContractDetailsModal
+          isOpen={showContractDetails}
+          onClose={() => setShowContractDetails(false)}
+          contractData={{
+            contractId: "126895",
+            contractName: "Contract name here...",
+            startDate: "10 March, 2025",
+            deadline: "15 March, 2025",
+            amount: 240.00,
+            offerAmount: message.offer?.amount
+          }}
+        />
       </div>
     );
   }
@@ -310,82 +264,53 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
           isOwn ? "justify-end" : "justify-start"
         )}
       >
-        <div
-          className={cn(
-            "max-w-[80%] rounded-lg p-4",
-            isOwn ? "bg-blue-50 text-main-900" : "bg-white border border-soft-200"
-          )}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-sub-600">Milestone</span>
-            <span className="text-xs text-sub-600">{formatTime(message.timestamp)}</span>
-          </div>
-          <h4 className="font-medium text-sm mb-2">{message.milestone?.title}</h4>
-          <div className="flex justify-between items-center">
-            <span className="font-bold text-sm">{message.milestone?.currency}{message.milestone?.amount}</span>
-          </div>
-          <div className="mt-3">
-            <button
-              className="text-blue-600 text-xs font-medium hover:underline"
-              onClick={handleViewContract}
+        <div className="flex items-start gap-2.5 max-w-[80%]">
+          <UserAvatar
+            imageUrl={sender.avatar}
+            name={sender.name}
+            className="w-10 h-10 rounded-full p-1"
+          />
+          <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col items-start gap-0.5">
+              <div className="flex items-center gap-0.5 text-xs">
+                <span className="font-medium text-sub-600">James</span>
+                <span className="font-normal text-soft-400">10:32 PM</span>
+              </div>
+              <span className="text-sub-600 font-normal text-xs">Activated the milestone</span>
+            </div>
+            <div
+              className={cn(
+                "w-full rounded-lg p-4 bg-weak-50"
+              )}
             >
-              View contract
-            </button>
+              <h4 className="font-normal text-strong-950 text-sm mb-1">{message.milestone?.title}</h4>
+              <div className="flex justify-between items-center">
+                <span className="font-normal text-strong-950 text-sm">Amount: $70.00</span>
+              </div>
+              <div className="mt-1">
+                <button
+                  className="text-primary-base text-sm cursor-pointer font-medium hover:underline"
+                  onClick={handleViewContract}
+                >
+                  View contract
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <AnimatePresence>
-          {showContractDetails && (
-            <motion.div
-              className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-              onClick={() => setShowContractDetails(false)}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              variants={backdropVariants}
-            >
-              <motion.div
-                className="bg-white rounded-lg p-6 max-w-md w-full"
-                onClick={(e) => e.stopPropagation()}
-                variants={modalVariants}
-              >
-                <h3 className="text-lg font-medium mb-4">Contract Details</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Contract ID</span>
-                    <span className="text-sm font-medium">#126895</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Contract Name</span>
-                    <span className="text-sm font-medium">Contract name here...</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Start Date</span>
-                    <span className="text-sm font-medium">10 March, 2025</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Deadline</span>
-                    <span className="text-sm font-medium">15 March, 2025</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Total Amount</span>
-                    <span className="text-sm font-medium">$240.00</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-sub-600">Milestone Amount</span>
-                    <span className="text-sm font-medium">{message.milestone?.currency}{message.milestone?.amount}</span>
-                  </div>
-                </div>
-                <button
-                  className="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-                  onClick={() => setShowContractDetails(false)}
-                >
-                  Close
-                </button>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <ContractDetailsModal
+          isOpen={showContractDetails}
+          onClose={() => setShowContractDetails(false)}
+          contractData={{
+            contractId: "126895",
+            contractName: "Contract name here...",
+            startDate: "10 March, 2025",
+            deadline: "15 March, 2025",
+            amount: 240.00,
+            milestoneAmount: message.milestone?.amount
+          }}
+        />
       </div>
     );
   }
@@ -399,11 +324,11 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
       )}
     >
       {!isOwn && (
-        <div className="w-8 h-8 rounded-full overflow-hidden mr-2 flex-shrink-0 mt-1">
-          <img
-            src={sender.avatar}
-            alt={sender.name}
-            className="w-full h-full object-cover"
+        <div className="w-10 h-10 rounded-full p-1 overflow-hidden mr-2 flex-shrink-0 mt-1">
+          <UserAvatar
+            imageUrl={sender.avatar}
+            name={sender.name}
+            className="w-10 h-10 rounded-full p-1"
           />
         </div>
       )}
@@ -455,7 +380,7 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
         )}
       </div>
       {isOwn && (
-        <div className="w-8 h-8 rounded-full overflow-hidden ml-2 flex-shrink-0 mt-1">
+        <div className="w-10 h-10 rounded-full p-1 overflow-hidden ml-2 flex-shrink-0 mt-1">
           <img
             src={sender.avatar}
             alt={sender.name}
