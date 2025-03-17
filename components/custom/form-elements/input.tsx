@@ -11,7 +11,7 @@ import { UseFormReturn } from "react-hook-form";
 
 interface Props {
     name: string;
-    label: string;
+    label?: string;
     type?: "text" | "number" | "file" | "email" | "password" | "textarea" | "price";
     placeholder?: string;
     prefix?: string;
@@ -52,11 +52,13 @@ export function InputElement({
             name={name}
             render={({ field }) => (
                 <FormItem className="w-full">
-                    <FormLabel>
-                        <div className="truncate flex w-full justify-start">
-                            <span className="text-[13px]">{label}</span>
-                        </div>
-                    </FormLabel>
+                    {label && (
+                        <FormLabel>
+                            <div className="truncate flex w-full justify-start">
+                                <span className="text-[13px]">{label}</span>
+                            </div>
+                        </FormLabel>
+                    )}
                     <FormControl>
                         <div className="relative">
                             {prefix && type === "price" && (
