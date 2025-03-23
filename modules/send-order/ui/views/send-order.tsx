@@ -29,9 +29,23 @@ const formSchema = z.object({
         size: z.number(),
         type: z.string()
     })),
+    milestones: z.array(z.object({
+        title: z.string(),
+        amount: z.number().min(0, "Amount must be greater than 0"),
+        deadline: z.string(),
+        currency: z.enum(["CNY"])
+    })).optional(),
     termsAgreed: z.boolean().refine(val => val === true, {
         message: "You must agree to the Terms & Conditions and Privacy Policy"
     })
+}).superRefine((data, ctx) => {
+    if (data.paymentType === "installment" && (!data.milestones || data.milestones.length === 0)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Milestones are required for installment payments",
+            path: ["milestones"]
+        });
+    }
 });
 
 type SendOrderFormValues = z.infer<typeof formSchema>;
@@ -53,6 +67,7 @@ const SendOrder = () => {
             amount: 0,
             currency: "CNY",
             deadline: "",
+            milestones: [],
             attachments: [],
             termsAgreed: false
         }
