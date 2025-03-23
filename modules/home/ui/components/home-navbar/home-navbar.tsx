@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import AuthedNavbar from "./authed-navbar";
 import { useTranslations } from "next-intl";
+import LanguageSelector from "./language-selector";
 
 const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
     const pathname = usePathname();
@@ -59,6 +60,7 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                 <div className="hidden lg:block">
                     <SearchInput />
                 </div>
+                <LanguageSelector />
                 <Icons.sunline />
                 {!isAuthenticated ? (
                     <Link href={pageUrls.SIGN_IN} prefetch>
