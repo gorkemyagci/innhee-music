@@ -18,13 +18,8 @@ const AuthedNavbar = () => {
                 >
                     <div className="absolute top-0 left-0 w-full h-0 group-hover:h-4 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] to-[#FFF]/0" />
                     <Icons.plus className="fill-white size-3" />
-                    <span className="text-sm font-medium">Create Request</span>
+                    <span className="text-sm font-medium">Create</span>
                 </Button></Link>
-            <motion.span
-                className="cursor-pointer hidden sm:block"
-            >
-                <Icons.sunline />
-            </motion.span>
             <Notifications>
                 <motion.span
                     className="cursor-pointer hidden sm:block"

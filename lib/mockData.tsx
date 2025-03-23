@@ -232,3 +232,50 @@ export const buyerOrders = [
         }
     }
 ];
+
+export const timelineData = [
+    {
+        id: 1,
+        title: "Order created",
+        amount: 500,
+        description: "Milestone Amount",
+        date: "23 Jan 2025, 14:27",
+        status: "completed",
+    },
+    {
+        id: 2,
+        title: "Milestone 1",
+        amount: 58,
+        date: "23 Jan 2025, 14:27",
+        status: "completed",
+    },
+    {
+        id: 3,
+        title: "Milestone 2",
+        amount: 120,
+        date: null,
+        status: "pending",
+    },
+    {
+        id: 4,
+        title: "Milestone 3",
+        amount: 100,
+        date: null,
+        status: "pending",
+    },
+    {
+        id: 5,
+        title: "Milestone 4",
+        amount: 100,
+        date: null,
+        status: "pending",
+    },
+    {
+        id: 6,
+        title: "Milestone 5",
+        amount: 100,
+        date: null,
+        status: "pending",
+    },
+];
+

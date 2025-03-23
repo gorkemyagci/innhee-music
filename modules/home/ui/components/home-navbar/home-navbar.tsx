@@ -26,18 +26,11 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    const navItemsAuthed = [
-        { label: "Find Works", icon: <Icons.layout_grid className={cn("size-5", pathname === "/dashboard" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/dashboard" },
-        { label: "Find jobs", icon: <Icons.calendar_line className={cn("size-5", pathname === "/find-jobs" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/find-jobs" },
-        { label: "Beats Market", icon: <Icons.timer className={cn("size-5", pathname === "/beats-market" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/beats-market" },
-        { label: "Referral", icon: <Icons.folders className={cn("size-5", pathname === "/referral" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/referral" }
-    ]
-
     const navItems = [
-        { label: "Works", icon: <Icons.layout_grid className={cn("size-5", pathname === "/dashboard" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/dashboard" },
-        { label: "Project", icon: <Icons.calendar_line className={cn("size-5", pathname === "/find-jobs" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/find-jobs" },
-        { label: "Beats", icon: <Icons.timer className={cn("size-5", pathname === "/beats-market" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/beats-market" },
-        { label: "Referral", icon: <Icons.folders className={cn("size-5", pathname === "/referral" ? "fill-[#335CFF]" : "fill-sub-600")} />, href: "/referral" }
+        { label: "Find workers", href: "/dashboard" },
+        { label: "Find Projects", href: "/find-jobs" },
+        { label: "Find Servers", href: "/beats-market" },
+        { label: "Bonus", href: "/referral" }
     ]
 
     const closeMenu = () => setIsMobileMenuOpen(false);
@@ -54,25 +47,14 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                     </Link>
                 </motion.div>
                 <ul className="hidden lg:flex items-center gap-1">
-                    {isAuthenticated && navItemsAuthed.map((item, index) => (
+                    {navItems.map((item, index) => (
                         <motion.li
                             key={index}
                             className={cn("pr-3 pl-2 py-2 hover:bg-weak-50 transition-all duration-200 rounded-lg"
                             )}
                         >
                             <Link href={item.href} prefetch className="flex items-center gap-1.5">
-                                <span className="text-sub-600 text-sm font-medium tracking-tight">{item.label}</span>
-                            </Link>
-                        </motion.li>
-                    ))}
-                    {!isAuthenticated && navItems.map((item, index) => (
-                        <motion.li
-                            key={index}
-                            className={cn("pr-3 pl-2 py-2 hover:bg-weak-50 transition-all duration-200 rounded-lg"
-                            )}
-                        >
-                            <Link href={item.href} prefetch className="flex items-center gap-1.5">
-                                <span className="text-sub-600 text-sm font-medium tracking-tight">{item.label}</span>
+                                <span className="text-strong-950 text-sm font-normal tracking-tight">{item.label}</span>
                             </Link>
                         </motion.li>
                     ))}
@@ -82,9 +64,7 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                 <div className="hidden lg:block">
                     <SearchInput />
                 </div>
-                {!isAuthenticated && (
-                    <Icons.flash_light />
-                )}
+                <Icons.sunline />
                 {!isAuthenticated ? (
                     <Link href={pageUrls.SIGN_IN} prefetch>
                         <Button
@@ -151,7 +131,7 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                                     <SearchInput />
                                 </div>
                                 <ul className="flex flex-col gap-3 sm:gap-4">
-                                    {isAuthenticated && navItemsAuthed.map((item, index) => (
+                                    {navItems.map((item, index) => (
                                         <motion.li
                                             key={index}
                                             initial={{ opacity: 0, x: -20 }}
@@ -165,26 +145,6 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                                             )}
                                         >
                                             <Link href={item.href} prefetch className="flex items-center gap-2 sm:gap-3" onClick={closeMenu}>
-                                                {item.icon}
-                                                <span className="text-sm sm:text-base text-black font-medium tracking-tight">{item.label}</span>
-                                            </Link>
-                                        </motion.li>
-                                    ))}
-                                    {!isAuthenticated && navItems.map((item, index) => (
-                                        <motion.li
-                                            key={index}
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{
-                                                opacity: 1,
-                                                x: 0,
-                                                transition: { delay: index * 0.1 }
-                                            }}
-                                            className={cn("py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg",
-                                                pathname === item.href && "bg-weak-50"
-                                            )}
-                                        >
-                                            <Link href={item.href} prefetch className="flex items-center gap-2 sm:gap-3" onClick={closeMenu}>
-                                                {item.icon}
                                                 <span className="text-sm sm:text-base text-black font-medium tracking-tight">{item.label}</span>
                                             </Link>
                                         </motion.li>

@@ -9,9 +9,10 @@ interface SubmitButtonProps {
     loading?: boolean;
     disabled?: boolean;
     className?: string;
+    buttonType?: "button" | "submit" | "reset";
 }
 
-const SubmitButton = ({ text, onClick, loading, disabled, className }: SubmitButtonProps) => {
+const SubmitButton = ({ text, onClick, loading, disabled, className, buttonType = "button" }: SubmitButtonProps) => {
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (onClick) {
             e.preventDefault();
@@ -21,7 +22,7 @@ const SubmitButton = ({ text, onClick, loading, disabled, className }: SubmitBut
 
     return (
         <Button
-            type="button"
+            type={buttonType}
             onClick={handleClick}
             disabled={disabled}
             className={cn("w-full h-10 disabled:cursor-auto group rounded-[10px] text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]", className)}>

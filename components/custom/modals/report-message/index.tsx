@@ -114,6 +114,7 @@ const ReportMessage = ({ children }: ReportMessageProps) => {
                                                 onChange={(e) => {
                                                     const newText = e.target.value;
                                                     setText(newText);
+                                                    form.setValue("detail", newText);
                                                 }}
                                                 maxLength={maxChars}
                                             />

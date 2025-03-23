@@ -141,6 +141,8 @@
   --color-weak-50: #f5f7fa;
   --color-disabled-300: #cacfd8;
   --color-soft-400: #99a0ae;
+  --disabled-300: #CACFD8;
+  --sub-300: #CACFD8;
 
   @keyframes accordion-down {
     from {

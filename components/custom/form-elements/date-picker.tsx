@@ -30,6 +30,7 @@ interface DatePickerProps {
   icon?: React.ReactNode;
   customLabel?: React.ReactNode;
   open?: boolean;
+  formItemClassName?: string;
 }
 
 export function DatePickerForm({
@@ -42,6 +43,7 @@ export function DatePickerForm({
   icon,
   customLabel,
   open,
+  formItemClassName,
   ...props
 }: DatePickerProps) {
   const [inputValue, setInputValue] = useState("");
@@ -107,7 +109,7 @@ export function DatePickerForm({
         };
 
         return (
-          <FormItem>
+          <FormItem className={cn(formItemClassName)}>
             <FormLabel className="text-xs font-medium">
               {customLabel ? customLabel : label} {required ? <span className="text-lm_red">*</span> : ""}
             </FormLabel>
