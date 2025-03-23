@@ -3,28 +3,30 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/user-avatar";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 
-const AppInfo = () => {
+const AppInfo = async () => {
+    const t = await getTranslations();
     return (
         <div className="py-6 sm:py-8 md:py-12 lg:py-16 max-w-[1440px] w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-20 flex flex-col gap-6 sm:gap-8 md:gap-10 lg:gap-14 items-center">
             <div className="flex flex-col items-center gap-4 sm:gap-6">
-                <h3 className="text-strong-950 text-xl sm:text-2xl md:text-3xl lg:text-[2.5rem] font-medium text-center">What&apos;s inside AlignUl?</h3>
-                <p className="text-sub-600 text-sm sm:text-base md:text-lg font-normal max-w-xl text-center">500+ flexible components with developer-friendly, comprehensive codebase for rapid development.</p>
+                <h3 className="text-strong-950 text-xl sm:text-2xl md:text-3xl lg:text-[2.5rem] font-medium text-center">{t("features_3.title")}</h3>
+                <p className="text-sub-600 text-sm sm:text-base md:text-lg font-normal max-w-xl text-center">{t("features_3.feature1.description")}</p>
             </div>
             <div className="flex flex-col items-center gap-6 w-full max-w-[1200px] mx-auto">
                 <div className="flex flex-col items-center gap-4 sm:gap-6">
                     <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 md:gap-6 lg:gap-12">
                         <Button variant="outline" className="border-soft-200 rounded-full py-2 sm:py-2.5 px-3 hover:bg-white w-full sm:w-auto">
                             <Icons.flaslight_fill className="fill-[#47C2FF] w-4 h-4 sm:w-5 sm:h-5" />
-                            <span className="text-strong-950 font-medium text-sm sm:text-base">Individual Plan</span>
+                            <span className="text-strong-950 font-medium text-sm sm:text-base">{t("features_3.feature1.description")}</span>
                         </Button>
                         <Button variant="outline" className="border-soft-200 rounded-full py-2 sm:py-2.5 px-3 hover:bg-white w-full sm:w-auto">
                             <Icons.flaslight_fill className="fill-[#47C2FF] w-4 h-4 sm:w-5 sm:h-5" />
-                            <span className="text-strong-950 font-medium text-sm sm:text-base">Commercial Project</span>
+                            <span className="text-strong-950 font-medium text-sm sm:text-base">{t("features_3.feature2.description")}</span>
                         </Button>
                         <Button variant="outline" className="border-soft-200 rounded-full py-2 sm:py-2.5 px-3 hover:bg-white w-full sm:w-auto">
                             <Icons.flaslight_fill className="fill-[#47C2FF] w-4 h-4 sm:w-5 sm:h-5" />
-                            <span className="text-strong-950 font-medium text-sm sm:text-base">Team Project</span>
+                            <span className="text-strong-950 font-medium text-sm sm:text-base">{t("features_3.feature3.description")}</span>
                         </Button>
                     </div>
                     <Icons.info_navigation className="w-full sm:w-auto" />
@@ -86,7 +88,7 @@ const AppInfo = () => {
                                     height={20}
                                     className="sm:w-6 sm:h-6"
                                 />
-                                <span className="text-black font-medium text-xs">Communication details</span>
+                                <span className="text-black font-medium text-xs">{t("features_3.feature4.description")}</span>
                             </div>
                             <div className="border border-[#CACFD8] relative rounded-lg flex items-center gap-2 w-full sm:w-64 z-10 bg-white px-3 sm:px-5 h-12 sm:h-14">
                                 <div className="absolute -top-1 left-1/2 -translate-x-1/2 border border-[#DADADA] bg-white rounded-full w-2 h-2"></div>
@@ -98,7 +100,7 @@ const AppInfo = () => {
                                     height={20}
                                     className="sm:w-6 sm:h-6"
                                 />
-                                <span className="text-black font-medium text-xs">Set Delivery Date</span>
+                                <span className="text-black font-medium text-xs">{t("features_3.feature5.description")}</span>
                             </div>
                             <div className="border border-[#CACFD8] relative rounded-lg flex items-center gap-2 w-full sm:w-64 z-10 bg-white px-3 sm:px-5 h-12 sm:h-14">
                                 <div className="absolute -top-1 left-1/2 -translate-x-1/2 border border-[#DADADA] bg-white rounded-full w-2 h-2"></div>
@@ -110,7 +112,7 @@ const AppInfo = () => {
                                     height={20}
                                     className="sm:w-6 sm:h-6"
                                 />
-                                <span className="text-black font-medium text-xs">Complete the order</span>
+                                <span className="text-black font-medium text-xs">{t("features_3.feature6.description")}</span>
                             </div>
                         </div>
                     </div>
@@ -127,8 +129,8 @@ const AppInfo = () => {
                                 className="sm:w-9 sm:h-9"
                             />
                             <div className="flex flex-col items-center gap-2 sm:gap-3">
-                                <span className="font-medium text-strong-950 text-sm sm:text-base">Support</span>
-                                <span className="text-sub-600 font-normal text-xs sm:text-sm max-w-sm text-center">Daily human customer service from 9:30-22:00, excluding public holidays.</span>
+                                <span className="font-medium text-strong-950 text-sm sm:text-base">{t("features_3.feature7.title")}</span>
+                                <span className="text-sub-600 font-normal text-xs sm:text-sm max-w-sm text-center">{t("features_3.feature7.description")}</span>
                             </div>
                         </div>
                         <div className="flex w-full flex-col items-center gap-4 sm:gap-5">
@@ -140,8 +142,8 @@ const AppInfo = () => {
                                 className="sm:w-9 sm:h-9"
                             />
                             <div className="flex flex-col items-center gap-2 sm:gap-3">
-                                <span className="font-medium text-strong-950 text-sm sm:text-base">Privacy</span>
-                                <span className="text-sub-600 font-normal text-xs sm:text-sm max-w-sm text-center">Workers are not allowed to disclose order-related information without your authorization.</span>
+                                <span className="font-medium text-strong-950 text-sm sm:text-base">{t("features_3.feature8.title")}</span>
+                                <span className="text-sub-600 font-normal text-xs sm:text-sm max-w-sm text-center">{t("features_3.feature8.description")}</span>
                             </div>
                         </div>
                         <div className="flex w-full flex-col items-center gap-4 sm:gap-5">
@@ -153,8 +155,8 @@ const AppInfo = () => {
                                 className="sm:w-9 sm:h-9"
                             />
                             <div className="flex flex-col items-center gap-2 sm:gap-3">
-                                <span className="font-medium text-strong-950 text-sm sm:text-base">Guarantee</span>
-                                <span className="text-sub-600 font-normal text-xs sm:text-sm max-w-sm text-center">You can apply for a full refund for work deliveries that do not meet your requirements.</span>
+                                <span className="font-medium text-strong-950 text-sm sm:text-base">{t("features_3.feature9.title")}</span>
+                                <span className="text-sub-600 font-normal text-xs sm:text-sm max-w-sm text-center">{t("features_3.feature9.description")}</span>
                             </div>
                         </div>
                     </div>

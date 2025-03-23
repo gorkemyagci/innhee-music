@@ -1,0 +1,229 @@
+{
+  "landingPageTitle": "innhee-One Stop Audio Talent Platform, Making Great Sounds Land Faster",
+  "landingPageSubtitle": "1v1 Customize Your Audio Solution",
+  "navigation": {
+    "FindWorker": "Workers",
+    "FindServices": "Services",
+    "FindProjects": "Requirements",
+    "Bonus": "First - Order Discount",
+    "Search": "Find More",
+    "SwitchLanguage": "Language",
+    "LightDark": "Light / Dark Mode",
+    "ctaButton": "Start for Free"
+  },
+  "hero": {
+    "title": "From Sound Enthusiast to Professional Producer, Just One Start Away. Every Step is Professionally Escorted.",
+    "subtitle": "1v1 Customize Your Audio Solution",
+    "ctaButton": "Start for Free"
+  },
+  "Buyer": {
+    "title": "Find Professional Services",
+    "description": "Post a job, set a budget, and quickly match with professionals.",
+    "ctaButton": "Start for Free"
+  },
+  "Worker": {
+    "title": "Provide Professional Audio Skills",
+    "description": "Realize the Value of Your Skills through Flexible Work Opportunities.",
+    "ctaButton": "Apply Now"
+  },
+  "features": {
+    "title": "Choose Yinhe",
+    "feature1": {
+      "title": "A Gathering Place for Various Types of Skilled People such as Singers, Bands, and Voice Actors",
+      "description": "Proficient in various styles, with excellent recording conditions and capabilities, providing the sounds you need most."
+    },
+    "feature2": {
+      "title": "Lyric Writing, Composing, Audio - Video Design and Creation, etc.",
+      "description": "Creativity, creation, innovation! Let's spark the collision of ideas together!"
+    },
+    "feature3": {
+      "title": "Song Post - Singing, Audio - Video Track Mixing, Dialogue, Mastering",
+      "description": "All audio - video - related mixing and post - production on - demand."
+    },
+    "feature4": {
+      "title": "Hardware Assistance",
+      "description": "Debugging experts remotely help you solve equipment problems."
+    }
+  },
+  "HowDoesItWork": {
+    "title": "How It Works",
+    "feature1": {
+      "Discover": "Discover",
+      "description": "View worker details and choose the one you are most satisfied with."
+    },
+    "feature2": {
+      "Chat": "Chat",
+      "description": "Confirm every detail of your needs."
+    },
+    "feature3": {
+      "title": "Confirm",
+      "description": "Deliver the satisfactory work files on time."
+    }
+  },
+  "features_2": {
+    "title": "Trusted Professional Services",
+    "feature1": {
+      "title": "Fast and Free",
+      "description": "Submit your requirements for free and get a response in the shortest time."
+    },
+    "feature2": {
+      "title": "Professional Certification",
+      "description": "All workers have been verified for relevant skills."
+    },
+    "feature3": {
+      "title": "Security and Privacy",
+      "description": "Set orders to be hidden and only visible to invited workers."
+    },
+    "feature4": {
+      "title": "Calendar",
+      "description": "Monitor order status through the calendar and have a comprehensive understanding of each order."
+    },
+    "feature5": {
+      "title": "Business Support",
+      "description": "Workers provide services such as contract signing, invoicing, non - disclosure agreements, and copyright authorization."
+    }
+  },
+  "features_3": {
+    "title": "Experience the Simplest Workflow",
+    "feature1": {
+      "description": "Personal Hobby"
+    },
+    "feature2": {
+      "description": "Business Requirements"
+    },
+    "feature3": {
+      "description": "Team Planning"
+    },
+    "feature4": {
+      "description": "Discuss Complete Details"
+    },
+    "feature5": {
+      "description": "Set Delivery Date"
+    },
+    "feature6": {
+      "description": "Confirm Order Completion"
+    },
+    "feature7": {
+      "title": "Customer Support",
+      "description": "Artificial customer service hours are from 9:30 to 22:00, excluding legal holidays."
+    },
+    "feature8": {
+      "title": "Privacy",
+      "description": "Without your authorization, workers are not allowed to disclose relevant information."
+    },
+    "feature9": {
+      "title": "Guarantee",
+      "description": "If the work delivery does not meet the requirements, you can apply for a refund."
+    }
+  },
+  "faq": {
+    "title": "FAQs",
+    "subtitle": "Everything you need to know about the product and billing. Can't find the answer you're looking for? Please chat to our friendly team.",
+    "viewAll": "View All",
+    "items": [
+      {
+        "title": "What is the refund policy?",
+        "description": "We offer a 30-day money-back guarantee for all our services. If you're not satisfied with the work, you can request a full refund within 30 days of the delivery date."
+      },
+      {
+        "title": "How long does it take to complete a project?",
+        "description": "Project completion time varies depending on the scope and complexity. Typically, small projects can be completed within 1-2 days, while larger projects may take 5-7 days or more."
+      },
+      {
+        "title": "What payment methods do you accept?",
+        "description": "We accept all major credit cards, PayPal, and bank transfers. All payments are processed securely through our payment partners."
+      },
+      {
+        "title": "Can I request revisions?",
+        "description": "Yes, we offer unlimited revisions until you're completely satisfied with the work. Our goal is to ensure you get exactly what you need."
+      },
+      {
+        "title": "How do I communicate with the team?",
+        "description": "You can communicate with our team through our platform's messaging system, email, or schedule a video call for more complex discussions."
+      }
+    ]
+  },
+  "Footer": {
+    "description": "One - Stop Audio Talent Platform, Making Great Sounds Land Faster. 1v1 Customize Your Audio Solution.",
+    "title": "Resources",
+    "Contact": "Contact Us",
+    "HelpCenter": "Help Center",
+    "Terms": "Terms of Service",
+    "PrivacyPolicy": "Privacy Policy",
+    "title_buyers": "Buyers",
+    "FindWorker": "View Workers",
+    "FindServices": "View Services",
+    "FindProjects": "View Requirements",
+    "ApplyForCertification": "Apply as a Worker",
+    "SocialMedia": "Social Media",
+    "copyright": "Copyright © 2025 innhee.com. All rights reserved."
+  },
+  "whats_inside": {
+    "news": "News!",
+    "button": "Unlock the Best",
+    "title": "What's inside AlignUl?",
+    "features": [
+      {
+        "title": "Post Your Audio Project",
+        "description": "Post a clear brief for voiceovers, mixing, podcast editing, or sound production."
+      },
+      {
+        "title": "Intelligent Matching System",
+        "description": "AI-driven skill-based matching connects you with top talent instantly."
+      },
+      {
+        "title": "Intelligent Matching System",
+        "description": "AI-driven skill-based matching connects you with top talent instantly."
+      },
+      {
+        "title": "Streamlined",
+        "description": "Secure payments after project completion through integrated solutions."
+      }
+    ]
+  },
+  "navbar": {
+    "navItems": [
+      {
+        "label": "Find workers",
+        "href": "/dashboard"
+      },
+      {
+        "label": "Find Projects",
+        "href": "/find-jobs"
+      },
+      {
+        "label": "Find Servers",
+        "href": "/beats-market"
+      },
+      {
+        "label": "Bonus",
+        "href": "/referral"
+      }
+    ],
+    "startNow": "Start Now"
+  },
+  "search": {
+    "placeholder": "Discover more"
+  },
+  "authed_navbar": {
+    "create": "Create",
+    "myAccount": "My Account"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllAsRead": "Mark all as read",
+    "manage": "Manage",
+    "items": {
+      "joined": "{name} joined to {project}",
+      "invites": "{name} invites you {file} file with you",
+      "uploaded": "{name} uploaded an {file}",
+      "commented": "{name} commented on your post"
+    },
+    "timeAgo": {
+      "minutes": "{count} min ago",
+      "hours": "{count} hours ago",
+      "days": "{count} days ago"
+    },
+    "view": "View"
+  }
+}

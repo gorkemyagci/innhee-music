@@ -1,0 +1,229 @@
+{
+    "landingPageTitle": "音合 一站式音频人才平台，让好声音更快落地",
+    "landingPageSubtitle": "1v1定制你的音频解决方案",
+    "navigation": {
+        "FindWorker": "工作者",
+        "FindServices": "服务",
+        "FindProjects": "需求",
+        "Bonus": "首单优惠",
+        "Search": "查找更多",
+        "SwitchLanguage": "语言",
+        "LightDark": "光暗模式",
+        "ctaButton": "免费开始"
+    },
+    "hero": {
+        "title": "从声音爱好者到专业制作人，只差一个开始。每一步都有专业护航。",
+        "subtitle": "",
+        "ctaButton": "免费开始"
+    },
+    "Buyer": {
+        "title": "寻找专业服务",
+        "description": "发布工作任务，设定预算，快速匹配专业人士。",
+        "ctaButton": "免费开始"
+    },
+    "Worker": {
+        "title": "提供专业音频技能",
+        "description": "通过弹性工作机会实现技能价值。",
+        "ctaButton": "现在申请"
+    },
+    "features": {
+        "title": "选择音合",
+        "feature1": {
+            "title": "歌手、乐队、配音等多种类技能者聚集地",
+            "description": "熟练各类风格，他们良好的实录条件与能力，提供你最需要的声音。"
+        },
+        "feature2": {
+            "title": "作词、作曲、音视频设计创作等",
+            "description": "创意、创作、创造！无须多言！一起碰撞思维的火花！"
+        },
+        "feature3": {
+            "title": "歌曲贴唱、音视频分轨混音、对白、母带",
+            "description": "按需匹配的一切音视频相关混音、后期。"
+        },
+        "feature4": {
+            "title": "硬件帮助",
+            "description": "调试专家们远程帮你解决设备问题。"
+        }
+    },
+    "HowDoesItWork": {
+        "title": "如何进行？",
+        "feature1": {
+            "Discover": "查找",
+            "description": "查看工作者详情，选择你最满意的。"
+        },
+        "feature2": {
+            "Chat": "讨论",
+            "description": "确认你的每一个需求细节。"
+        },
+        "feature3": {
+            "title": "确认",
+            "description": "准时交付满意的作品文件。"
+        }
+    },
+    "features_2": {
+        "title": "值得信赖的专业服务",
+        "feature1": {
+            "title": "快速且免费",
+            "description": "免费提交您的需求，最短时间内获得响应。"
+        },
+        "feature2": {
+            "title": "专业认证",
+            "description": "所有工作者均已经相关技能验证。"
+        },
+        "feature3": {
+            "title": "安全隐私",
+            "description": "设置订单隐藏，仅对受邀工作者可见。"
+        },
+        "feature4": {
+            "title": "日程表",
+            "description": "通过日历监控订单状态，全方位了解每个订单。"
+        },
+        "feature5": {
+            "title": "商业支持",
+            "description": "工作者提供合同签署、开具发票、保密协议、版权授权等服务。"
+        }
+    },
+    "features_3": {
+        "title": "体验最简单的工作流程",
+        "feature1": {
+            "description": "个人爱好"
+        },
+        "feature2": {
+            "description": "商业需求"
+        },
+        "feature3": {
+            "description": "团队企划"
+        },
+        "feature4": {
+            "description": "讨论完整细节"
+        },
+        "feature5": {
+            "description": "设置交付日期"
+        },
+        "feature6": {
+            "description": "确认订单完成"
+        },
+        "feature7": {
+            "title": "客服支持",
+            "description": "人工客服时间为9:30至22:00,法定节假日除外。"
+        },
+        "feature8": {
+            "title": "隐私",
+            "description": "未经您的授权，工作者不得泄露相关信息。"
+        },
+        "feature9": {
+            "title": "保障",
+            "description": "若工作交付成果未达要求可申请退款。"
+        }
+    },
+    "Footer": {
+        "description": "一站式音频人才平台,让好声音更快落地。1v1定制你的音频解决方案。",
+        "title": "资源",
+        "Contact": "联系我们",
+        "HelpCenter": "帮助中心",
+        "Terms": "服务条款",
+        "PrivacyPolicy": "隐私政策",
+        "title_buyers": "买家",
+        "FindWorker": "查看工作者",
+        "FindServices": "查看服务",
+        "FindProjects": "查看需求",
+        "ApplyForCertification": "申请工作者",
+        "SocialMedia": "社交媒体",
+        "copyright": "版权所有 © 2025 innhee.com。保留所有权利。"
+    },
+    "faq": {
+        "title": "常见问题",
+        "subtitle": "关于产品和计费的一切信息。找不到您需要的答案？请与我们的友好团队聊天。",
+        "viewAll": "查看全部",
+        "items": [
+            {
+                "title": "退款政策是什么？",
+                "description": "我们为所有服务提供30天退款保证。如果您对工作不满意，可以在交付日期后30天内申请全额退款。"
+            },
+            {
+                "title": "完成一个项目需要多长时间？",
+                "description": "项目完成时间因范围和复杂性而异。通常，小型项目可以在1-2天内完成，而大型项目可能需要5-7天或更长时间。"
+            },
+            {
+                "title": "您接受哪些支付方式？",
+                "description": "我们接受所有主要信用卡、PayPal和银行转账。所有付款都通过我们的支付合作伙伴安全处理。"
+            },
+            {
+                "title": "我可以要求修改吗？",
+                "description": "是的，我们提供无限次修改，直到您完全满意为止。我们的目标是确保您获得所需的一切。"
+            },
+            {
+                "title": "如何与团队沟通？",
+                "description": "您可以通过我们的平台消息系统、电子邮件与团队沟通，或安排视频通话进行更复杂的讨论。"
+            }
+        ]
+    },
+    "whats_inside": {
+        "news": "新闻！",
+        "button": "解锁最佳",
+        "title": "音合有什么？",
+        "features": [
+            {
+                "title": "发布您的音频项目",
+                "description": "发布清晰的配音、混音、播客编辑或声音制作需求。"
+            },
+            {
+                "title": "智能匹配系统",
+                "description": "AI驱动的基于技能的匹配系统让您立即与顶尖人才连接。"
+            },
+            {
+                "title": "智能匹配系统",
+                "description": "AI驱动的基于技能的匹配系统让您立即与顶尖人才连接。"
+            },
+            {
+                "title": "流程优化",
+                "description": "通过集成解决方案确保项目完成后的安全支付。"
+            }
+        ]
+    },
+    "navbar": {
+        "navItems": [
+            {
+                "label": "寻找工作者",
+                "href": "/dashboard"
+            },
+            {
+                "label": "寻找项目",
+                "href": "/find-jobs"
+            },
+            {
+                "label": "寻找服务器",
+                "href": "/beats-market"
+            },
+            {
+                "label": "奖励",
+                "href": "/referral"
+            }
+        ],
+        "startNow": "立即开始"
+    },
+    "search": {
+        "placeholder": "发现更多"
+    },
+    "authed_navbar": {
+        "create": "创建",
+        "myAccount": "我的账户"
+    },
+    "notifications": {
+        "title": "通知",
+        "markAllAsRead": "全部标记为已读",
+        "manage": "管理",
+        "items": {
+            "joined": "{name} 加入了 {project}",
+            "invites": "{name} 邀请您查看 {file} 文件",
+            "uploaded": "{name} 上传了 {file}",
+            "commented": "{name} 评论了您的帖子"
+        },
+        "timeAgo": {
+            "minutes": "{count} 分钟前",
+            "hours": "{count} 小时前",
+            "days": "{count} 天前"
+        },
+        "view": "查看"
+    }
+}

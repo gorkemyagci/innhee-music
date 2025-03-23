@@ -2,22 +2,24 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 
-const Discover = () => {
+const Discover = async () => {
+    const t = await getTranslations();
     return (
         <div className="py-10 max-w-[1440px] w-full mx-auto md:py-12 lg:py-16 px-4 md:px-8 lg:px-20 flex flex-col gap-8 md:gap-10 lg:gap-14 items-center">
             <div className="flex flex-col items-center gap-6">
-                <Button variant="outline" className="bg-white hover:bg-white flex gap-2.5 items-center pr-6 py-[0.325rem] rounded-full h-10 max-w-[207px] w-full pl-[0.325rem] border border-[#DA6733]">
+                <Button variant="outline" className="bg-white hover:bg-white flex gap-2.5 items-center pr-6 py-[0.325rem] rounded-full h-10 pl-[0.325rem] border border-[#DA6733]">
                     <div className="bg-[#DA6733] w-16 h-[1.875rem] rounded-full flex items-center justify-center">
                         <span className="text-white font-bold text-xs">
                             News!
                         </span>
                     </div>
-                    <span className="text-strong-950 font-medium text-sm">Unlock the Best</span>
+                    <span className="text-strong-950 font-medium text-sm">{t("features_2.title")}</span>
                 </Button>
                 <div className="flex flex-col items-center gap-4">
-                    <h3 className="text-strong-950 text-[2.5rem] font-medium">What&apos;s inside AlignUl?</h3>
-                    <p className="text-sub-600 text-lg font-normal max-w-xl text-center">500+ flexible components with developer-friendly, comprehensive codebase for rapid development.</p>
+                    <h3 className="text-strong-950 text-[2.5rem] font-medium">{t("features_2.title")}</h3>
+                    <p className="text-sub-600 text-lg font-normal max-w-xl text-center">{t("features_2.feature1.description")}</p>
                 </div>
             </div>
             <div className="flex flex-col gap-4 sm:gap-6 md:gap-8">
@@ -31,9 +33,9 @@ const Discover = () => {
                                 height={28}
                                 className="sm:w-[32px] sm:h-[32px] md:w-[36px] md:h-[36px]"
                             />
-                            <span className="text-strong-950 font-medium text-lg sm:text-xl md:text-2xl">Quick and free</span>
+                            <span className="text-strong-950 font-medium text-lg sm:text-xl md:text-2xl">{t("features_2.feature1.title")}</span>
                         </div>
-                        <span className="text-sub-600 text-sm sm:text-base font-normal">Post your requirements within 1 minute</span>
+                        <span className="text-sub-600 text-sm sm:text-base font-normal">{t("features_2.feature1.description")}</span>
                     </div>
                     <div className="p-5 sm:p-6 md:p-8 border border-soft-200 rounded-[20px] bg-white flex flex-col gap-3 sm:gap-4">
                         <div className="flex items-center gap-2">
@@ -44,9 +46,9 @@ const Discover = () => {
                                 height={28}
                                 className="sm:w-[32px] sm:h-[32px] md:w-[36px] md:h-[36px]"
                             />
-                            <span className="text-strong-950 font-medium text-lg sm:text-xl md:text-2xl">Professional</span>
+                            <span className="text-strong-950 font-medium text-lg sm:text-xl md:text-2xl">{t("features_2.feature2.title")}</span>
                         </div>
-                        <span className="text-sub-600 text-sm sm:text-base font-normal">All workers have undergone skill verification and work copyright.</span>
+                        <span className="text-sub-600 text-sm sm:text-base font-normal">{t("features_2.feature2.description")}</span>
                     </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
@@ -59,9 +61,9 @@ const Discover = () => {
                                 height={28}
                                 className="sm:w-[32px] sm:h-[32px] md:w-[36px] md:h-[36px]"
                             />
-                            <span className="text-strong-950 font-medium text-lg sm:text-xl md:text-2xl">Security and Privacy</span>
+                            <span className="text-strong-950 font-medium text-lg sm:text-xl md:text-2xl">{t("features_2.feature3.title")}</span>
                         </div>
-                        <span className="text-sub-600 text-sm sm:text-base font-normal">After setting, your order will be hidden and visible only to invited workers.</span>
+                        <span className="text-sub-600 text-sm sm:text-base font-normal">{t("features_2.feature3.description")}</span>
                     </div>
                     <div className="p-5 sm:p-6 md:p-8 border border-soft-200 rounded-[20px] bg-white flex flex-col gap-3 sm:gap-4">
                         <div className="flex items-center gap-2">
@@ -72,9 +74,9 @@ const Discover = () => {
                                 height={28}
                                 className="sm:w-[32px] sm:h-[32px] md:w-[36px] md:h-[36px]"
                             />
-                            <span className="text-strong-950 font-medium text-lg sm:text-xl md:text-2xl">Schedule</span>
+                            <span className="text-strong-950 font-medium text-lg sm:text-xl md:text-2xl">{t("features_2.feature4.title")}</span>
                         </div>
-                        <span className="text-sub-600 text-sm sm:text-base font-normal">Track order progress using the calendar.</span>
+                        <span className="text-sub-600 text-sm sm:text-base font-normal">{t("features_2.feature4.description")}</span>
                     </div>
                     <div className="p-5 sm:p-6 md:p-8 border border-soft-200 rounded-[20px] bg-white flex flex-col gap-3 sm:gap-4">
                         <div className="flex items-center gap-2">
@@ -85,9 +87,9 @@ const Discover = () => {
                                 height={28}
                                 className="sm:w-[32px] sm:h-[32px] md:w-[36px] md:h-[36px]"
                             />
-                            <span className="text-strong-950 font-medium text-lg sm:text-xl md:text-2xl">Commerce</span>
+                            <span className="text-strong-950 font-medium text-lg sm:text-xl md:text-2xl">{t("features_2.feature5.title")}</span>
                         </div>
-                        <span className="text-sub-600 text-sm sm:text-base font-normal">Services such as contract signing, invoicing, and copyright authorization are provided.</span>
+                        <span className="text-sub-600 text-sm sm:text-base font-normal">{t("features_2.feature5.description")}</span>
                     </div>
                 </div>
             </div>

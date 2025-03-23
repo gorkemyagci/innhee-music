@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "framer-motion";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -5,8 +6,10 @@ import ProfileDropdown from "./profile-dropdown";
 import Link from "next/link";
 import { pageUrls } from "@/lib/constants/page-urls";
 import Notifications from "./notifcations";
+import { useTranslations } from "next-intl";
 
 const AuthedNavbar = () => {
+    const t = useTranslations();
     return (
         <>
             <Link href={pageUrls.JOB_POSTING} prefetch>
@@ -18,7 +21,7 @@ const AuthedNavbar = () => {
                 >
                     <div className="absolute top-0 left-0 w-full h-0 group-hover:h-4 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] to-[#FFF]/0" />
                     <Icons.plus className="fill-white size-3" />
-                    <span className="text-sm font-medium">Create</span>
+                    <span className="text-sm font-medium">{t("authed_navbar.create")}</span>
                 </Button></Link>
             <Notifications>
                 <motion.span
@@ -29,7 +32,7 @@ const AuthedNavbar = () => {
             </Notifications>
             <ProfileDropdown>
                 <Button variant="outline" className="bg-white border border-soft-200 hover:bg-gray-50 h-10 p-2.5 rounded-[10px] text-strong-950 font-medium text-sm">
-                    My Account
+                    {t("authed_navbar.myAccount")}
                 </Button>
             </ProfileDropdown>
         </>

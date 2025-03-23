@@ -9,11 +9,13 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import AuthedNavbar from "./authed-navbar";
+import { useTranslations } from "next-intl";
 
 const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const t = useTranslations();
 
     useEffect(() => {
         const checkMobile = () => {
@@ -26,16 +28,9 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    const navItems = [
-        { label: "Find workers", href: "/dashboard" },
-        { label: "Find Projects", href: "/find-jobs" },
-        { label: "Find Servers", href: "/beats-market" },
-        { label: "Bonus", href: "/referral" }
-    ]
+    const navItems = t.raw("navbar.navItems");
 
     const closeMenu = () => setIsMobileMenuOpen(false);
-
-
 
     const NavbarContent = () => (
         <div className="max-w-[1440px] mx-auto w-full h-full flex items-center justify-between">
@@ -47,7 +42,7 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                     </Link>
                 </motion.div>
                 <ul className="hidden lg:flex items-center gap-1">
-                    {navItems.map((item, index) => (
+                    {navItems.map((item: { label: string; href: string }, index: number) => (
                         <motion.li
                             key={index}
                             className={cn("pr-3 pl-2 py-2 hover:bg-weak-50 transition-all duration-200 rounded-lg"
@@ -71,7 +66,7 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                             type="button"
                             className={cn("w-full h-10 disabled:cursor-auto group rounded-[10px] text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]")}>
                             <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                            Start Now
+                            {t("navbar.startNow")}
                         </Button>
                     </Link>
                 ) : (
@@ -131,7 +126,7 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                                     <SearchInput />
                                 </div>
                                 <ul className="flex flex-col gap-3 sm:gap-4">
-                                    {navItems.map((item, index) => (
+                                    {navItems.map((item: { label: string; href: string }, index: number) => (
                                         <motion.li
                                             key={index}
                                             initial={{ opacity: 0, x: -20 }}
