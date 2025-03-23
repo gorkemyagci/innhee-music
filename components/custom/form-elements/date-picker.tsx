@@ -47,8 +47,8 @@ export function DatePickerForm({
   ...props
 }: DatePickerProps) {
   const [inputValue, setInputValue] = useState("");
-  const [calendarDate, setCalendarDate] = useState<Date | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(open || false);
+  const [tempSelectedDate, setTempSelectedDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     if (open !== undefined) {
@@ -64,7 +64,7 @@ export function DatePickerForm({
         const handleDateInput = (val: string) => {
           if (!val) {
             setInputValue("");
-            setCalendarDate(undefined);
+            setTempSelectedDate(undefined);
             field.onChange(null);
             return;
           }
@@ -88,7 +88,7 @@ export function DatePickerForm({
                   new Date()
                 );
                 if (isValid(tempDate)) {
-                  setCalendarDate(tempDate);
+                  setTempSelectedDate(tempDate);
                 }
               }
 
@@ -102,8 +102,7 @@ export function DatePickerForm({
           if (formattedValue.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
             const parsedDate = parse(formattedValue, "dd/MM/yyyy", new Date());
             if (isValid(parsedDate)) {
-              field.onChange(parsedDate);
-              setCalendarDate(parsedDate);
+              setTempSelectedDate(parsedDate);
             }
           }
         };
@@ -147,7 +146,7 @@ export function DatePickerForm({
                               inputValue.length === 1
                             ) {
                               setInputValue("");
-                              setCalendarDate(undefined);
+                              setTempSelectedDate(undefined);
                               field.onChange(null);
                             }
                           }}
@@ -172,27 +171,18 @@ export function DatePickerForm({
                 </PopoverTrigger>
                 <PopoverContent className="p-0 shadow-none border-soft-200" align="start">
                   <Calendar
-                    mode="single"
-                    selected={field.value}
-                    month={calendarDate}
-                    captionLayout="dropdown-buttons"
-                    fromDate={new Date()}
-                    toDate={new Date("2100-01-01")}
-                    onSelect={(date) => {
-                      field.onChange(date);
+                    selected={tempSelectedDate}
+                    onApply={(date) => {
                       if (date) {
+                        field.onChange(date);
                         setInputValue(format(date, "dd/MM/yyyy"));
-                        setCalendarDate(date);
-                        setIsOpen(false);
                       }
+                      setIsOpen(false);
                     }}
-                    onMonthChange={setCalendarDate}
-                    disabled={(date) => {
-                      const today = new Date();
-                      today.setHours(0, 0, 0, 0);
-                      return date < today;
+                    onCancel={() => {
+                      setTempSelectedDate(field.value);
+                      setIsOpen(false);
                     }}
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
