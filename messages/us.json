@@ -225,5 +225,8 @@
       "days": "{count} days ago"
     },
     "view": "View"
+  },
+  "common": {
+    "news": "News!"
   }
 }

@@ -1,6 +1,5 @@
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 
@@ -12,7 +11,7 @@ const Discover = async () => {
                 <Button variant="outline" className="bg-white hover:bg-white flex gap-2.5 items-center pr-6 py-[0.325rem] rounded-full h-10 pl-[0.325rem] border border-[#DA6733]">
                     <div className="bg-[#DA6733] w-16 h-[1.875rem] rounded-full flex items-center justify-center">
                         <span className="text-white font-bold text-xs">
-                            News!
+                            {t("common.news")}
                         </span>
                     </div>
                     <span className="text-strong-950 font-medium text-sm">{t("features_2.title")}</span>
