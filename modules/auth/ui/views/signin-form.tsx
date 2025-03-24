@@ -21,6 +21,7 @@ import { useAuthStore } from "@/store/auth-store";
 import { PasswordInput } from "@/components/custom/form-elements/password-input";
 import { jwtDecode } from "jwt-decode";
 import { DecodedToken } from "@/lib/types";
+import { useTranslations } from "next-intl";
 
 const signinSchema = z.object({
     account: z.string().email(),
@@ -41,6 +42,7 @@ interface SignInFormProps {
 }
 
 const SignInForm = ({ activeTab }: SignInFormProps) => {
+    const t = useTranslations("auth.signIn.form");
     const form = useForm<SignIn>({
         mode: "onSubmit",
         reValidateMode: "onChange",
@@ -56,36 +58,36 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
 
     const login = trpc.auth.login.useMutation({
         onSuccess: (data) => {
-            toast.success("Login successful");
+            toast.success(t("errors.loginSuccess"));
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
             useAuthStore.getState().setToken(access_token, keep_logged);
             typeof window !== "undefined" && window.location.replace(pageUrls.DASHBOARD);
         },
         onError: (error) => {
-            toast.error(error.message || "Failed to login");
+            toast.error(error.message || t("errors.generalError"));
         }
     });
 
     const verify = trpc.auth.verifyOtp.useMutation({
         onSuccess: async (data) => {
-            toast.success("OTP verified successfully");
+            toast.success(t("errors.verifySuccess"));
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
             useAuthStore.getState().setToken(access_token, keep_logged);
             typeof window !== "undefined" && window.location.replace(pageUrls.DASHBOARD);
         },
         onError: (error) => {
-            toast.error(error.message || "Failed to verify OTP");
+            toast.error(error.message || t("errors.generalError"));
         }
     });
 
     const sendOtp = trpc.auth.send_otp.useMutation({
         onSuccess: async (data) => {
-            toast.success("Verification code sent successfully");
+            toast.success(t("errors.verificationSent"));
         },
         onError: (error) => {
-            toast.error(error.message || "Failed to send verification code");
+            toast.error(error.message || t("errors.generalError"));
         }
     });
 
@@ -96,23 +98,23 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
         const terms = form.getValues("terms");
 
         if (!account) {
-            toast.error("Please enter your email or phone number");
+            toast.error(t("errors.accountRequired"));
             return;
         }
         if (activeTab === "code" && !code) {
-            toast.error("Please enter the verification code");
+            toast.error(t("errors.codeRequired"));
             return;
         }
         if (activeTab === "password" && !password) {
-            toast.error("Please enter your password");
+            toast.error(t("errors.passwordRequired"));
             return;
         }
         if (!terms) {
-            toast.error("You must accept the terms and conditions");
+            toast.error(t("errors.termsRequired"));
             return;
         }
 
-        const toastId = toast.loading(activeTab === "code" ? "Verifying code..." : "Logging in...");
+        const toastId = toast.loading(activeTab === "code" ? t("code.verifying") : t("errors.loginSuccess"));
 
         try {
             if (activeTab === "code") {
@@ -142,20 +144,20 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
             }
         } catch (error) {
             toast.dismiss(toastId);
-            toast.error("An error occurred during form submission");
+            toast.error(t("errors.generalError"));
         }
     }
 
     const handleSendOtp = () => {
         const account = form.getValues("account");
         if (!account) {
-            toast.error("Please enter your email or phone number");
+            toast.error(t("errors.accountRequired"));
             return;
         }
         const isEmail = EMAIL_REGEX.test(account);
         const isPhone = PHONE_REGEX.test(account);
         if (!isEmail && !isPhone) {
-            toast.error("Please enter a valid email or phone number");
+            toast.error(t("errors.invalidAccount"));
             return;
         }
         sendOtp.mutate({ account });
@@ -176,13 +178,13 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                     name="account"
                     render={() => (
                         <FormItem>
-                            <FormLabel>Account<span className="text-sm text-error-base">*</span></FormLabel>
+                            <FormLabel>{t("account.label")}<span className="text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
                                     <div className="flex h-10 items-center relative gap-0 pl-2.5 pr-3 py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
                                         <Icons.user_line />
                                         <div className="flex-1 relative">
-                                            <InputElement form={form} name="account" placeholder="Phone number or email address" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
+                                            <InputElement form={form} name="account" placeholder={t("account.placeholder")} className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
                                         </div>
                                     </div>
                                 </FormControl>
@@ -196,12 +198,12 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                     name="code"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Code<span className="text-sm text-error-base">*</span></FormLabel>
+                            <FormLabel>{t("code.label")}<span className="text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
                                     <div className="flex h-10 items-center relative py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
                                         <div className="flex-1 px-1 relative">
-                                            <InputElement form={form} name="code" placeholder="Enter code" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" /></div>
+                                            <InputElement form={form} name="code" placeholder={t("code.placeholder")} className="border-none shadow-none absolute top-1/2 -translate-y-1/2" /></div>
                                         <Separator orientation="vertical" className="h-full" />
                                         <SendCodeButton onClick={handleSendOtp} loading={sendOtp.isPending} />
                                     </div>
@@ -212,7 +214,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                     )}
                 /> :
                     <>
-                        <PasswordInput form={form} name="password" placeholder="Enter password" />
+                        <PasswordInput form={form} name="password" placeholder={t("password.placeholder")} />
                     </>}
                 <div className="flex flex-col gap-4">
                     {activeTab === "password" && (
@@ -234,14 +236,14 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                                             htmlFor="keep_logged"
                                             className="text-sm text-strong-950 font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         >
-                                            Keep me logged in
+                                            {t("password.keepLogged")}
                                         </label>
                                     </FormItem>
                                 )}
                             />
                             <div className="flex w-full justify-end">
                                 <Link href={pageUrls.FORGOT} className="underline text-sub-600 font-medium text-xs">
-                                    Forgot password?
+                                    {t("password.forgot")}
                                 </Link>
                             </div>
                         </div>
@@ -263,7 +265,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                                     htmlFor="terms"
                                     className="text-sm text-sub-600 font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
-                                    I agree to the <Link href="#" className="border-b border-strong-950 text-main-900 font-medium">Conditions</Link> and <Link href="#" className="border-b border-strong-950 text-main-900 font-medium">Privacy Policy</Link>.
+                                    {t("terms.text")} <Link href="#" className="border-b border-strong-950 text-main-900 font-medium">{t("terms.conditions")}</Link> {t("terms.and")} <Link href="#" className="border-b border-strong-950 text-main-900 font-medium">{t("terms.privacy")}</Link>.
                                 </label>
                                 <FormMessage className="font-medium text-xs" />
                             </FormItem>
@@ -271,7 +273,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                     />
                 </div>
                 <SubmitButton
-                    text={`Log in${activeTab === "code" ? "/Sign up" : ""}`}
+                    text={activeTab === "code" ? t("submit.code") : t("submit.password")}
                     onClick={() => {
                         onSubmit(form.getValues());
                     }}
@@ -280,7 +282,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                 />
             </form>
             <Separator className="w-full relative">
-                <span className="text-[11px] text-soft-400 font-normal absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white px-3">OR</span>
+                <span className="text-[11px] text-soft-400 font-normal absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-white px-3">{t("or")}</span>
             </Separator>
             <Accounts />
         </Form>

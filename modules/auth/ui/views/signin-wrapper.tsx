@@ -4,9 +4,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/custom
 import SignInForm from "./signin-form";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const SignInWrapper = () => {
     const [activeTab, setActiveTab] = useState<"code" | "password">("code");
+    const t = useTranslations("auth.signIn");
+
     return (
         <>
             <motion.div
@@ -19,13 +22,17 @@ const SignInWrapper = () => {
                 <div className="flex flex-col items-center gap-2">
                     <Icons.auth_user />
                     <span className="text-2xl font-medium text-center text-main-900 max-w-[17.5rem]">
-                        {activeTab === "code" ? "Create or Login" : "Log In With Password"}
+                        {t(`title.${activeTab}`)}
                     </span>
                 </div>
                 <Tabs defaultValue="code" className="w-full">
                     <TabsList className="grid bg-transparent w-full grid-cols-2">
-                        <TabsTrigger value="code" className="cursor-pointer" onClick={() => setActiveTab("code")}>Use Code</TabsTrigger>
-                        <TabsTrigger value="password" className="cursor-pointer" onClick={() => setActiveTab("password")}>Use Password</TabsTrigger>
+                        <TabsTrigger value="code" className="cursor-pointer" onClick={() => setActiveTab("code")}>
+                            {t("tabs.code")}
+                        </TabsTrigger>
+                        <TabsTrigger value="password" className="cursor-pointer" onClick={() => setActiveTab("password")}>
+                            {t("tabs.password")}
+                        </TabsTrigger>
                     </TabsList>
                     <div className="relative">
                         <AnimatePresence mode="wait">

@@ -1,7 +1,11 @@
 import { Icons } from "@/components/icons";
 import AuthNavbar from "@/modules/auth/ui/components/navbar";
+import LanguageSwitcher from "@/modules/auth/ui/components/language-switcher";
+import { getTranslations } from "next-intl/server";
 
-const AuthLayout = ({ children }: { children: React.ReactNode }) => {
+const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
+    const t = await getTranslations("auth.layout");
+
     return (
         <div className="min-h-screen w-full bg-weak-100 py-3 md:py-4">
             <div className="w-full max-w-8xl px-4 md:px-6 lg:px-8 mx-auto">
@@ -10,15 +14,9 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
                 <main className="h-[calc(100vh-90px)] md:h-[calc(100vh-107px)]">{children}</main>
                 <div className="flex items-center justify-between py-2 md:py-0">
                     <span className="text-sub-600 text-xs md:text-sm font-normal">
-                        © 2025 MusicLogo
+                        {t("copyright")}
                     </span>
-                    <div className="flex items-center gap-1 md:gap-1.5">
-                        <Icons.global className="size-4 md:size-5" />
-                        <span className="text-sub-600 text-xs md:text-sm font-normal flex items-center gap-0">
-                            ENG 
-                            <Icons.dropdown className="size-3 md:size-4" />
-                        </span>
-                    </div>
+                    <LanguageSwitcher />
                 </div>
             </div>
         </div>

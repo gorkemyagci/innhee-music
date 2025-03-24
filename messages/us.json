@@ -205,5 +205,116 @@
         "description": "Our email system is integrated with your account. You'll receive notifications about new projects, client messages, and payment updates directly to your registered email address."
       }
     }
+  },
+  "auth": {
+    "signIn": {
+      "title": {
+        "code": "Create or Login",
+        "password": "Log In With Password"
+      },
+      "tabs": {
+        "code": "Use Code",
+        "password": "Use Password"
+      },
+      "form": {
+        "account": {
+          "label": "Account",
+          "placeholder": "Phone number or email address"
+        },
+        "code": {
+          "label": "Code",
+          "placeholder": "Enter code",
+          "sendCode": "Send Code",
+          "resend": "Resend",
+          "verifying": "Verifying code..."
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter password",
+          "forgot": "Forgot password?",
+          "keepLogged": "Keep me logged in"
+        },
+        "terms": {
+          "text": "I agree to the",
+          "conditions": "Conditions",
+          "and": "and",
+          "privacy": "Privacy Policy"
+        },
+        "submit": {
+          "code": "Log in/Sign up",
+          "password": "Log in"
+        },
+        "or": "OR",
+        "errors": {
+          "accountRequired": "Please enter your email or phone number",
+          "codeRequired": "Please enter the verification code",
+          "passwordRequired": "Please enter your password",
+          "termsRequired": "You must accept the terms and conditions",
+          "invalidAccount": "Please enter a valid email or phone number",
+          "verificationSent": "Verification code sent successfully",
+          "loginSuccess": "Login successful",
+          "verifySuccess": "OTP verified successfully",
+          "generalError": "An error occurred during form submission"
+        }
+      }
+    },
+    "forgot": {
+      "title": "Forgot Password",
+      "subtitle": "Enter your details to login.",
+      "form": {
+        "account": {
+          "label": "Account",
+          "placeholder": "Phone number or email address"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter new password"
+        },
+        "confirmPassword": {
+          "label": "Confirm Password",
+          "placeholder": "Confirm new password",
+          "mismatch": "Passwords don't match"
+        },
+        "code": {
+          "label": "Code",
+          "placeholder": "Enter code"
+        },
+        "submit": "Reset",
+        "errors": {
+          "fillFields": "Please fill all the fields",
+          "invalidAccount": "Invalid email or phone number",
+          "invalidCode": "Invalid code",
+          "otpSuccess": "OTP sent successfully!",
+          "otpError": "Failed to send",
+          "resetSuccess": "Password reset successfully!",
+          "resetError": "Failed to reset password"
+        }
+      }
+    },
+    "verify": {
+      "title": "Enter Verification Code",
+      "description": "We've sent a code to",
+      "form": {
+        "code": {
+          "label": "Verification Code",
+          "placeholder": "Enter verification code"
+        },
+        "submit": "Submit Code",
+        "resend": {
+          "issues": "Experiencing issues receiving the code?",
+          "action": "Resend code"
+        }
+      }
+    },
+    "layout": {
+      "copyright": "© 2025 MusicLogo",
+      "language": "ENG"
+    },
+    "navbar": {
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign In"
+    }
   }
 }

@@ -204,5 +204,116 @@
         "description": "我们的邮件系统与您的账户集成。您将直接在注册的电子邮件地址收到关于新项目、客户消息和付款更新的通知。"
       }
     }
+  },
+  "auth": {
+    "signIn": {
+      "title": {
+        "code": "创建或登录",
+        "password": "使用密码登录"
+      },
+      "tabs": {
+        "code": "使用验证码",
+        "password": "使用密码"
+      },
+      "form": {
+        "account": {
+          "label": "账号",
+          "placeholder": "手机号或邮箱地址"
+        },
+        "code": {
+          "label": "验证码",
+          "placeholder": "输入验证码",
+          "sendCode": "发送验证码",
+          "resend": "重新发送",
+          "verifying": "验证中..."
+        },
+        "password": {
+          "label": "密码",
+          "placeholder": "输入密码",
+          "forgot": "忘记密码？",
+          "keepLogged": "保持登录状态"
+        },
+        "terms": {
+          "text": "我同意",
+          "conditions": "条款",
+          "and": "和",
+          "privacy": "隐私政策"
+        },
+        "submit": {
+          "code": "登录/注册",
+          "password": "登录"
+        },
+        "or": "或",
+        "errors": {
+          "accountRequired": "请输入邮箱或手机号",
+          "codeRequired": "请输入验证码",
+          "passwordRequired": "请输入密码",
+          "termsRequired": "您必须接受条款和条件",
+          "invalidAccount": "请输入有效的邮箱或手机号",
+          "verificationSent": "验证码发送成功",
+          "loginSuccess": "登录成功",
+          "verifySuccess": "验证码验证成功",
+          "generalError": "表单提交时出现错误"
+        }
+      }
+    },
+    "forgot": {
+      "title": "忘记密码",
+      "subtitle": "输入您的详细信息以登录。",
+      "form": {
+        "account": {
+          "label": "账号",
+          "placeholder": "手机号或邮箱地址"
+        },
+        "password": {
+          "label": "密码",
+          "placeholder": "输入新密码"
+        },
+        "confirmPassword": {
+          "label": "确认密码",
+          "placeholder": "确认新密码",
+          "mismatch": "密码不匹配"
+        },
+        "code": {
+          "label": "验证码",
+          "placeholder": "输入验证码"
+        },
+        "submit": "重置",
+        "errors": {
+          "fillFields": "请填写所有字段",
+          "invalidAccount": "无效的邮箱或手机号",
+          "invalidCode": "无效的验证码",
+          "otpSuccess": "验证码发送成功！",
+          "otpError": "发送失败",
+          "resetSuccess": "密码重置成功！",
+          "resetError": "重置密码失败"
+        }
+      }
+    },
+    "verify": {
+      "title": "输入验证码",
+      "description": "我们已向",
+      "form": {
+        "code": {
+          "label": "验证码",
+          "placeholder": "输入验证码"
+        },
+        "submit": "提交验证码",
+        "resend": {
+          "issues": "收不到验证码？",
+          "action": "重新发送"
+        }
+      }
+    },
+    "layout": {
+      "copyright": "© 2025 MusicLogo",
+      "language": "中文"
+    },
+    "navbar": {
+      "noAccount": "还没有账号？",
+      "signUp": "注册",
+      "hasAccount": "已有账号？",
+      "signIn": "登录"
+    }
   }
 }

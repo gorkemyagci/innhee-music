@@ -15,6 +15,7 @@ import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { pageUrls } from "@/lib/constants/page-urls";
+import { useTranslations } from "next-intl";
 
 const forgotSchema = z.object({
     account: z.string().email(),
@@ -34,6 +35,8 @@ export type Forgot = z.infer<typeof forgotSchema>;
 
 const ForgotForm = () => {
     const router = useRouter();
+    const t = useTranslations("auth.forgot.form");
+
     const form = useForm<Forgot>({
         mode: "onSubmit",
         reValidateMode: "onChange",
@@ -48,27 +51,27 @@ const ForgotForm = () => {
 
     const sendOtp = trpc.auth.sendForgotPasswordOtp.useMutation({
         onSuccess: (data) => {
-            toast.success("OTP sent successfully!")
+            toast.success(t("errors.otpSuccess"))
         },
         onError: (error) => {
-            toast.error("Failed to send");
+            toast.error(t("errors.otpError"));
         }
     })
 
     const verifyOtp = trpc.auth.verifyForgotPasswordOtp.useMutation({
         onSuccess: (data) => {
-            toast.success("Password reset successfully!");
+            toast.success(t("errors.resetSuccess"));
             router.push(pageUrls.SIGN_IN);
         },
         onError: (error) => {
-            toast.error("Failed to reset password");
+            toast.error(t("errors.resetError"));
         }
     })
 
     const handleSendOtp = () => {
         const account = form.getValues("account");
         if (!account) {
-            return toast.error("Please enter your email or phone number");
+            return toast.error(t("errors.fillFields"));
         }
         sendOtp.mutate({ account });
     }
@@ -76,16 +79,16 @@ const ForgotForm = () => {
     const onSubmit = (data: Forgot) => {
         const { account, code, password, confirmPassword } = data;
         if (!account || !code || !password || !confirmPassword) {
-            return toast.error("Please fill all the fields");
+            return toast.error(t("errors.fillFields"));
         }
         if (!EMAIL_REGEX.test(account) && !PHONE_REGEX.test(account)) {
-            return toast.error("Invalid email or phone number");
+            return toast.error(t("errors.invalidAccount"));
         }
         if (code.length < 6) {
-            return toast.error("Invalid code");
+            return toast.error(t("errors.invalidCode"));
         }
         if (password !== confirmPassword) {
-            return toast.error("Passwords don't match");
+            return toast.error(t("confirmPassword.mismatch"));
         }
         verifyOtp.mutate({ account, code, password });
     }
@@ -98,13 +101,13 @@ const ForgotForm = () => {
                     name="account"
                     render={() => (
                         <FormItem>
-                            <FormLabel>Account<span className="text-sm text-error-base">*</span></FormLabel>
+                            <FormLabel>{t("account.label")}<span className="text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
                                     <div className="flex h-10 items-center relative gap-0 pl-2.5 pr-3 py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
                                         <Icons.user_line />
                                         <div className="flex-1 relative">
-                                            <InputElement form={form} name="account" placeholder="Phone number or email address" className="border-none  shadow-none absolute top-1/2 -translate-y-1/2" />
+                                            <InputElement form={form} name="account" placeholder={t("account.placeholder")} className="border-none  shadow-none absolute top-1/2 -translate-y-1/2" />
                                         </div>
                                     </div>
                                 </FormControl>
@@ -118,12 +121,12 @@ const ForgotForm = () => {
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Password<span className="text-sm text-error-base">*</span></FormLabel>
+                            <FormLabel>{t("password.label")}<span className="text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
                                     <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
                                         <div className="flex-1 relative">
-                                            <InputElement form={form} name="password" placeholder="Enter new password" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
+                                            <InputElement form={form} name="password" placeholder={t("password.placeholder")} className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
                                         </div>
                                         <div className="cursor-pointer">
                                             <Icons.eye />
@@ -140,12 +143,12 @@ const ForgotForm = () => {
                     name="confirmPassword"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Confirm Password<span className="text-sm text-error-base">*</span></FormLabel>
+                            <FormLabel>{t("confirmPassword.label")}<span className="text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
                                     <div className="flex h-10 items-center relative gap-0 pl-1 pr-3 py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
                                         <div className="flex-1 relative">
-                                            <InputElement form={form} name="confirmPassword" placeholder="Confirm new password" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
+                                            <InputElement form={form} name="confirmPassword" placeholder={t("confirmPassword.placeholder")} className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
                                         </div>
                                         <div className="cursor-pointer">
                                             <Icons.eye />
@@ -162,12 +165,12 @@ const ForgotForm = () => {
                     name="code"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Code<span className="text-sm text-error-base">*</span></FormLabel>
+                            <FormLabel>{t("code.label")}<span className="text-sm text-error-base">*</span></FormLabel>
                             <div>
                                 <FormControl>
                                     <div className="flex h-10 items-center relative py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
                                         <div className="flex-1 relative px-1">
-                                            <InputElement form={form} name="code" placeholder="Enter code" className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
+                                            <InputElement form={form} name="code" placeholder={t("code.placeholder")} className="border-none shadow-none absolute top-1/2 -translate-y-1/2" />
                                         </div>
                                         <Separator orientation="vertical" className="h-full" />
                                         <SendCodeButton onClick={handleSendOtp} loading={sendOtp.isPending} />
@@ -178,7 +181,7 @@ const ForgotForm = () => {
                         </FormItem>
                     )}
                 />
-                <SubmitButton text="Reset" onClick={() => onSubmit(form.getValues())} loading={verifyOtp.isPending} />
+                <SubmitButton text={t("submit")} onClick={() => onSubmit(form.getValues())} loading={verifyOtp.isPending} />
             </form>
         </Form>
     )

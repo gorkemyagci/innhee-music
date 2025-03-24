@@ -4,9 +4,12 @@ import { Icons } from "@/components/icons";
 import Link from "next/link";
 import { pageUrls } from "@/lib/constants/page-urls";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const AuthNavbar = () => {
     const pathname = usePathname();
+    const t = useTranslations("auth.navbar");
+
     return (
         <div className="w-full flex items-center justify-between">
             <Link href={pageUrls.HOME} prefetch>
@@ -15,22 +18,22 @@ const AuthNavbar = () => {
             {pathname.includes("sign-in") ? (
                 <div className="flex items-center gap-2">
                     <span className="text-sub-600 font-normal text-sm">
-                        Don't have an account?
+                        {t("noAccount")}
                     </span>
                     <Link href={pageUrls.SIGN_UP} prefetch>
                         <span className="text-main-900 font-medium text-sm underline">
-                            Sign Up
+                            {t("signUp")}
                         </span>
                     </Link>
                 </div>
             ) : (
                 <div className="flex items-center gap-2">
                     <span className="text-sub-600 font-normal text-sm">
-                        Already have an account?
+                        {t("hasAccount")}
                     </span>
                     <Link href={pageUrls.SIGN_IN} prefetch>
                         <span className="text-main-900 font-medium text-sm underline">
-                            Sign In
+                            {t("signIn")}
                         </span>
                     </Link>
                 </div>
