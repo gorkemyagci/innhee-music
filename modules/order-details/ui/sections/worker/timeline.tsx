@@ -1,6 +1,6 @@
 "use client";
 import { Icons } from "@/components/icons";
-import { timelineData } from "@/lib/mockData";
+import { useMockData } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -8,6 +8,8 @@ import MilestoneItem from "../../components/milestone-item";
 
 const Timeline = () => {
     const [isOpen, setIsOpen] = useState(true);
+    const { timelineData } = useMockData();
+    
     return (
         <div className="flex-1 border border-soft-200 rounded-2xl relative">
             <motion.div 

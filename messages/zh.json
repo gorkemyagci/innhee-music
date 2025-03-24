@@ -203,6 +203,22 @@
         "title": "我的邮件计划如何运作？",
         "description": "我们的邮件系统与您的账户集成。您将直接在注册的电子邮件地址收到关于新项目、客户消息和付款更新的通知。"
       }
+    },
+    "slider": {
+      "items": {
+        "rnb": {
+          "title": "R&B 热门歌曲",
+          "description": "All mine, Lie again, Petty call me everyday, Out of time, No love, Bad habit, 等等"
+        },
+        "tomorrow": {
+          "title": "明日曲调",
+          "description": "享受新兴艺术家的最新热门歌曲，发现明日之声"
+        },
+        "hiphop": {
+          "title": "嘻哈经典",
+          "description": "重温黄金时代，聆听定义一代的永恒曲目"
+        }
+      }
     }
   },
   "auth": {
@@ -567,7 +583,8 @@
       },
       "buttons": {
         "cancel": "取消",
-        "confirm": "确认"
+        "confirm": "确认",
+        "submit": "提交"
       }
     },
     "reportMessage": {
@@ -593,7 +610,7 @@
       },
       "buttons": {
         "cancel": "取消",
-        "confirm": "确认"
+        "submit": "提交"
       }
     },
     "installWechat": {
@@ -623,6 +640,76 @@
         "overdue": "已逾期"
       },
       "startedOn": "开始于 {date}"
+    }
+  },
+  "projects": {
+    "title": "项目",
+    "more": "更多",
+    "noProjects": "未找到项目",
+    "categories": {
+      "all": "全部",
+      "billboard": "公告牌",
+      "american": "美国",
+      "brit": "英国",
+      "mtv": "MTV",
+      "awards": "奖项"
+    },
+    "projectItem": {
+      "unknown": "未知",
+      "rating": "4.9(125)",
+      "salary": "薪资",
+      "work": "工作",
+      "special": "专业",
+      "deadline": "{date}",
+      "proposals": "{count} 个提案",
+      "businessContract": "商业合同",
+      "budget": "预算",
+      "fixedPrice": "固定价格",
+      "applyNow": "立即申请"
+    }
+  },
+  "jobDetail": {
+    "findWorks": "寻找工作",
+    "projectDetail": "项目详情",
+    "detail": {
+      "title": "项目详情",
+      "businessContract": "商业合同",
+      "skills": "技能",
+      "attachments": "附件"
+    },
+    "similarProjects": {
+      "title": "类似项目"
+    },
+    "info": {
+      "unknown": "未知",
+      "rating": "4.9(125)",
+      "budget": "预算",
+      "releaseTime": "发布时间",
+      "deadline": "截止日期",
+      "proposals": "提案",
+      "message": "消息",
+      "apply": "申请"
+    },
+    "list": {
+      "title": "列表"
+    },
+    "jobLink": {
+      "title": "工作链接",
+      "copySuccess": "已复制到剪贴板",
+      "copyError": "复制失败"
+    }
+  },
+  "jobPosting": {
+    "menu": {
+      "basicInfo": "基本信息",
+      "selectCategory": "选择类别",
+      "usage": "用途",
+      "preview": "预览"
+    },
+    "timeline": {
+      "orderCreated": "订单已创建",
+      "milestone": "里程碑 {number}",
+      "milestoneAmount": "里程碑金额"
     }
   }
 }

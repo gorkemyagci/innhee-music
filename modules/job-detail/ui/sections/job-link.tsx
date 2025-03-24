@@ -3,12 +3,14 @@ import { Icons } from "@/components/icons";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ProjectItemType } from "@/lib/types";
+import { useTranslations } from "next-intl";
 
 interface JobLinkProps {
     item: ProjectItemType
 }
 
 const JobLink = ({ item }: JobLinkProps) => {
+    const t = useTranslations("jobDetail.jobLink");
     const [copied, setCopied] = useState(false);
 
     const handleCopy = () => {
@@ -16,18 +18,18 @@ const JobLink = ({ item }: JobLinkProps) => {
         navigator.clipboard.writeText(url)
             .then(() => {
                 setCopied(true);
-                toast.success("Copied to clipboard");
+                toast.success(t("copySuccess"));
                 setTimeout(() => {
                     setCopied(false);
                 }, 2000);
             })
             .catch(err => {
-                toast.error("Failed to copy");
+                toast.error(t("copyError"));
             });
     }
 
     return <div className="w-full flex flex-col items-start gap-2">
-        <span className="text-strong-950 font-medium text-sm">Job Link</span>
+        <span className="text-strong-950 font-medium text-sm">{t("title")}</span>
         <div className="h-10 w-full border border-soft-200 flex items-center justify-between pr-3 rounded-[10px]">
             <div className="p-2.5 pl-3 flex items-center gap-2 overflow-hidden">
                 <Icons.links_line className="flex-shrink-0" />

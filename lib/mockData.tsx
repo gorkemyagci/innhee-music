@@ -1,49 +1,109 @@
-export const faqsItems = [
-    {
-        title: "How and when do I get paid?",
-        description: "Fermentum egestas at nunc tristique. Feugiat sodales viverra odio nisi non sem mauris. Nisi at purus habitant dictum etiam mi adipiscing. Congue at arcu aenean vitae aliquam eu tortor viverra id. Habitant sagittis faucibus pharetra odio fames rhoncus pellentesque sem est. Nunc ac eget tellus ultrices."
-    },
-    {
-        title: "Are you the merchant of record?",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    },
-    {
-        title: "Can I sell in other countries?",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    },
-    {
-        title: "What if I already have a website?",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    },
-    {
-        title: "How does my email plan work?",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    },
-]
+"use client"
+import { useTranslations } from "next-intl";
 
-export const slides = [
+export const useMockData = () => {
+    const t = useTranslations("faq");
+    const tJobPosting = useTranslations("jobPosting");
+
+    const faqsItems = [
+        {
+            title: t("items.payment.title"),
+            description: t("items.payment.description")
+        },
+        {
+            title: t("items.merchant.title"),
+            description: t("items.merchant.description")
+        },
+        {
+            title: t("items.international.title"),
+            description: t("items.international.description")
+        },
+        {
+            title: t("items.website.title"),
+            description: t("items.website.description")
+        },
+        {
+            title: t("items.email.title"),
+            description: t("items.email.description")
+        }
+    ];
+
+    const slides = [
     {
         id: 1,
         image: "/assets/images/slider-item.png",
-        title: "R & B Hits",
-        description: "All mine, Lie again, Petty call me everyday, Out of time, No love, Bad habit, and so much more"
+            title: t("slider.items.rnb.title"),
+            description: t("slider.items.rnb.description")
     },
     {
         id: 2,
         image: "/assets/images/slider-item.png",
-        title: "Tomorrow's Tunes",
-        description: "Enjoy the latest hits from emerging artists and discover the sound of tomorrow"
+            title: t("slider.items.tomorrow.title"),
+            description: t("slider.items.tomorrow.description")
     },
     {
         id: 3,
         image: "/assets/images/slider-item.png",
-        title: "Hip Hop Classics",
-        description: "Relive the golden era with timeless tracks that defined a generation"
-    }
-];
+            title: t("slider.items.hiphop.title"),
+            description: t("slider.items.hiphop.description")
+        }
+    ];
+
+    const jobPostingMenu = [
+        { id: 1, title: tJobPosting("menu.basicInfo"), value: "basic-information" },
+        { id: 2, title: tJobPosting("menu.selectCategory"), value: "select-category" },
+        { id: 3, title: tJobPosting("menu.usage"), value: "usage" },
+        { id: 4, title: tJobPosting("menu.preview"), value: "preview" },
+    ];
+
+    const timelineData = [
+        {
+            id: 1,
+            title: tJobPosting("timeline.orderCreated"),
+            amount: 500,
+            description: tJobPosting("timeline.milestoneAmount"),
+            date: "23 Jan 2025, 14:27",
+            status: "completed",
+        },
+        {
+            id: 2,
+            title: tJobPosting("timeline.milestone", { number: 1 }),
+            amount: 58,
+            date: "23 Jan 2025, 14:27",
+            status: "completed",
+        },
+        {
+            id: 3,
+            title: tJobPosting("timeline.milestone", { number: 2 }),
+            amount: 120,
+            date: null,
+            status: "pending",
+        },
+        {
+            id: 4,
+            title: tJobPosting("timeline.milestone", { number: 3 }),
+            amount: 100,
+            date: null,
+            status: "pending",
+        },
+        {
+            id: 5,
+            title: tJobPosting("timeline.milestone", { number: 4 }),
+            amount: 100,
+            date: null,
+            status: "pending",
+        },
+        {
+            id: 6,
+            title: tJobPosting("timeline.milestone", { number: 5 }),
+            amount: 100,
+            date: null,
+            status: "pending",
+        },
+    ];
 
 // Job postings mock data
-export const featuredJobs = [
+    const featuredJobs = [
     {
         id: 1,
         clientName: "Cleve Music",
@@ -81,7 +141,7 @@ export const featuredJobs = [
 ];
 
 // Workers mock data
-export const workers = [
+    const workers = [
     {
         id: 1,
         name: "Cleve Music",
@@ -162,15 +222,7 @@ export const workers = [
     }
 ];
 
-
-export const jobPostingMenu = [
-    { id: 1, title: "Basic Information", value: "basic-information" },
-    { id: 2, title: "Select category", value: "select-category" },
-    { id: 3, title: "Usage", value: "usage" },
-    { id: 4, title: "Preview", value: "preview" },
-];
-
-export const buyerOrders = [
+    const buyerOrders = [
     {
         id: 1,
         title: "Write professional resume, cover letter, and linkedin writing services",
@@ -233,49 +285,14 @@ export const buyerOrders = [
     }
 ];
 
-export const timelineData = [
-    {
-        id: 1,
-        title: "Order created",
-        amount: 500,
-        description: "Milestone Amount",
-        date: "23 Jan 2025, 14:27",
-        status: "completed",
-    },
-    {
-        id: 2,
-        title: "Milestone 1",
-        amount: 58,
-        date: "23 Jan 2025, 14:27",
-        status: "completed",
-    },
-    {
-        id: 3,
-        title: "Milestone 2",
-        amount: 120,
-        date: null,
-        status: "pending",
-    },
-    {
-        id: 4,
-        title: "Milestone 3",
-        amount: 100,
-        date: null,
-        status: "pending",
-    },
-    {
-        id: 5,
-        title: "Milestone 4",
-        amount: 100,
-        date: null,
-        status: "pending",
-    },
-    {
-        id: 6,
-        title: "Milestone 5",
-        amount: 100,
-        date: null,
-        status: "pending",
-    },
-];
+    return {
+        faqsItems,
+        slides,
+        jobPostingMenu,
+        timelineData,
+        featuredJobs,
+        workers,
+        buyerOrders
+    };
+};
 

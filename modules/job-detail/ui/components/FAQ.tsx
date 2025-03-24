@@ -1,5 +1,5 @@
 "use client"
-import { faqsItems } from "@/lib/mockData";
+import { useMockData } from "@/lib/mockData";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icons } from "@/components/icons";
 import { useState } from "react";
@@ -7,10 +7,12 @@ import { cn } from "@/lib/utils";
 
 const FAQ = () => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const { faqsItems } = useMockData();
+    
     return <div className="flex w-full flex-col items-start gap-3">
         <p className="text-[#161922] font-semibold text-base tracking-[-1.5%]">Frequently Asked Questions</p>
         <div className="w-full">
-            {faqsItems.map((item, index: number) => (
+            {faqsItems.map((item:any, index: number) => (
                 <motion.div
                     key={index}
                     initial={false}

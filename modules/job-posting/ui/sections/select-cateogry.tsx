@@ -1,7 +1,7 @@
 "use client"
 import CardLayout from "../components/card-layout";
 import { useQueryState } from "nuqs";
-import { jobPostingMenu } from "@/lib/mockData";
+import { useMockData } from "@/lib/mockData";
 import CustomSelect from "@/components/custom/select";
 import { useState, useEffect, useRef } from "react";
 import { Icons } from "@/components/icons";
@@ -49,6 +49,10 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
     const [playingFile, setPlayingFile] = useState<number | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
 
+    const { jobPostingMenu } = useMockData();
+    const isOpen = tab === "select-category";
+    const item = jobPostingMenu.find((item) => item.value === "select-category");
+
     useEffect(() => {
         const formSkillLevelIds = form.getValues("skillLevelIds");
         const formCandidateSourceIds = form.getValues("candidateSourceIds");
@@ -89,9 +93,6 @@ const SelectCategory = ({ form }: { form: UseFormReturn<jobPostingFormSchema> })
         const candidateSourceIds = selectedTools.map(tool => tool.id);
         form.setValue("candidateSourceIds", candidateSourceIds);
     }, [selectedTools, form]);
-
-    const isOpen = tab === "select-category";
-    const item = jobPostingMenu.find((item) => item.value === "select-category");
 
     const skillLevelOptions = skillLevels
         .filter(level => !selectedSkillLevels.some(selected => selected.id === level.id))

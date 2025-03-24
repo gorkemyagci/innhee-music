@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import { trpc } from "@/trpc/client";
 import { ProjectItemType } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 import {
     Pagination,
     PaginationContent,
@@ -44,11 +45,17 @@ const ProjectItemSkeleton = () => (
 );
 
 const Projects = () => {
+    const t = useTranslations("projects");
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 3;
     const { data: jobPosts, isLoading } = trpc.jobPosting.getJobPosts.useQuery();
     const items = [
-        "All", "Billboard", "Americamn", "BRIT", "MTV", "Awards"
+        t("categories.all"),
+        t("categories.billboard"),
+        t("categories.american"),
+        t("categories.brit"),
+        t("categories.mtv"),
+        t("categories.awards")
     ];
     const [active, setActive] = useState(0);
     const categoriesRef = useRef<HTMLDivElement>(null);
@@ -107,13 +114,13 @@ const Projects = () => {
         <div className="flex flex-col items-start gap-4 pr-1 w-full">
             <div className="flex flex-col md:flex-row md:items-center w-full justify-between gap-4 md:gap-0">
                 <div className="flex items-center justify-between w-full md:w-auto">
-                    <p className="text-main-900 font-medium text-base">Projects</p>
+                    <p className="text-main-900 font-medium text-base">{t("title")}</p>
                     <Button
                         variant="outline"
                         size="sm"
                         className="md:hidden h-8 rounded-lg border border-soft-200 text-sub-600 font-medium text-xs"
                     >
-                        More <MoreHorizontal className="ml-1 h-4 w-4" />
+                        {t("more")} <MoreHorizontal className="ml-1 h-4 w-4" />
                     </Button>
                 </div>
 
@@ -169,7 +176,7 @@ const Projects = () => {
                     </Button>
                 </div>
                 <span className="hidden md:inline-block border-b border-sub-600 text-sub-600 font-medium text-xs cursor-pointer">
-                    More
+                    {t("more")}
                 </span>
             </div>
 
@@ -184,7 +191,7 @@ const Projects = () => {
                     ))
                 ) : (
                     <div className="flex flex-col gap-2 md:gap-0 w-full">
-                        <p className="text-sub-600 font-medium text-xs">No projects found</p>
+                        <p className="text-sub-600 font-medium text-xs">{t("noProjects")}</p>
                     </div>
                 )}
                 {totalPages > 1 && (

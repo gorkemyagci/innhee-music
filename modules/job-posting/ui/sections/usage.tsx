@@ -1,7 +1,7 @@
 "use client"
 import { Checkbox } from "@/components/ui/checkbox";
 import CardLayout from "../components/card-layout";
-import { jobPostingMenu } from "@/lib/mockData";
+import { useMockData } from "@/lib/mockData";
 import { useQueryState } from "nuqs";
 import { UseFormReturn } from "react-hook-form";
 import { jobPostingFormSchema } from "../views/job-posting";
@@ -11,6 +11,7 @@ const Usage = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
     const [usageType, setUsageType] = useState<string>("");
     const [privacyType, setPrivacyType] = useState<string>("");
+    const { jobPostingMenu } = useMockData();
     
     const isOpen = tab === "usage";
     const item = jobPostingMenu.find((item) => item.value === "usage");

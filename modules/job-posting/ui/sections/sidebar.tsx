@@ -1,7 +1,7 @@
 "use client"
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { jobPostingMenu } from "@/lib/mockData";
+import { useMockData } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 import { useQueryState } from "nuqs";
 import { Suspense, useState, useEffect, useRef } from "react";
@@ -13,6 +13,7 @@ const SidebarSuspense = () => {
     const [isMobile, setIsMobile] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const sidebarRef = useRef<HTMLDivElement>(null);
+    const { jobPostingMenu } = useMockData();
 
     // Detect screen size
     useEffect(() => {

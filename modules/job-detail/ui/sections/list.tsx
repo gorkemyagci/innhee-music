@@ -3,8 +3,10 @@ import { Icons } from "@/components/icons";
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/user-avatar";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const List = () => {
+    const t = useTranslations("jobDetail.list");
     const [playingIndex, setPlayingIndex] = useState<number | null>(null);
 
     const handlePlayClick = (index: number) => {
@@ -19,7 +21,7 @@ const List = () => {
     };
 
     return <div className="bg-white w-full rounded-[20px] p-3 md:p-4 flex flex-col items-start gap-3 md:gap-4 shadow-sm">
-        <p className="text-strong-950 font-medium text-sm md:text-base">List</p>
+        <p className="text-strong-950 font-medium text-sm md:text-base">{t("title")}</p>
         <Separator className="bg-soft-200 w-full" />
         {new Array(5).fill(0).map((_, i) => (
             <div key={i} className="flex h-10 md:h-12 w-full items-center justify-between">

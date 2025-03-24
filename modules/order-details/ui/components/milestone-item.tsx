@@ -1,6 +1,6 @@
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { timelineData } from "@/lib/mockData";
+import { useMockData } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 
 interface MilestoneItemProps {
@@ -15,6 +15,8 @@ interface MilestoneItemProps {
 }
 
 const MilestoneItem = ({ item, index }: MilestoneItemProps) => {
+    const { timelineData } = useMockData();
+    
     return (
         <div key={index} className="flex relative items-center w-full justify-between">
             <div className="flex relative flex-row items-center gap-3">

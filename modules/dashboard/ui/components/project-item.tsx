@@ -10,12 +10,15 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { pageUrls } from "@/lib/constants/page-urls";
 import moment from "moment";
+import { useTranslations } from "next-intl";
+
 interface ProjectItemProps {
-  key: string | number;
-  item: ProjectItemType;
+    key: string | number;
+    item: ProjectItemType;
 }
 
 const ProjectItem = ({ key, item }: ProjectItemProps) => {
+    const t = useTranslations("projects.projectItem");
     const pathname = usePathname();
     const [isMobile, setIsMobile] = useState(false);
     const [isTablet, setIsTablet] = useState(false);
@@ -40,29 +43,29 @@ const ProjectItem = ({ key, item }: ProjectItemProps) => {
                 <div className="flex items-center gap-2">
                     <UserAvatar
                         imageUrl="/assets/images/avatar-3.png"
-                        name={item.employer?.nickname || "Unknown"}
+                        name={item.employer?.nickname || t("unknown")}
                         className="h-10 w-10 md:h-12 md:w-12"
                     />
                     <div className="flex flex-col items-start gap-1">
                         <div className="flex items-center gap-2">
-                            <p className="text-sub-600 font-medium text-xs">{item.employer?.nickname || "Unknown"}</p>
+                            <p className="text-sub-600 font-medium text-xs">{item.employer?.nickname || t("unknown")}</p>
                             <div className="flex items-center gap-1">
                                 <Icons.star />
-                                <span className="text-sub-600 font-normal text-xs">4.9(125)</span>
+                                <span className="text-sub-600 font-normal text-xs">{t("rating")}</span>
                             </div>
                         </div>
                         <div className="flex flex-wrap items-center gap-1.5 md:gap-2.5">
                             <div className="flex items-center gap-1">
                                 <Icons.dollar_square className="size-3 md:size-4" />
-                                <span className="text-sub-600 text-[10px] md:text-xs font-medium">Salary</span>
+                                <span className="text-sub-600 text-[10px] md:text-xs font-medium">{t("salary")}</span>
                             </div>
                             <div className="flex items-center gap-1">
                                 <Icons.map className="size-3 md:size-4" />
-                                <span className="text-sub-600 text-[10px] md:text-xs font-medium">Work</span>
+                                <span className="text-sub-600 text-[10px] md:text-xs font-medium">{t("work")}</span>
                             </div>
                             <div className="flex items-center gap-1">
                                 <Icons.star className="size-3 md:size-4 fill-blue-800" />
-                                <span className="text-sub-600 text-[10px] md:text-xs font-medium">Specia</span>
+                                <span className="text-sub-600 text-[10px] md:text-xs font-medium">{t("special")}</span>
                             </div>
                         </div>
                     </div>
@@ -103,14 +106,14 @@ const ProjectItem = ({ key, item }: ProjectItemProps) => {
                     {/* Badges */}
                     <div className="flex flex-wrap items-center gap-1.5 md:gap-2">
                         <Badge className="flex h-7 items-center gap-0.5 py-1 md:py-1.5 px-2 md:px-3 rounded-full bg-neutral-100 border border-neutral-200 text-sub-600 font-medium text-[10px] md:text-[11px] whitespace-nowrap">
-                            <Icons.timeline className="size-3 md:size-3.5" /> {moment(item.deadline).format("MMM DD, YYYY")}
+                            <Icons.timeline className="size-3 md:size-3.5" /> {t("deadline", { date: moment(item.deadline).format("MMM DD, YYYY") })}
                         </Badge>
                         <Badge className="flex h-7 items-center gap-0.5 py-1 md:py-1.5 px-2 md:px-3 rounded-full bg-neutral-100 border border-neutral-200 text-sub-600 font-medium text-[10px] md:text-[11px] whitespace-nowrap">
-                            <Icons.users className="size-3 md:size-3.5" /> 3 sent proposal
+                            <Icons.users className="size-3 md:size-3.5" /> {t("proposals", { count: 3 })}
                         </Badge>
                         {pathname === "/find-jobs" && (
                             <Badge className="flex h-7 items-center gap-0.5 py-1 md:py-1.5 px-2 md:px-3 rounded-full bg-neutral-100 border border-neutral-200 text-sub-600 font-medium text-[10px] md:text-[11px] whitespace-nowrap">
-                                <Icons.group_line_users className="size-3 md:size-3.5" /> Business contract
+                                <Icons.group_line_users className="size-3 md:size-3.5" /> {t("businessContract")}
                             </Badge>
                         )}
                     </div>
@@ -126,7 +129,7 @@ const ProjectItem = ({ key, item }: ProjectItemProps) => {
                         isMobile ? "flex-row items-center" : "flex-col items-end"
                     )}>
                         <span className="text-[#525866] font-medium text-xs md:text-sm">
-                            {pathname.includes("jobs") ? "Budget" : "Fixed Price"}
+                            {pathname.includes("jobs") ? t("budget") : t("fixedPrice")}
                         </span>
                         <span className="text-strong-950 font-medium text-base md:text-xl">${typeof item.salary === 'number' ? item.salary.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : item.salary}</span>
                     </div>
@@ -139,7 +142,7 @@ const ProjectItem = ({ key, item }: ProjectItemProps) => {
                                 isMobile ? "h-8 rounded-lg px-3" : "h-10 rounded-[10px] p-2.5"
                             )}
                         >
-                            Apply Now
+                            {t("applyNow")}
                             {pathname === "/find-jobs" && (
                                 <Icons.chevron_short_right className="size-2.5 ml-1" />
                             )}

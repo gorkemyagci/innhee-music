@@ -204,6 +204,22 @@
         "title": "How does my email plan work?",
         "description": "Our email system is integrated with your account. You'll receive notifications about new projects, client messages, and payment updates directly to your registered email address."
       }
+    },
+    "slider": {
+      "items": {
+        "rnb": {
+          "title": "R&B Hits",
+          "description": "All mine, Lie again, Petty call me everyday, Out of time, No love, Bad habit, and so much more"
+        },
+        "tomorrow": {
+          "title": "Tomorrow's Tunes",
+          "description": "Enjoy the latest hits from emerging artists and discover the sound of tomorrow"
+        },
+        "hiphop": {
+          "title": "Hip Hop Classics",
+          "description": "Relive the golden era with timeless tracks that defined a generation"
+        }
+      }
     }
   },
   "auth": {
@@ -568,7 +584,8 @@
       },
       "buttons": {
         "cancel": "Cancel",
-        "confirm": "Confirm"
+        "confirm": "Confirm",
+        "submit": "Submit"
       }
     },
     "reportMessage": {
@@ -594,7 +611,7 @@
       },
       "buttons": {
         "cancel": "Cancel",
-        "confirm": "Confirm"
+        "submit": "Submit"
       }
     },
     "installWechat": {
@@ -624,6 +641,131 @@
         "overdue": "Overdue"
       },
       "startedOn": "STARTED ON {date}"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "more": "More",
+    "noProjects": "No projects found",
+    "categories": {
+      "all": "All",
+      "billboard": "Billboard",
+      "american": "American",
+      "brit": "BRIT",
+      "mtv": "MTV",
+      "awards": "Awards"
+    },
+    "projectItem": {
+      "unknown": "Unknown",
+      "rating": "4.9(125)",
+      "salary": "Salary",
+      "work": "Work",
+      "special": "Special",
+      "deadline": "{date}",
+      "proposals": "{count} sent proposal",
+      "businessContract": "Business contract",
+      "budget": "Budget",
+      "fixedPrice": "Fixed Price",
+      "applyNow": "Apply Now"
+    }
+  },
+  "jobDetail": {
+    "findWorks": "Find Works",
+    "projectDetail": "Project Detail",
+    "detail": {
+      "title": "Project Details",
+      "businessContract": "Business contract",
+      "skills": "Skills",
+      "attachments": "Attachments"
+    },
+    "similarProjects": {
+      "title": "Similar Projects"
+    },
+    "info": {
+      "unknown": "Unknown",
+      "rating": "4.9(125)",
+      "budget": "Budget",
+      "releaseTime": "Release time",
+      "deadline": "Deadline",
+      "proposals": "Proposals",
+      "message": "Message",
+      "apply": "Apply"
+    },
+    "list": {
+      "title": "List"
+    },
+    "jobLink": {
+      "title": "Job Link",
+      "copySuccess": "Copied to clipboard",
+      "copyError": "Failed to copy"
+    }
+  },
+  "mockData": {
+    "faqs": {
+      "items": {
+        "payment": {
+          "title": "How and when do I get paid?",
+          "description": "Payments are processed within 24 hours after the client approves your work. You can withdraw your earnings through various payment methods including bank transfer, PayPal, and digital wallets."
+        },
+        "merchant": {
+          "title": "Are you the merchant of record?",
+          "description": "Yes, we handle all payment processing and act as the merchant of record for all transactions on our platform, ensuring secure and compliant financial operations."
+        },
+        "international": {
+          "title": "Can I sell in other countries?",
+          "description": "Yes, you can offer your services globally. Our platform supports multiple currencies and international transactions, making it easy to work with clients worldwide."
+        },
+        "website": {
+          "title": "What if I already have a website?",
+          "description": "You can still use our platform alongside your existing website. Many professionals use both to maximize their reach and opportunities while maintaining their independent presence."
+        },
+        "email": {
+          "title": "How does my email plan work?",
+          "description": "Our email system is integrated with your account. You'll receive notifications about new projects, client messages, and payment updates directly to your registered email address."
+        }
+      }
+    },
+    "slider": {
+      "items": {
+        "rnb": {
+          "title": "R & B Hits",
+          "description": "All mine, Lie again, Petty call me everyday, Out of time, No love, Bad habit, and so much more"
+        },
+        "tomorrow": {
+          "title": "Tomorrow's Tunes",
+          "description": "Enjoy the latest hits from emerging artists and discover the sound of tomorrow"
+        },
+        "hiphop": {
+          "title": "Hip Hop Classics",
+          "description": "Relive the golden era with timeless tracks that defined a generation"
+        }
+      }
+    },
+    "jobPosting": {
+      "menu": {
+        "basicInfo": "Basic Information",
+        "selectCategory": "Select category",
+        "usage": "Usage",
+        "preview": "Preview"
+      },
+      "timeline": {
+        "orderCreated": "Order created",
+        "milestone": "Milestone {number}",
+        "milestoneAmount": "Milestone Amount"
+      }
+    }
+  },
+  "jobPosting": {
+    "menu": {
+      "basicInfo": "Basic Information",
+      "selectCategory": "Select Category",
+      "usage": "Usage",
+      "preview": "Preview"
+    },
+    "timeline": {
+      "orderCreated": "Order Created",
+      "milestone": "Milestone {number}",
+      "milestoneAmount": "Milestone Amount"
     }
   }
 }

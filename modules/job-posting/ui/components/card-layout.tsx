@@ -5,9 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Icons } from "@/components/icons";
 import SubmitButton from "@/modules/auth/ui/components/submit-button";
 import { useQueryState } from "nuqs";
-import { jobPostingMenu } from "@/lib/mockData";
+import { useMockData } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
-import TransactionMethodDetails from "@/components/custom/modals/transaction-method-details";
 
 interface CardLayoutProps {
     isOpen: boolean;
@@ -20,6 +19,7 @@ interface CardLayoutProps {
 
 const CardLayout = ({ isOpen, toggleOpen, children, item, onSubmit, loading }: CardLayoutProps) => {
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
+    const { jobPostingMenu } = useMockData();
 
     const nextItem = (() => {
         if (!item) return null;

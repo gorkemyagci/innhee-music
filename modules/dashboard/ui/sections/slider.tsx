@@ -8,13 +8,14 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { slides } from "@/lib/mockData";
+import { useMockData } from "@/lib/mockData";
 
 const Slider = () => {
     const [api, setApi] = useState<any>(null);
     const [current, setCurrent] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [isMounted, setIsMounted] = useState(false);
+    const { slides } = useMockData();
 
     useEffect(() => {
         setIsMounted(true);

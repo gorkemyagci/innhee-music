@@ -1,6 +1,6 @@
 "use client"
 import CardLayout from "../components/card-layout";
-import { jobPostingMenu } from "@/lib/mockData";
+import { useMockData } from "@/lib/mockData";
 import { useQueryState } from "nuqs";
 import { UseFormReturn } from "react-hook-form";
 import { jobPostingFormSchema } from "../views/job-posting";
@@ -17,6 +17,7 @@ interface SkillLevel {
 
 const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
+    const { jobPostingMenu } = useMockData();
     const isOpen = tab === "preview";
     const item = jobPostingMenu.find((item) => item.value === "preview");
     const { data: skillsData } = trpc.jobPosting.getAllSkillLevels.useQuery();
