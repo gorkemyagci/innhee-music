@@ -12,4 +12,6 @@ export const pageUrls = {
     TALENT: "/talent",
     ORDERS: "/settings/orders",
     CHAT: "/chat",
+    BEATS_MARKET: "/beats-market",
+    REFERRAL: "/referral"
 }

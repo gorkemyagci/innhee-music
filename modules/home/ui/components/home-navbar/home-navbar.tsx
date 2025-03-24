@@ -29,29 +29,25 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    interface NavItem {
-        href: string;
-        label: string;
-    }
-
-    const navItems: NavItem[] = Object.entries(t.raw("header.navigation")).map(([href, label]) => ({
-        href: `/${href.toLowerCase().replace(/([A-Z])/g, '-$1').toLowerCase()}`,
-        label: label as string
-    }));
+    const navItems = [
+        { label: t("header.navigation.findWorker"), href: pageUrls.DASHBOARD },
+        { label: t("header.navigation.findProjects"), href: pageUrls.FIND_JOBS },
+        { label: t("header.navigation.findServices"), href: pageUrls.BEATS_MARKET },
+        { label: t("header.navigation.bonus"), href: pageUrls.REFERRAL }
+    ];
 
     const closeMenu = () => setIsMobileMenuOpen(false);
 
     const NavbarContent = () => (
         <div className="max-w-[1440px] mx-auto w-full h-full flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-5">
-                <motion.div
-                >
+                <motion.div>
                     <Link href={pageUrls.HOME} prefetch>
                         <Icons.logo />
                     </Link>
                 </motion.div>
                 <ul className="hidden lg:flex items-center gap-1">
-                    {navItems.map((item: { label: string; href: string }, index: number) => (
+                    {navItems.map((item, index) => (
                         <motion.li
                             key={index}
                             className={cn("pr-3 pl-2 py-2 hover:bg-weak-50 transition-all duration-200 rounded-lg"
@@ -136,7 +132,7 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                                     <SearchInput />
                                 </div>
                                 <ul className="flex flex-col gap-3 sm:gap-4">
-                                    {navItems.map((item: { label: string; href: string }, index: number) => (
+                                    {navItems.map((item, index) => (
                                         <motion.li
                                             key={index}
                                             initial={{ opacity: 0, x: -20 }}
