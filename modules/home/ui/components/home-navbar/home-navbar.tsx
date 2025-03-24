@@ -29,7 +29,15 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    const navItems = t.raw("navbar.navItems");
+    interface NavItem {
+        href: string;
+        label: string;
+    }
+
+    const navItems: NavItem[] = Object.entries(t.raw("header.navigation")).map(([href, label]) => ({
+        href: `/${href.toLowerCase().replace(/([A-Z])/g, '-$1').toLowerCase()}`,
+        label: label as string
+    }));
 
     const closeMenu = () => setIsMobileMenuOpen(false);
 
@@ -68,7 +76,7 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
                             type="button"
                             className={cn("w-full h-10 disabled:cursor-auto group rounded-[10px] text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]")}>
                             <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                            {t("navbar.startNow")}
+                            {t("header.buttons.freeStart")}
                         </Button>
                     </Link>
                 ) : (

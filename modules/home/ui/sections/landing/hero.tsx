@@ -10,7 +10,7 @@ import { GridPattern } from "@/components/magicui/grid-pattern";
 import { getTranslations } from "next-intl/server";
 
 const Hero = async () => {
-    const t = await getTranslations();
+    const t = await getTranslations("landing.hero");
     return <div className="relative w-full flex items-center flex-col px-4 lg:px-8">
         <GridPatternDashed />
         <div className="flex pt-8 lg:pt-12 flex-col items-center gap-4 lg:gap-6">
@@ -25,25 +25,16 @@ const Hero = async () => {
                     className="relative left-[calc(50%-15rem)] aspect-[2300/700] w-[26.125rem] -translate-x-1/2 rotate-[0deg] bg-white opacity-100 sm:left-[calc(50%-3rem)] sm:w-[75.1875rem]"
                 />
             </div>
-            <Badge className="flex items-center gap-3 text-[#666D80] text-sm font-medium tracking-tight bg-weak-50 border border-soft-200 rounded-xl pl-4 pr-1.5 py-2">
-                {t("hero.title")}
-                <span className="bg-[#DA6733] flex items-center justify-center rounded-md h-5 w-6">
-                    <Icons.arrow_right />
-                </span>
-            </Badge>
-            <h1 className="text-black-light text-center text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] font-medium leading-[2.5rem] md:leading-[3rem] lg:leading-[4rem] max-w-2xl">
-                {t("landingPageTitle")}
+            <h1 className="text-black-light text-center text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] font-medium leading-[2.5rem] md:leading-[3rem] lg:leading-[4rem] max-w-[55rem]">
+                {t("title")}
             </h1>
-            <TextAnimate startOnView={false} className="text-neutral-500 text-center text-base lg:text-lg font-medium leading-6 max-w-[52rem] px-4" animation="blurInUp" by="word">
-                {t("landingPageSubtitle")}
-            </TextAnimate>
             <div className="w-full flex justify-center items-center pt-3">
                 <Link href={pageUrls.SIGN_UP} prefetch>
                     <Button
                         type="button"
                         className={cn("w-[145px] h-11 disabled:cursor-auto group rounded-[10px] text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]")}>
                         <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                        {t("hero.ctaButton")}
+                        {t("cta.freeStart")}
                         <Icons.arrow_right />
                     </Button>
                 </Link>
@@ -62,12 +53,12 @@ const Hero = async () => {
                 />
                 <Icons.big_cursor className="absolute bottom-6 left-1/2 hidden md:block" />
                 <div className="flex flex-col items-start gap-2 md:gap-3">
-                    <Button variant="outline" className="bg-gradient-to-r h-10 from-white/40 to-white/10 px-4 md:px-6 py-1.5 md:py-2 z-10 text-white font-semibold text-sm md:text-base rounded-full border border-white/50">{t("Buyer.title")}</Button>
-                    <p className="text-white font-semibold text-2xl">{t("Buyer.title")}</p>
-                    <span className="text-disabled-300 text-base md:text-lg font-medium">{t("Buyer.description")}</span>
+                    <Button variant="outline" className="bg-gradient-to-r h-10 from-white/40 to-white/10 px-4 md:px-6 py-1.5 md:py-2 z-10 text-white font-semibold text-sm md:text-base rounded-full border border-white/50">{t("buyers.tag")}</Button>
+                    <p className="text-white font-semibold text-2xl">{t("buyers.title")}</p>
+                    <span className="text-disabled-300 text-base md:text-lg font-medium">{t("buyers.description")}</span>
                 </div>
                 <Button className="flex rounded-md min-w-28 md:min-w-32 h-9 md:h-11 z-10 text-black font-semibold text-sm items-center gap-2 bg-weak-100 hover:bg-weak-100">
-                    {t("Buyer.ctaButton")}
+                    {t("buyers.button")}
                     <Icons.arrow_right className="size-3 md:size-4" stroke="#0A0D14" />
                 </Button>
             </div>
@@ -82,12 +73,12 @@ const Hero = async () => {
                     )}
                 />
                 <div className="flex flex-col items-start gap-2 md:gap-3">
-                    <Button variant="outline" className="bg-gradient-to-r h-10 from-[#BEADAD]/50 to-[#7D7D7D]/10 px-4 md:px-6 py-1.5 md:py-2 z-10 text-black text-sm md:text-base font-semibold rounded-full border border-[#0C0502]/20">{t("Worker.title")}</Button>
-                    <p className="text-black font-semibold text-2xl">{t("Worker.title")}</p>
-                    <span className="text-[#666D80] text-base md:text-lg font-medium">{t("Worker.description")}</span>
+                    <Button variant="outline" className="bg-gradient-to-r h-10 from-[#BEADAD]/50 to-[#7D7D7D]/10 px-4 md:px-6 py-1.5 md:py-2 z-10 text-black text-sm md:text-base font-semibold rounded-full border border-[#0C0502]/20">{t("workers.tag")}</Button>
+                    <p className="text-black font-semibold text-2xl">{t("workers.title")}</p>
+                    <span className="text-[#666D80] text-base md:text-lg font-medium">{t("workers.description")}</span>
                 </div>
                 <Button className="flex rounded-md min-w-28 md:min-w-32 h-9 md:h-11 z-10 text-white font-semibold text-sm items-center gap-2 bg-surface-700 hover:bg-surface-700">
-                    {t("Worker.ctaButton")}
+                    {t("workers.button")}
                     <Icons.arrow_right className="size-3 md:size-4" />
                 </Button>
             </div>

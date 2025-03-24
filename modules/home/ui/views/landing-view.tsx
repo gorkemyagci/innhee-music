@@ -3,16 +3,16 @@ import FAQ from "../sections/landing/faq";
 import Features from "../sections/landing/features";
 import Footer from "../sections/landing/footer";
 import Hero from "../sections/landing/hero";
-import AppInfo from "../sections/landing/info";
-import WhatsInside from "../sections/landing/whats-inside";
+import Choose from "../sections/landing/choose";
+import Workflow from "../sections/landing/workflow";
 
 const Landing = () => {
     return <div className="w-full flex flex-col items-center">
         <Hero />
-        <WhatsInside />
+        <Choose />
         <Features />
         <Discover />
-        <AppInfo />
+        <Workflow />
         <FAQ />
         <Footer />
     </div>

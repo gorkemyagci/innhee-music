@@ -9,7 +9,7 @@ import Notifications from "./notifcations";
 import { useTranslations } from "next-intl";
 
 const AuthedNavbar = () => {
-    const t = useTranslations();
+    const t = useTranslations("authed_navbar");
     return (
         <>
             <Link href={pageUrls.JOB_POSTING} prefetch>
@@ -21,7 +21,7 @@ const AuthedNavbar = () => {
                 >
                     <div className="absolute top-0 left-0 w-full h-0 group-hover:h-4 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] to-[#FFF]/0" />
                     <Icons.plus className="fill-white size-3" />
-                    <span className="text-sm font-medium">{t("authed_navbar.create")}</span>
+                    <span className="text-sm font-medium">{t("create")}</span>
                 </Button></Link>
             <Notifications>
                 <motion.span
@@ -32,7 +32,7 @@ const AuthedNavbar = () => {
             </Notifications>
             <ProfileDropdown>
                 <Button variant="outline" className="bg-white border border-soft-200 hover:bg-gray-50 h-10 p-2.5 rounded-[10px] text-strong-950 font-medium text-sm">
-                    {t("authed_navbar.myAccount")}
+                    {t("myAccount")}
                 </Button>
             </ProfileDropdown>
         </>

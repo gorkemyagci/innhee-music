@@ -4,82 +4,82 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
 const Footer = async () => {
-    const t = await getTranslations("Footer");
+    const t = await getTranslations("footer");
     return (
         <footer className="w-full max-w-[1200px] bg-white flex flex-col items-center gap-4 md:gap-6">
             <div className="w-full px-4 md:px-6 xl:px-5 flex flex-col lg:flex-row items-start gap-8 lg:gap-0 lg:pb-3 lg:justify-between mx-auto pt-8 md:pt-10">
                 <div className="flex flex-col items-start gap-3 w-full lg:max-w-lg">
                     <Icons.logo />
-                    <span className="text-black text-base md:text-lg font-light">{t("description")}</span>
+                    <span className="text-black text-base md:text-lg font-light">{t("appDownload")}</span>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 w-full lg:w-auto">
                     <div className="flex flex-col items-start gap-4 md:gap-6">
-                        <span className="text-strong-950 font-medium text-base md:text-lg tracking-tight">{t("title")}</span>
+                        <span className="text-strong-950 font-medium text-base md:text-lg tracking-tight">{t("company.title")}</span>
                         <ul className="flex flex-col items-start gap-3 md:gap-4">
                             <li className="text-sub-600 font-medium text-xs md:text-sm">
                                 <Link href="#">
-                                    {t("Contact")}
+                                    {t("company.links.contact")}
                                 </Link>
                             </li>
                             <li className="text-sub-600 font-medium text-xs md:text-sm">
                                 <Link href="#">
-                                    {t("HelpCenter")}
+                                    {t("company.links.helpCenter")}
                                 </Link>
                             </li>
                             <li className="text-sub-600 font-medium text-xs md:text-sm">
                                 <Link href="#">
-                                    {t("PrivacyPolicy")}
+                                    {t("company.links.privacyPolicy")}
                                 </Link>
                             </li>
                             <li className="text-sub-600 font-medium text-xs md:text-sm">
                                 <Link href="#">
-                                    {t("Terms")}
+                                    {t("company.links.terms")}
                                 </Link>
                             </li>
                         </ul>
                     </div>
                     <div className="flex flex-col items-start gap-4 md:gap-6">
-                        <span className="text-strong-950 font-medium text-base md:text-lg tracking-tight">{t("title_buyers")}</span>
+                        <span className="text-strong-950 font-medium text-base md:text-lg tracking-tight">{t("forUser.title")}</span>
                         <ul className="flex flex-col items-start gap-3 md:gap-4">
                             <li className="text-sub-600 font-medium text-xs md:text-sm">
                                 <Link href="#">
-                                    {t("FindWorker")}
+                                    {t("forUser.links.findWorker")}
                                 </Link>
                             </li>
                             <li className="text-sub-600 font-medium text-xs md:text-sm">
                                 <Link href="#">
-                                    {t("FindServices")}
+                                    {t("forUser.links.findServices")}
                                 </Link>
                             </li>
                             <li className="text-sub-600 font-medium text-xs md:text-sm">
                                 <Link href="#">
-                                    {t("FindProjects")}
+                                    {t("forWork.links.findProjects")}
                                 </Link>
                             </li>
                         </ul>
                     </div>
                     <div className="flex flex-col items-start gap-4 md:gap-6">
-                        <span className="text-strong-950 font-medium text-base md:text-lg tracking-tight">For Workers</span>
+                        <span className="text-strong-950 font-medium text-base md:text-lg tracking-tight">{t("forWork.title")}</span>
                         <ul className="flex flex-col items-start gap-3 md:gap-4">
                             <li className="text-sub-600 font-medium text-xs md:text-sm">
                                 <Link href="#">
-                                    {t("FindWorker")}
+                                    {t("forUser.links.findWorker")}
                                 </Link>
                             </li>
                             <li className="text-sub-600 font-medium text-xs md:text-sm">
                                 <Link href="#">
-                                    {t("FindServices")}
+                                    {t("forUser.links.findServices")}
                                 </Link>
                             </li>
                             <li className="text-sub-600 font-medium text-xs md:text-sm">
                                 <Link href="#">
-                                    {t("ApplyForCertification")}
+                                    {t("forWork.links.applyForCertification")}
                                 </Link>
                             </li>
                         </ul>
                     </div>
                     <div className="flex flex-col items-start gap-4 md:gap-6">
-                        <span className="text-strong-950 font-medium text-base md:text-lg tracking-tight">{t("SocialMedia")}</span>
+                        <span className="text-strong-950 font-medium text-base md:text-lg tracking-tight">{t("socialMedia.title")}</span>
                         <div className="flex items-center gap-3 md:gap-4">
                             <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-weak-50 flex items-center justify-center">
                                 <Icons.instagram className="size-4 md:size-[18px] fill-sub-600" />
