@@ -21,7 +21,6 @@ const ChatView = () => {
     }
   }, []);
 
-  // Simulate fetching messages when a chat is selected
   useEffect(() => {
     if (selectedChat) {
       setMessages(getMockMessages(selectedChat));

@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import InputElement from "@/components/custom/form-elements/input";
+import { useTranslations } from "next-intl";
 
 interface OfferModalProps {
   isOpen: boolean;
@@ -16,20 +17,26 @@ interface OfferModalProps {
   onSubmit: (offer: Offer) => void;
 }
 
-const formSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  amount: z.string().min(1, "Amount is required").refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-    message: "Amount must be greater than 0",
-  }),
-  deliveryDays: z.string().min(1, "Delivery days is required").refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-    message: "Delivery days must be greater than 0",
-  }),
-});
-
-type FormValues = z.infer<typeof formSchema>;
-
 const OfferModal = ({ isOpen, onClose, onSubmit }: OfferModalProps) => {
+  const t = useTranslations("chat.offerModal");
+  
+  const formSchema = z.object({
+    title: z.string().min(1, t("form.errors.titleRequired")),
+    description: z.string().min(1, t("form.errors.descriptionRequired")),
+    amount: z.string()
+      .min(1, t("form.errors.amountRequired"))
+      .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+        message: t("form.errors.amountGreaterThanZero"),
+      }),
+    deliveryDays: z.string()
+      .min(1, t("form.errors.deliveryDaysRequired"))
+      .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+        message: t("form.errors.deliveryDaysGreaterThanZero"),
+      }),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,7 +67,7 @@ const OfferModal = ({ isOpen, onClose, onSubmit }: OfferModalProps) => {
       <DialogContent className="sm:max-w-[500px] p-0 bg-white border-soft-200 rounded-3xl overflow-hidden">
         <DialogHeader className="p-6 border-b border-soft-200">
           <div className="flex items-center justify-between w-full">
-            <DialogTitle className="text-main-900 font-medium">Create an Offer</DialogTitle>
+            <DialogTitle className="text-main-900 font-medium">{t("title")}</DialogTitle>
           </div>
         </DialogHeader>
         <Form {...form}>
@@ -70,12 +77,12 @@ const OfferModal = ({ isOpen, onClose, onSubmit }: OfferModalProps) => {
                 <InputElement
                   form={form}
                   name="title"
-                  label="Title"
-                  placeholder="I will migrate any website from one platform to another"
+                  label={t("form.title.label")}
+                  placeholder={t("form.title.placeholder")}
                   className="h-11 hover:bg-weak-50 border-soft-200 transition-colors"
                 />
                 <p className="text-xs text-sub-600 px-0.5">
-                  Enter a clear and concise title for your offer
+                  {t("form.title.helper")}
                 </p>
               </div>
 
@@ -83,13 +90,13 @@ const OfferModal = ({ isOpen, onClose, onSubmit }: OfferModalProps) => {
                 <InputElement
                   form={form}
                   name="description"
-                  label="Description"
+                  label={t("form.description.label")}
                   type="textarea"
-                  placeholder="Describe what you'll deliver..."
+                  placeholder={t("form.description.placeholder")}
                   className="min-h-[120px] hover:bg-weak-50 border-soft-200 transition-colors"
                 />
                 <p className="text-xs text-sub-600 px-0.5">
-                  Provide detailed information about your offer
+                  {t("form.description.helper")}
                 </p>
               </div>
 
@@ -98,14 +105,14 @@ const OfferModal = ({ isOpen, onClose, onSubmit }: OfferModalProps) => {
                   <InputElement
                     form={form}
                     name="amount"
-                    label="Price"
+                    label={t("form.price.label")}
                     type="price"
-                    placeholder="100"
-                    prefix="US$"
+                    placeholder={t("form.price.placeholder")}
+                    prefix={t("form.price.prefix")}
                     className="h-11 hover:bg-weak-50 border-soft-200 transition-colors"
                   />
                   <p className="text-xs text-sub-600 px-0.5">
-                    Minimum price: $1
+                    {t("form.price.helper")}
                   </p>
                 </div>
 
@@ -113,13 +120,13 @@ const OfferModal = ({ isOpen, onClose, onSubmit }: OfferModalProps) => {
                   <InputElement
                     form={form}
                     name="deliveryDays"
-                    label="Delivery Time (Days)"
+                    label={t("form.deliveryTime.label")}
                     type="number"
-                    placeholder="7"
+                    placeholder={t("form.deliveryTime.placeholder")}
                     className="h-11 hover:bg-weak-50 border-soft-200 transition-colors"
                   />
                   <p className="text-xs text-sub-600 px-0.5">
-                    Minimum: 1 day
+                    {t("form.deliveryTime.helper")}
                   </p>
                 </div>
               </div>
@@ -128,19 +135,19 @@ const OfferModal = ({ isOpen, onClose, onSubmit }: OfferModalProps) => {
               <Button type="button"
                 onClick={onClose}
                 variant="outline" className="h-9 flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
-                Cancel
+                {t("form.buttons.cancel")}
               </Button>
               <Button
                 type="submit"
                 className="h-10 flex-1 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
                 <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                Send Offer
+                {t("form.buttons.submit")}
               </Button>
             </div>
           </form>
         </Form>
       </DialogContent>
-    </Dialog >
+    </Dialog>
   );
 };
 

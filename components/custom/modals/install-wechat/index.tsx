@@ -6,32 +6,43 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 
-interface InstallWechatProps {
-    children: React.ReactNode;
+interface InstallWechatModalProps {
+    isOpen?: boolean;
+    onClose?: () => void;
+    children?: React.ReactNode;
 }
 
-const InstallWechat = ({ children }: InstallWechatProps) => {
+const InstallWechatModal = ({ isOpen, onClose, children }: InstallWechatModalProps) => {
+    const t = useTranslations("modals.installWechat");
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[425px] bg-white rounded-3xl">
                 <DialogHeader>
-                    <DialogTitle className="text-center">WeChat QR Code</DialogTitle>
+                    <DialogTitle className="text-center">{t("title")}</DialogTitle>
                 </DialogHeader>
-                <div className="flex justify-center items-center py-3">
-                    <Image
-                        src="/assets/images/QR.png"
-                        alt="WeChat QR Code"
-                        width={153}
-                        height={153}
-                        className="w-[153px] h-[153px] pointer-events-none"
-                    />
+                <div className="flex flex-col items-center space-y-4 py-4">
+                    <div className="relative w-48 h-48">
+                        <Image
+                            src="/wechat-qr.png"
+                            alt="WeChat QR Code"
+                            fill
+                            className="object-contain"
+                        />
+                    </div>
+                    <p className="text-center text-sm text-sub-600">
+                        {t("scanText")}
+                    </p>
+                    <Button onClick={onClose} className="w-full">
+                        {t("buttons.close")}
+                    </Button>
                 </div>
-                <p className="text-sm text-sub-600 font-normal text-center">Scan me with the installed WeChat App.</p>
             </DialogContent>
         </Dialog>
     )
 }
 
-export default InstallWechat;
+export default InstallWechatModal;

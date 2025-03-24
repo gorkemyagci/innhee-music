@@ -1,13 +1,16 @@
 import { Icons } from "@/components/icons";
 import { pageUrls } from "@/lib/constants/page-urls";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const Menu = ({ userId }: { userId: string }) => {
+    const t = useTranslations("sidebar.items");
+    
     const menuItems = [
-        { label: "My Home", icon: <Icons.home_line className="fill-current" />, href: `${pageUrls.TALENT}/${userId}` },
-        { label: "Order", icon: <Icons.briefcase_line className="fill-current" />, href: pageUrls.ORDERS },
-        { label: "Chat", icon: <Icons.building className="stroke-current" />, href: pageUrls.CHAT },
-        { label: "Collection", icon: <Icons.article_line className="fill-current" />, href: "#" },
+        { label: t("home"), icon: <Icons.home_line className="fill-current" />, href: `${pageUrls.TALENT}/${userId}` },
+        { label: t("order"), icon: <Icons.briefcase_line className="fill-current" />, href: pageUrls.ORDERS },
+        { label: t("chat"), icon: <Icons.building className="stroke-current" />, href: pageUrls.CHAT },
+        { label: t("collection"), icon: <Icons.article_line className="fill-current" />, href: "#" },
     ]
     return (
         <div className="p-4 flex flex-col items-start gap-1">

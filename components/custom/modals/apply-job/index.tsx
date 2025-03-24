@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { trpc } from "@/trpc/client";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface ApplyJobProps {
     children: React.ReactNode;
@@ -33,6 +34,7 @@ const formSchema = z.object({
 })
 
 const ApplyJob = ({ children, jobId }: ApplyJobProps) => {
+    const t = useTranslations("modals.applyJob");
     const [text, setText] = useState("");
     const [open, setOpen] = useState(false);
     const maxChars = 200;
@@ -86,8 +88,8 @@ const ApplyJob = ({ children, jobId }: ApplyJobProps) => {
                             <Icons.upload_line />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <DialogTitle><span className="text-main-900 font-medium text-sm">Apply</span></DialogTitle>
-                            <span className="text-sub-600 font-normal text-xs">Add tags and do adjustments before uploading.</span>
+                            <DialogTitle><span className="text-main-900 font-medium text-sm">{t("title")}</span></DialogTitle>
+                            <span className="text-sub-600 font-normal text-xs">{t("subtitle")}</span>
                         </div>
                     </div>
                 </DialogHeader>
@@ -103,12 +105,12 @@ const ApplyJob = ({ children, jobId }: ApplyJobProps) => {
                             name="amount"
                             render={({ field }) => (
                                 <FormItem className="w-full px-4">
-                                    <FormLabel className="text-sub-600 font-medium">Enter Amount <Icons.info /></FormLabel>
+                                    <FormLabel className="text-sub-600 font-medium">{t("form.amount.label")} <Icons.info /></FormLabel>
                                     <FormControl className="w-full">
                                         <div className="relative flex items-center gap-2 p-2.5 pl-3 h-10 justify-center w-full border border-soft-200 rounded-[10px]">
                                             <span className="text-soft-400 font-normal text-sm">￥</span>
                                             <input
-                                                placeholder="0.00"
+                                                placeholder={t("form.amount.placeholder")}
                                                 type="number"
                                                 className="border-none outline-0 focus:outline-none shadow-none flex-1 h-full flex items-center justify-center pl-1 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                                 value={field.value}
@@ -124,12 +126,12 @@ const ApplyJob = ({ children, jobId }: ApplyJobProps) => {
                             name="description"
                             render={({ field }) => (
                                 <FormItem className="w-full px-4">
-                                    <FormLabel className="text-sub-600 font-medium">Description <span className="text-sub-600 font-normal text-sm">(Optional)</span> </FormLabel>
+                                    <FormLabel className="text-sub-600 font-medium">{t("form.description.label")} <span className="text-sub-600 font-normal text-sm">(Optional)</span> </FormLabel>
                                     <FormControl className="w-full">
                                         <div className="relative my-0.5">
                                             <Textarea
                                                 value={text}
-                                                placeholder="Please describe yourself"
+                                                placeholder={t("form.description.placeholder")}
                                                 className="w-full min-h-[120px] border-soft-200 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-sub-400 resize-none pr-3"
                                                 onChange={(e) => {
                                                     const newText = e.target.value;
@@ -167,7 +169,7 @@ const ApplyJob = ({ children, jobId }: ApplyJobProps) => {
                         <div className="flex items-center w-full gap-3 px-4">
                             <DialogClose asChild>
                                 <Button variant="outline" className="h-9 flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
-                                    Cancel
+                                    {t("buttons.cancel")}
                                 </Button>
                             </DialogClose>
                             <Button
@@ -175,7 +177,7 @@ const ApplyJob = ({ children, jobId }: ApplyJobProps) => {
                                 disabled={create.isPending}
                                 className="h-9 flex-1 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
                                 <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                                {create.isPending ? <Loader2 className="size-4 animate-spin" /> : "Confirm"}
+                                {create.isPending ? <Loader2 className="size-4 animate-spin" /> : t("buttons.submit")}
                             </Button>
                         </div>
                     </form>

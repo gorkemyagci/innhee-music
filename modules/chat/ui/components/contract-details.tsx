@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icons } from "@/components/icons";
+import { useTranslations } from "next-intl";
 
 interface ContractDetailsProps {
     contractId: string;
@@ -35,6 +36,7 @@ const ContractDetails = ({
     files = [],
     people = [],
 }: ContractDetailsProps) => {
+    const t = useTranslations("chat.contractDetails");
     const [isContractOpen, setIsContractOpen] = useState(true);
     const [isFilesOpen, setIsFilesOpen] = useState(true);
     const [isPeopleOpen, setIsPeopleOpen] = useState(true);
@@ -84,7 +86,7 @@ const ContractDetails = ({
                         className="flex items-center h-8 lg:h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-3 lg:px-4 py-1.5 text-left"
                         onClick={() => setIsContractOpen(!isContractOpen)}
                     >
-                        <h3 className="font-medium text-[#525866] text-sm lg:text-base">Contract details</h3>
+                        <h3 className="font-medium text-[#525866] text-sm lg:text-base">{t("sections.contract")}</h3>
                         <motion.div
                             animate={{ rotate: isContractOpen ? 180 : 0 }}
                             transition={{ duration: 0.3 }}
@@ -103,35 +105,35 @@ const ContractDetails = ({
                             >
                                 <div className="p-3 lg:p-[14px] space-y-2">
                                     <div className="flex justify-between">
-                                        <span className="text-xs font-medium text-sub-600">Contract</span>
+                                        <span className="text-xs font-medium text-sub-600">{t("fields.contract")}</span>
                                         <span className="text-xs text-sub-600 font-medium truncate max-w-[150px]">
                                             {contractName}
                                         </span>
                                     </div>
                                     <Separator className="bg-soft-200" />
                                     <div className="flex justify-between">
-                                        <span className="text-xs font-medium text-sub-600">Contract ID</span>
+                                        <span className="text-xs font-medium text-sub-600">{t("fields.contractId")}</span>
                                         <span className="text-xs text-sub-600 font-medium">
                                             #{contractId}
                                         </span>
                                     </div>
                                     <Separator className="bg-soft-200" />
                                     <div className="flex justify-between">
-                                        <span className="text-xs font-medium text-sub-600">Start Date</span>
+                                        <span className="text-xs font-medium text-sub-600">{t("fields.startDate")}</span>
                                         <span className="text-xs text-sub-600 font-medium">
                                             {startDate}
                                         </span>
                                     </div>
                                     <Separator className="bg-soft-200" />
                                     <div className="flex justify-between">
-                                        <span className="text-xs font-medium text-sub-600">Deadline</span>
+                                        <span className="text-xs font-medium text-sub-600">{t("fields.deadline")}</span>
                                         <span className="text-xs text-sub-600 font-medium">
                                             {deadline}
                                         </span>
                                     </div>
                                     <Separator className="bg-soft-200" />
                                     <div className="flex justify-between">
-                                        <span className="text-xs font-medium text-sub-600">Amount</span>
+                                        <span className="text-xs font-medium text-sub-600">{t("fields.amount")}</span>
                                         <span className="text-sm lg:text-base font-medium">
                                             ${typeof amount === 'number' ? amount.toFixed(2) : '0.00'}
                                         </span>
@@ -147,7 +149,7 @@ const ContractDetails = ({
                     <div className="flex items-center h-8 lg:h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-3 lg:px-4 py-1.5 text-left"
                         onClick={() => setIsFilesOpen(!isFilesOpen)}
                     >
-                        <h3 className="font-medium text-[#525866] text-sm lg:text-base">Files</h3>
+                        <h3 className="font-medium text-[#525866] text-sm lg:text-base">{t("sections.files")}</h3>
                         <motion.div
                             animate={{ rotate: isFilesOpen ? 180 : 0 }}
                             transition={{ duration: 0.3 }}
@@ -188,7 +190,7 @@ const ContractDetails = ({
                     <div className="flex items-center h-8 lg:h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-3 lg:px-4 py-1.5 text-left"
                         onClick={() => setIsPeopleOpen(!isPeopleOpen)}
                     >
-                        <h3 className="font-medium text-[#525866] text-sm lg:text-base">People</h3>
+                        <h3 className="font-medium text-[#525866] text-sm lg:text-base">{t("sections.people")}</h3>
                         <motion.div
                             animate={{ rotate: isPeopleOpen ? 180 : 0 }}
                             transition={{ duration: 0.3 }}

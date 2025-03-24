@@ -315,5 +315,314 @@
       "hasAccount": "已有账号？",
       "signIn": "登录"
     }
+  },
+  "chat": {
+    "title": "聊天",
+    "timeAgo": {
+      "minutes": "{count} 分钟前",
+      "hours": "{count} 小时前",
+      "days": "{count} 天前"
+    },
+    "messages": {
+      "system": {
+        "acceptedOffer": "已接受报价",
+        "viewContract": "查看合同",
+        "activatedMilestone": "已激活里程碑"
+      },
+      "offer": {
+        "title": "报价",
+        "yourOfferIncludes": "您的报价包括",
+        "deliveryTime": "12天交付",
+        "cancel": "取消",
+        "accept": "接受"
+      },
+      "milestone": {
+        "activated": "已激活里程碑",
+        "amount": "金额：",
+        "viewContract": "查看合同"
+      },
+      "regular": {
+        "me": "我",
+        "files": "{count} 个文件"
+      }
+    },
+    "main": {
+      "selectChat": "选择一个聊天开始对话",
+      "status": {
+        "online": "在线",
+        "offline": "离线"
+      },
+      "contractDetails": "合同详情",
+      "input": {
+        "placeholder": "输入消息...",
+        "send": "发送"
+      },
+      "attachments": {
+        "uploading": "上传中",
+        "fileSize": "{size} KB"
+      }
+    },
+    "offerModal": {
+      "title": "创建报价",
+      "form": {
+        "title": {
+          "label": "标题",
+          "placeholder": "我将把任何网站从一个平台迁移到另一个平台",
+          "helper": "为您的报价输入清晰简洁的标题"
+        },
+        "description": {
+          "label": "描述",
+          "placeholder": "描述您将交付的内容...",
+          "helper": "提供有关您报价的详细信息"
+        },
+        "price": {
+          "label": "价格",
+          "placeholder": "100",
+          "prefix": "US$",
+          "helper": "最低价格：$1"
+        },
+        "deliveryTime": {
+          "label": "交付时间（天）",
+          "placeholder": "7",
+          "helper": "最少：1天"
+        },
+        "buttons": {
+          "cancel": "取消",
+          "submit": "发送报价"
+        },
+        "errors": {
+          "titleRequired": "标题是必需的",
+          "descriptionRequired": "描述是必需的",
+          "amountRequired": "金额是必需的",
+          "amountGreaterThanZero": "金额必须大于0",
+          "deliveryDaysRequired": "交付天数是必需的",
+          "deliveryDaysGreaterThanZero": "交付天数必须大于0"
+        }
+      }
+    },
+    "contractDetails": {
+      "sections": {
+        "contract": "合同详情",
+        "files": "文件",
+        "people": "人员"
+      },
+      "fields": {
+        "contract": "合同",
+        "contractId": "合同编号",
+        "startDate": "开始日期",
+        "deadline": "截止日期",
+        "amount": "金额"
+      }
+    }
+  },
+  "referral": {
+    "becomePartner": {
+      "title": "开始赚钱",
+      "subtitle": "成为我们的合作伙伴！",
+      "buyers": {
+        "tag": "买家",
+        "title": "用技能赚钱",
+        "description": "通过灵活的工作机会将您的音频技能转化为收入。",
+        "button": "发布工作"
+      },
+      "workers": {
+        "tag": "工作者",
+        "title": "用技能赚钱",
+        "description": "通过灵活的工作机会将您的音频技能转化为收入。",
+        "button": "发布工作"
+      }
+    },
+    "howItWorks": {
+      "title": "它是如何工作的？",
+      "subtitle": "如何成为一名商人。",
+      "engage": {
+        "title": "吸引人们",
+        "description": "与对购买游戏感兴趣的人分享您的推荐链接。"
+      },
+      "earnings": {
+        "title": "看着您的收入增长",
+        "description": "在您的联盟面板上监控您的收入。获得推荐订单的佣金。"
+      },
+      "receive": {
+        "title": "收到您的钱",
+        "description": "作为对您承诺的奖励，您将获得真金白银！"
+      }
+    },
+    "share": {
+      "title": "分享您的唯一链接",
+      "subtitle": "复制您的唯一链接并与朋友和关注者分享。",
+      "referralLink": "推荐链接",
+      "shareVia": "分享方式",
+      "placeholder": "推荐码..."
+    },
+    "rebateCondition": {
+      "title": "获得返利的条件",
+      "subtitle": "返利百分比",
+      "conditions": {
+        "level1": "1-5个成功推荐，或推荐用户总交易额达到1,000美元",
+        "level2": "6-10个成功推荐，或推荐用户总交易额达到5,000美元",
+        "level3": "10个以上成功推荐，或推荐用户总交易额达到10,000美元"
+      }
+    },
+    "userProfile": {
+      "tabs": {
+        "overview": "概览",
+        "comments": "评论",
+        "rewards": "奖励"
+      },
+      "badge": "一月份表现最佳员工！"
+    }
+  },
+  "sidebar": {
+    "menu": "菜单",
+    "noAboutText": "暂无简介",
+    "items": {
+      "home": "我的主页",
+      "order": "订单",
+      "chat": "聊天",
+      "collection": "收藏"
+    },
+    "skills": {
+      "title": "技能",
+      "averagePrice": "平均价格 - 每首歌350美元"
+    },
+    "tags": {
+      "title": "标签",
+      "noTags": "暂无标签"
+    },
+    "about": {
+      "title": "关于"
+    }
+  },
+  "modals": {
+    "editSkills": {
+      "title": "编辑技能",
+      "subtitle": "搜索技能或添加自己的",
+      "addSkills": "添加技能",
+      "search": {
+        "placeholder": "搜索...",
+        "noResults": "未找到结果。",
+        "allSkills": "所有技能",
+        "searchResults": "搜索结果"
+      },
+      "buttons": {
+        "cancel": "取消",
+        "save": "保存"
+      }
+    },
+    "editTags": {
+      "title": "编辑标签",
+      "subtitle": "搜索技能或添加自己的",
+      "addTags": "添加标签",
+      "search": {
+        "placeholder": "搜索...",
+        "noResults": "未找到结果。",
+        "allTags": "所有标签",
+        "searchResults": "搜索结果"
+      },
+      "buttons": {
+        "cancel": "取消",
+        "save": "保存"
+      }
+    },
+    "editAbout": {
+      "title": "关于我",
+      "subtitle": "最大字符数限制为 {maxChars}。",
+      "placeholder": "请描述你自己",
+      "buttons": {
+        "cancel": "取消",
+        "save": "保存"
+      }
+    },
+    "contractDetails": {
+      "title": "合同详情",
+      "fields": {
+        "contractId": "合同编号",
+        "contractName": "合同名称",
+        "startDate": "开始日期",
+        "deadline": "截止日期",
+        "totalAmount": "总金额",
+        "offerAmount": "报价金额",
+        "milestoneAmount": "里程碑金额"
+      },
+      "buttons": {
+        "close": "关闭"
+      }
+    },
+    "applyJob": {
+      "title": "申请",
+      "subtitle": "上传前添加标签并进行调整。",
+      "recipientReceives": "接收者收到",
+      "form": {
+        "amount": {
+          "label": "输入金额",
+          "placeholder": "0.00"
+        },
+        "description": {
+          "label": "描述",
+          "optional": "（可选）",
+          "placeholder": "请描述你自己"
+        },
+        "hideDisplay": "隐藏申请显示"
+      },
+      "buttons": {
+        "cancel": "取消",
+        "confirm": "确认"
+      }
+    },
+    "reportMessage": {
+      "title": "举报消息",
+      "subtitle": "选择举报消息的原因。",
+      "reasons": {
+        "spam": {
+          "title": "垃圾信息",
+          "description": "未经请求或不相关的内容。"
+        },
+        "harassment": {
+          "title": "骚扰",
+          "description": "持续、不受欢迎或冒犯性的行为。"
+        },
+        "violation": {
+          "title": "违反规则",
+          "description": "违反社区准则或条款。"
+        }
+      },
+      "detail": {
+        "label": "详情",
+        "placeholder": "请描述举报原因"
+      },
+      "buttons": {
+        "cancel": "取消",
+        "confirm": "确认"
+      }
+    },
+    "installWechat": {
+      "title": "微信二维码",
+      "scanText": "使用已安装的微信应用扫描。"
+    }
+  },
+  "calendar": {
+    "title": "日历",
+    "seeAll": "查看全部",
+    "week": "周",
+    "month": "月",
+    "currentOrders": "当前未完成订单数 {count}。",
+    "weekDays": {
+      "short": ["日", "一", "二", "三", "四", "五", "六"],
+      "long": ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
+    },
+    "timeline": {
+      "tabs": {
+        "7days": "7天",
+        "15days": "15天",
+        "30days": "30天"
+      },
+      "status": {
+        "submitted": "已提交",
+        "pending": "待处理",
+        "overdue": "已逾期"
+      },
+      "startedOn": "开始于 {date}"
+    }
   }
 }

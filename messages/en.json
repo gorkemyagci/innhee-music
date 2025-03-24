@@ -1,0 +1,102 @@
+{
+    "auth": {
+        "title": "Welcome",
+        "description": "Sign in to continue",
+        "email": "Email",
+        "password": "Password",
+        "login": "Sign In",
+        "register": "Sign Up",
+        "forgotPassword": "Forgot Password",
+        "dontHaveAccount": "Don't have an account?",
+        "alreadyHaveAccount": "Already have an account?",
+        "or": "or",
+        "continueWithGoogle": "Continue with Google",
+        "continueWithGithub": "Continue with Github",
+        "errors": {
+            "invalidEmail": "Invalid email address",
+            "invalidPassword": "Invalid password",
+            "invalidCredentials": "Invalid credentials",
+            "userNotFound": "User not found",
+            "wrongPassword": "Wrong password",
+            "emailAlreadyInUse": "Email already in use",
+            "weakPassword": "Password is too weak",
+            "passwordsDontMatch": "Passwords don't match",
+            "somethingWentWrong": "Something went wrong"
+        }
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "welcome": "Welcome",
+        "totalOrders": "Total Orders",
+        "totalProducts": "Total Products",
+        "totalCustomers": "Total Customers",
+        "totalRevenue": "Total Revenue",
+        "recentOrders": "Recent Orders",
+        "recentProducts": "Recent Products",
+        "recentCustomers": "Recent Customers",
+        "viewAll": "View All",
+        "noData": "No data"
+    },
+    "calendar": {
+        "title": "Calendar",
+        "seeAll": "All",
+        "week": "Week",
+        "currentOrders": "{{count}} order",
+        "weekDays": {
+            "short": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        }
+    },
+    "orders": {
+        "title": "Orders",
+        "newOrder": "New Order",
+        "orderDetails": "Order Details",
+        "orderHistory": "Order History",
+        "orderStatus": "Order Status",
+        "orderDate": "Order Date",
+        "orderNumber": "Order Number",
+        "orderTotal": "Order Total",
+        "orderItems": "Order Items",
+        "orderCustomer": "Customer",
+        "orderAddress": "Address",
+        "orderPayment": "Payment",
+        "orderShipping": "Shipping",
+        "orderNotes": "Notes",
+        "noOrders": "No orders"
+    },
+    "products": {
+        "title": "Products",
+        "newProduct": "New Product",
+        "productDetails": "Product Details",
+        "productName": "Product Name",
+        "productDescription": "Product Description",
+        "productPrice": "Product Price",
+        "productStock": "Stock",
+        "productCategory": "Category",
+        "productImage": "Image",
+        "noProducts": "No products"
+    },
+    "customers": {
+        "title": "Customers",
+        "newCustomer": "New Customer",
+        "customerDetails": "Customer Details",
+        "customerName": "Customer Name",
+        "customerEmail": "Email",
+        "customerPhone": "Phone",
+        "customerAddress": "Address",
+        "customerOrders": "Orders",
+        "noCustomers": "No customers"
+    },
+    "settings": {
+        "title": "Settings",
+        "general": "General",
+        "account": "Account",
+        "notifications": "Notifications",
+        "security": "Security",
+        "appearance": "Appearance",
+        "language": "Language",
+        "theme": "Theme",
+        "darkMode": "Dark Mode",
+        "lightMode": "Light Mode",
+        "systemMode": "System Mode"
+    }
+} 

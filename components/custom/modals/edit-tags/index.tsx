@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/trpc/client";
+import { useTranslations } from "next-intl";
 
 interface Tag {
     id: string;
@@ -34,6 +35,7 @@ interface EditTagsProps {
 }
 
 const EditTags = ({ children, initialTags = [], onSave }: EditTagsProps) => {
+    const t = useTranslations("modals.editTags");
     const { data: tags } = trpc.dashboard.getAllTags.useQuery();    
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearching, setIsSearching] = useState(false);
@@ -100,21 +102,21 @@ const EditTags = ({ children, initialTags = [], onSave }: EditTagsProps) => {
                             <Icons.settings />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <DialogTitle><span className="text-main-900 font-medium text-sm">Edit Tags</span></DialogTitle>
-                            <span className="text-sub-600 font-normal text-xs">Search skills or add your own</span>
+                            <DialogTitle><span className="text-main-900 font-medium text-sm">{t("title")}</span></DialogTitle>
+                            <span className="text-sub-600 font-normal text-xs">{t("subtitle")}</span>
                         </div>
                     </div>
                 </DialogHeader>
                 <div className="px-4 pb-4 flex flex-col gap-1">
                     <div className="flex items-center gap-0.5 pb-1.5">
-                        <span className="text-strong-950 font-medium text-sm">Add Tags</span>
+                        <span className="text-strong-950 font-medium text-sm">{t("addTags")}</span>
                         <Icons.info />
                     </div>
                     <div ref={commandRef} className="relative">
                         <Command className="rounded-lg border border-soft-200">
                             <div className="flex items-center">
                                 <CommandInput
-                                    placeholder="Search..."
+                                    placeholder={t("search.placeholder")}
                                     className="flex-1 outline-none border-0 focus:ring-0 focus-visible:ring-0 placeholder:text-soft-400"
                                     value={searchQuery}
                                     onValueChange={handleSearch}
@@ -137,9 +139,9 @@ const EditTags = ({ children, initialTags = [], onSave }: EditTagsProps) => {
                                     <Command className="border-0">
                                         <CommandList className="max-h-none">
                                             {filteredTags.length === 0 ? (
-                                                <CommandEmpty>No results found.</CommandEmpty>
+                                                <CommandEmpty>{t("search.noResults")}</CommandEmpty>
                                             ) : (
-                                                <CommandGroup heading={searchQuery ? "Search Results" : "All Tags"}>
+                                                <CommandGroup heading={searchQuery ? t("search.searchResults") : t("search.allTags")}>
                                                     {filteredTags.map((tag) => (
                                                         <CommandItem 
                                                             key={tag.id} 
@@ -179,9 +181,9 @@ const EditTags = ({ children, initialTags = [], onSave }: EditTagsProps) => {
 
                     <div className="flex items-center gap-3 mt-5 w-full">
                         <DialogClose asChild>
-                            <Button variant="outline" className="border-soft-200 flex-1 h-9 rounded-lg text-sub-600 font-medium text-sm">Cancel</Button>
+                            <Button variant="outline" className="border-soft-200 flex-1 h-9 rounded-lg text-sub-600 font-medium text-sm">{t("buttons.cancel")}</Button>
                         </DialogClose>
-                        <Button onClick={handleSave} className="h-9 rounded-lg text-white flex-1 font-medium text-sm bg-neutral-950">Save</Button>
+                        <Button onClick={handleSave} className="h-9 rounded-lg text-white flex-1 font-medium text-sm bg-neutral-950">{t("buttons.save")}</Button>
                     </div>
                 </div>
             </DialogContent>

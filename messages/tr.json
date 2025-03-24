@@ -1,0 +1,102 @@
+{
+    "auth": {
+        "title": "Hoş Geldiniz",
+        "description": "Devam etmek için giriş yapın",
+        "email": "E-posta",
+        "password": "Şifre",
+        "login": "Giriş Yap",
+        "register": "Kayıt Ol",
+        "forgotPassword": "Şifremi Unuttum",
+        "dontHaveAccount": "Hesabınız yok mu?",
+        "alreadyHaveAccount": "Zaten hesabınız var mı?",
+        "or": "veya",
+        "continueWithGoogle": "Google ile devam et",
+        "continueWithGithub": "Github ile devam et",
+        "errors": {
+            "invalidEmail": "Geçersiz e-posta adresi",
+            "invalidPassword": "Geçersiz şifre",
+            "invalidCredentials": "Geçersiz kimlik bilgileri",
+            "userNotFound": "Kullanıcı bulunamadı",
+            "wrongPassword": "Yanlış şifre",
+            "emailAlreadyInUse": "Bu e-posta adresi zaten kullanımda",
+            "weakPassword": "Şifre çok zayıf",
+            "passwordsDontMatch": "Şifreler eşleşmiyor",
+            "somethingWentWrong": "Bir şeyler yanlış gitti"
+        }
+    },
+    "dashboard": {
+        "title": "Panel",
+        "welcome": "Hoş geldiniz",
+        "totalOrders": "Toplam Siparişler",
+        "totalProducts": "Toplam Ürünler",
+        "totalCustomers": "Toplam Müşteriler",
+        "totalRevenue": "Toplam Gelir",
+        "recentOrders": "Son Siparişler",
+        "recentProducts": "Son Ürünler",
+        "recentCustomers": "Son Müşteriler",
+        "viewAll": "Tümünü Gör",
+        "noData": "Veri yok"
+    },
+    "calendar": {
+        "title": "Takvim",
+        "seeAll": "Tümü",
+        "week": "Hafta",
+        "currentOrders": "{{count}} sipariş",
+        "weekDays": {
+            "short": ["Pz", "Pt", "Sa", "Çr", "Pr", "Cu", "Ct"]
+        }
+    },
+    "orders": {
+        "title": "Siparişler",
+        "newOrder": "Yeni Sipariş",
+        "orderDetails": "Sipariş Detayları",
+        "orderHistory": "Sipariş Geçmişi",
+        "orderStatus": "Sipariş Durumu",
+        "orderDate": "Sipariş Tarihi",
+        "orderNumber": "Sipariş Numarası",
+        "orderTotal": "Sipariş Toplamı",
+        "orderItems": "Sipariş Öğeleri",
+        "orderCustomer": "Müşteri",
+        "orderAddress": "Adres",
+        "orderPayment": "Ödeme",
+        "orderShipping": "Kargo",
+        "orderNotes": "Notlar",
+        "noOrders": "Sipariş yok"
+    },
+    "products": {
+        "title": "Ürünler",
+        "newProduct": "Yeni Ürün",
+        "productDetails": "Ürün Detayları",
+        "productName": "Ürün Adı",
+        "productDescription": "Ürün Açıklaması",
+        "productPrice": "Ürün Fiyatı",
+        "productStock": "Stok",
+        "productCategory": "Kategori",
+        "productImage": "Resim",
+        "noProducts": "Ürün yok"
+    },
+    "customers": {
+        "title": "Müşteriler",
+        "newCustomer": "Yeni Müşteri",
+        "customerDetails": "Müşteri Detayları",
+        "customerName": "Müşteri Adı",
+        "customerEmail": "E-posta",
+        "customerPhone": "Telefon",
+        "customerAddress": "Adres",
+        "customerOrders": "Siparişler",
+        "noCustomers": "Müşteri yok"
+    },
+    "settings": {
+        "title": "Ayarlar",
+        "general": "Genel",
+        "account": "Hesap",
+        "notifications": "Bildirimler",
+        "security": "Güvenlik",
+        "appearance": "Görünüm",
+        "language": "Dil",
+        "theme": "Tema",
+        "darkMode": "Karanlık Mod",
+        "lightMode": "Aydınlık Mod",
+        "systemMode": "Sistem Modu"
+    }
+} 

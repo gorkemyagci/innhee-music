@@ -4,6 +4,7 @@ import { User } from "../../types";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface ChatSidebarProps {
   users: User[];
@@ -12,10 +13,12 @@ interface ChatSidebarProps {
 }
 
 const ChatSidebar = ({ users, selectedChat, onSelectChat }: ChatSidebarProps) => {
+  const t = useTranslations("chat");
+
   return (
     <div className="w-full md:w-[200px] p-4 border-r border-soft-200 flex flex-col gap-4 h-full overflow-hidden">
       <div>
-        <h1 className="text-2xl font-medium text-strong-950">Chat</h1>
+        <h1 className="text-2xl font-medium text-strong-950">{t("title")}</h1>
       </div>
       <div className="flex-1 flex flex-col gap-2 overflow-y-auto custom-scroll">
         {users.map((user) => (
@@ -44,7 +47,7 @@ const ChatSidebar = ({ users, selectedChat, onSelectChat }: ChatSidebarProps) =>
             <div className="flex flex-col gap-1">
               <h3 className="font-medium text-sub-600 text-xs">{user.name}</h3>
               <p className="text-sub-600 text-xs font-normal truncate mt-1">
-                1 days ago
+                {t("timeAgo.days", { count: 1 })}
               </p>
             </div>
           </div>

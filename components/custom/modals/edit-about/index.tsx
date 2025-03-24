@@ -16,6 +16,7 @@ import { trpc } from "@/trpc/client";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface EditAboutProps {
     children: React.ReactNode;
@@ -24,6 +25,7 @@ interface EditAboutProps {
 }
 
 const EditAbout = ({ children, initialText = "", onSave }: EditAboutProps) => {
+    const t = useTranslations("modals.editAbout");
     const [text, setText] = useState(initialText);
     const [isOpen, setIsOpen] = useState(false);
     const maxChars = 200;
@@ -80,8 +82,8 @@ const EditAbout = ({ children, initialText = "", onSave }: EditAboutProps) => {
                             <Icons.upload_line />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <DialogTitle><span className="text-main-900 font-medium text-sm">About me</span></DialogTitle>
-                            <span className="text-sub-600 font-normal text-xs">The maximum character count limit is {maxChars}.</span>
+                            <DialogTitle><span className="text-main-900 font-medium text-sm">{t("title")}</span></DialogTitle>
+                            <span className="text-sub-600 font-normal text-xs">{t("subtitle", { maxChars })}</span>
                         </div>
                     </div>
                 </DialogHeader>
@@ -89,7 +91,7 @@ const EditAbout = ({ children, initialText = "", onSave }: EditAboutProps) => {
                     <div className="relative my-2">
                         <Textarea
                             value={text}
-                            placeholder="Please describe yourself"
+                            placeholder={t("placeholder")}
                             className="w-full min-h-[120px] border-soft-200 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-sub-400 resize-none pr-3"
                             onChange={(e) => {
                                 const newText = e.target.value;
@@ -105,14 +107,14 @@ const EditAbout = ({ children, initialText = "", onSave }: EditAboutProps) => {
                     <Separator className="bg-soft-200" />
                     <div className="flex items-center gap-3 w-full">
                         <DialogClose asChild>
-                            <Button variant="outline" className="border-soft-200 flex-1 h-9 rounded-lg text-sub-600 font-medium text-sm">Cancel</Button>
+                            <Button variant="outline" className="border-soft-200 flex-1 h-9 rounded-lg text-sub-600 font-medium text-sm">{t("buttons.cancel")}</Button>
                         </DialogClose>
                         <Button 
                             className="h-9 rounded-lg text-white flex-1 font-medium text-sm bg-neutral-950"
                             onClick={handleSave}
                             disabled={updateMutation.isPending}
                         >
-                            {updateMutation.isPending ? <Loader2 className="size-4 animate-spin" /> : "Save"}
+                            {updateMutation.isPending ? <Loader2 className="size-4 animate-spin" /> : t("buttons.save")}
                         </Button>
                     </div>
                 </div>

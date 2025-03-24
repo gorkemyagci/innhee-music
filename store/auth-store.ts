@@ -14,7 +14,7 @@ interface IAuth {
 }
 
 export const useAuthStore = create<IAuth>((set) => {
-  const domain = ".innhee.vercel.app";
+  const domain = ".localhost";
   const initializeFromToken = () => {
     const cookies = nookies.get(null);
     if (cookies.token) {

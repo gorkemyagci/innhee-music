@@ -1,5 +1,6 @@
 import EditTags from "@/components/custom/modals/edit-tags";
 import { Icons } from "@/components/icons"
+import { useTranslations } from "next-intl";
 
 interface TagsProps {
     tags?: Array<{
@@ -11,12 +12,13 @@ interface TagsProps {
 }
 
 const Tags = ({ tags }: TagsProps = {}) => {
+    const t = useTranslations("sidebar.tags");
     const displayTags = tags && tags.length > 0 ? tags : [];
 
     return (
         <div className="p-4 flex flex-col gap-3 items-start">
             <div className="flex w-full items-center justify-between">
-                <span className="text-main-900 font-medium text-xs">Tags</span>
+                <span className="text-main-900 font-medium text-xs">{t("title")}</span>
                 <EditTags>
                     <Icons.pencil className="size-5 cursor-pointer" />
                 </EditTags>
@@ -31,7 +33,7 @@ const Tags = ({ tags }: TagsProps = {}) => {
                     </div>
                 )) : (
                     <div className="text-sub-600 shrink-0 font-medium flex items-center justify-center text-xs border border-soft-200 py-1 px-2 rounded-md h-6 min-w-16">
-                        No tags
+                        {t("noTags")}
                     </div>
                 )}
             </div>

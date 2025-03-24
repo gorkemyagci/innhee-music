@@ -316,5 +316,314 @@
       "hasAccount": "Already have an account?",
       "signIn": "Sign In"
     }
+  },
+  "chat": {
+    "title": "Chat",
+    "timeAgo": {
+      "minutes": "{count} minutes ago",
+      "hours": "{count} hours ago",
+      "days": "{count} days ago"
+    },
+    "messages": {
+      "system": {
+        "acceptedOffer": "Accepted an offer",
+        "viewContract": "View contract",
+        "activatedMilestone": "Activated the milestone"
+      },
+      "offer": {
+        "title": "Offer",
+        "yourOfferIncludes": "Your offer includes",
+        "deliveryTime": "12 Days Delivery",
+        "cancel": "Cancel",
+        "accept": "Accept"
+      },
+      "milestone": {
+        "activated": "Activated the milestone",
+        "amount": "Amount:",
+        "viewContract": "View contract"
+      },
+      "regular": {
+        "me": "Me",
+        "files": "{count} files"
+      }
+    },
+    "main": {
+      "selectChat": "Select a chat to start messaging",
+      "status": {
+        "online": "Online",
+        "offline": "Offline"
+      },
+      "contractDetails": "Contract Details",
+      "input": {
+        "placeholder": "Type a message...",
+        "send": "Send"
+      },
+      "attachments": {
+        "uploading": "Uploading",
+        "fileSize": "{size} KB"
+      }
+    },
+    "offerModal": {
+      "title": "Create an Offer",
+      "form": {
+        "title": {
+          "label": "Title",
+          "placeholder": "I will migrate any website from one platform to another",
+          "helper": "Enter a clear and concise title for your offer"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Describe what you'll deliver...",
+          "helper": "Provide detailed information about your offer"
+        },
+        "price": {
+          "label": "Price",
+          "placeholder": "100",
+          "prefix": "US$",
+          "helper": "Minimum price: $1"
+        },
+        "deliveryTime": {
+          "label": "Delivery Time (Days)",
+          "placeholder": "7",
+          "helper": "Minimum: 1 day"
+        },
+        "buttons": {
+          "cancel": "Cancel",
+          "submit": "Send Offer"
+        },
+        "errors": {
+          "titleRequired": "Title is required",
+          "descriptionRequired": "Description is required",
+          "amountRequired": "Amount is required",
+          "amountGreaterThanZero": "Amount must be greater than 0",
+          "deliveryDaysRequired": "Delivery days is required",
+          "deliveryDaysGreaterThanZero": "Delivery days must be greater than 0"
+        }
+      }
+    },
+    "contractDetails": {
+      "sections": {
+        "contract": "Contract details",
+        "files": "Files",
+        "people": "People"
+      },
+      "fields": {
+        "contract": "Contract",
+        "contractId": "Contract ID",
+        "startDate": "Start Date",
+        "deadline": "Deadline",
+        "amount": "Amount"
+      }
+    }
+  },
+  "referral": {
+    "becomePartner": {
+      "title": "START EARNING",
+      "subtitle": "Become Our Partner!",
+      "buyers": {
+        "tag": "Buyers",
+        "title": "Earn with Your Skills",
+        "description": "Turn your audio skills into earnings with flexible job opportunities.",
+        "button": "Post a Job"
+      },
+      "workers": {
+        "tag": "Workers",
+        "title": "Earn with Your Skills",
+        "description": "Turn your audio skills into earnings with flexible job opportunities.",
+        "button": "Post a Job"
+      }
+    },
+    "howItWorks": {
+      "title": "How it works?",
+      "subtitle": "How to become a business person.",
+      "engage": {
+        "title": "Engage people",
+        "description": "Share your referral link with people that are interested in buying games."
+      },
+      "earnings": {
+        "title": "Watch your earnings grow",
+        "description": "Monitor your earnings on your affiliate panel. Receive commission for referred orders."
+      },
+      "receive": {
+        "title": "Receive your money",
+        "description": "As a reward for your commitment you will receive real money!"
+      }
+    },
+    "share": {
+      "title": "Share your unique URL",
+      "subtitle": "Copy your unique link and share It with your friends and followers.",
+      "referralLink": "Referral Link",
+      "shareVia": "Share Via",
+      "placeholder": "referral code here..."
+    },
+    "rebateCondition": {
+      "title": "Condition for Achieving Rebate",
+      "subtitle": "Rebate Percentage",
+      "conditions": {
+        "level1": "1-5 successful referrals, OR total transaction amount of referred users reaches $1,000",
+        "level2": "6-10 successful referrals, OR total transaction amount of referred users reaches $5,000",
+        "level3": "10+ successful referrals, OR total transaction amount of referred users reaches $10,000"
+      }
+    },
+    "userProfile": {
+      "tabs": {
+        "overview": "Overview",
+        "comments": "Comments",
+        "rewards": "Rewards"
+      },
+      "badge": "Top-performing employee of January!"
+    }
+  },
+  "sidebar": {
+    "menu": "Menu",
+    "noAboutText": "No about text",
+    "items": {
+      "home": "My Home",
+      "order": "Order",
+      "chat": "Chat",
+      "collection": "Collection"
+    },
+    "skills": {
+      "title": "Skills",
+      "averagePrice": "Average price - $350 per song"
+    },
+    "tags": {
+      "title": "Tags",
+      "noTags": "No tags"
+    },
+    "about": {
+      "title": "About"
+    }
+  },
+  "modals": {
+    "editSkills": {
+      "title": "Edit Skills",
+      "subtitle": "Search skills or add your own",
+      "addSkills": "Add Skills",
+      "search": {
+        "placeholder": "Search...",
+        "noResults": "No results found.",
+        "allSkills": "All Skills",
+        "searchResults": "Search Results"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "save": "Save"
+      }
+    },
+    "editTags": {
+      "title": "Edit Tags",
+      "subtitle": "Search skills or add your own",
+      "addTags": "Add Tags",
+      "search": {
+        "placeholder": "Search...",
+        "noResults": "No results found.",
+        "allTags": "All Tags",
+        "searchResults": "Search Results"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "save": "Save"
+      }
+    },
+    "editAbout": {
+      "title": "About me",
+      "subtitle": "The maximum character count limit is {maxChars}.",
+      "placeholder": "Please describe yourself",
+      "buttons": {
+        "cancel": "Cancel",
+        "save": "Save"
+      }
+    },
+    "contractDetails": {
+      "title": "Contract Details",
+      "fields": {
+        "contractId": "Contract ID",
+        "contractName": "Contract Name",
+        "startDate": "Start Date",
+        "deadline": "Deadline",
+        "totalAmount": "Total Amount",
+        "offerAmount": "Offer Amount",
+        "milestoneAmount": "Milestone Amount"
+      },
+      "buttons": {
+        "close": "Close"
+      }
+    },
+    "applyJob": {
+      "title": "Apply",
+      "subtitle": "Add tags and do adjustments before uploading.",
+      "recipientReceives": "Recipient Receives",
+      "form": {
+        "amount": {
+          "label": "Enter Amount",
+          "placeholder": "0.00"
+        },
+        "description": {
+          "label": "Description",
+          "optional": "(Optional)",
+          "placeholder": "Please describe yourself"
+        },
+        "hideDisplay": "Hide Application Display"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "confirm": "Confirm"
+      }
+    },
+    "reportMessage": {
+      "title": "Report Message",
+      "subtitle": "Select the reason for reporting the message.",
+      "reasons": {
+        "spam": {
+          "title": "Spam",
+          "description": "Unsolicited or irrelevant content."
+        },
+        "harassment": {
+          "title": "Harassment",
+          "description": "Persistent, unwanted, or offensive behavior."
+        },
+        "violation": {
+          "title": "Violation of Rules",
+          "description": "Infringement of community guidelines or terms."
+        }
+      },
+      "detail": {
+        "label": "Detail",
+        "placeholder": "Please describe the reason for reporting"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "confirm": "Confirm"
+      }
+    },
+    "installWechat": {
+      "title": "WeChat QR Code",
+      "scanText": "Scan me with the installed WeChat App."
+    }
+  },
+  "calendar": {
+    "title": "Calendar",
+    "seeAll": "See All",
+    "week": "Week",
+    "month": "Month",
+    "currentOrders": "Current number of outstanding orders {count}.",
+    "weekDays": {
+      "short": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      "long": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    },
+    "timeline": {
+      "tabs": {
+        "7days": "7 Days",
+        "15days": "15 Days",
+        "30days": "30 Days"
+      },
+      "status": {
+        "submitted": "Submitted",
+        "pending": "Pending",
+        "overdue": "Overdue"
+      },
+      "startedOn": "STARTED ON {date}"
+    }
   }
 }

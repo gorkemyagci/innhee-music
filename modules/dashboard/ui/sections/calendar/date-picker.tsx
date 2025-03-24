@@ -16,8 +16,10 @@ import {
 } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const DatePicker = () => {
+    const t = useTranslations("calendar");
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [visibleDays, setVisibleDays] = useState<Date[]>([]);
@@ -90,22 +92,23 @@ const DatePicker = () => {
         setCurrentView(currentView === 'month' ? 'week' : 'month');
     };
 
+    const weekDays = t.raw("weekDays.short") as string[];
+
     return (
         <div className="p-4 flex flex-col gap-4 items-start w-full">
             <div className="w-full flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Icons.calendar_line className="size-6" />
-                    <span className="text-strong-950 font-medium">Calendar</span>
+                    <span className="text-strong-950 font-medium">{t("title")}</span>
                 </div>
                 <Button
                     variant="outline"
                     className="border border-soft-200 p-1.5 tracking-[-0.6%] h-8 w-16 flex items-center justify-center text-sub-600 font-medium text-sm"
                     onClick={() => {}}
                 >
-                    {currentView === 'week' ? 'See All' : 'Week'}
+                    {currentView === 'week' ? t("seeAll") : t("week")}
                 </Button>
             </div>
-
 
             <div className="w-full bg-white rounded-xl pt-0 p-0">
                 <div className="flex items-center bg-weak-50 h-9 rounded-lg justify-between mb-6 p-1.5 relative overflow-hidden">
@@ -179,7 +182,7 @@ const DatePicker = () => {
                                                     "text-xs font-normal mb-1 z-10",
                                                     isCurrentMonth && isSelected ? "text-white" : "text-sub-600"
                                                 )}>
-                                                    {format(day, 'EEE')}
+                                                    {weekDays[day.getDay()]}
                                                 </span>
                                                 {isSelected && (
                                                     <motion.div
@@ -213,7 +216,7 @@ const DatePicker = () => {
                 ) : (
                     <div className="mb-4 overflow-hidden">
                         <div className="grid grid-cols-7 gap-1 mb-2">
-                            {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((day, i) => (
+                            {weekDays.map((day, i) => (
                                 <div key={i} className="text-center text-xs text-gray-500">
                                     {day}
                                 </div>
@@ -257,7 +260,7 @@ const DatePicker = () => {
                     </div>
                 )}
                 <div className="w-full bg-white rounded-lg border border-soft-200 py-1.5 pr-1 pl-2.5 h-7 flex items-center justify-between">
-                    <span className="text-sub-600 font-normal text-xs">Current number of outstanding orders 1.</span>
+                    <span className="text-sub-600 font-normal text-xs">{t("currentOrders", { count: 1 })}</span>
                     <Icons.info />
                 </div>
             </div>

@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import ContractDetails from "@/modules/chat/ui/components/contract-details";
 import { contractDetailsData } from "@/lib/chatMockData";
+import { useTranslations } from "next-intl";
 
 interface ChatMainProps {
     messages: Message[];
@@ -39,6 +40,7 @@ const ChatMain = ({
     onSendOffer,
     onBack,
 }: ChatMainProps) => {
+    const t = useTranslations("chat.main");
     const [messageText, setMessageText] = useState("");
     const [attachments, setAttachments] = useState<File[]>([]);
     const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
@@ -160,7 +162,7 @@ const ChatMain = ({
     if (!selectedUser) {
         return (
             <div className="flex-1 flex items-center justify-center bg-soft-50">
-                <p className="text-sub-600">Select a chat to start messaging</p>
+                <p className="text-sub-600">{t("selectChat")}</p>
             </div>
         );
     }
@@ -194,7 +196,7 @@ const ChatMain = ({
                     <div className="ml-2 sm:ml-3">
                         <h3 className="font-medium text-sub-600 text-[11px] sm:text-xs">{selectedUser.name}</h3>
                         <p className="text-[11px] sm:text-xs text-sub-600 font-normal">
-                            {selectedUser.online ? "Online" : "Offline"}
+                            {selectedUser.online ? t("status.online") : t("status.offline")}
                         </p>
                     </div>
                 </div>
@@ -208,7 +210,7 @@ const ChatMain = ({
                     <span
                         onClick={() => setIsContractDetailsOpen(true)}
                         className="text-strong-950 font-medium text-sm md:hidden">
-                        Contract Details
+                        {t("contractDetails")}
                     </span>
                 </div>
             </div>
@@ -252,11 +254,11 @@ const ChatMain = ({
                                             <Icons.close className="absolute top-1 sm:top-2 right-1 sm:right-2 size-4 sm:size-[18px] text-sub-600" />
                                             <div className="flex flex-col items-center gap-0.5 sm:gap-1">
                                                 <Icons.loader className="animate-spin w-5 h-5 sm:w-6 sm:h-6" />
-                                                <span className="text-strong-950 font-normal text-[10px] sm:text-xs">Uploading</span>
+                                                <span className="text-strong-950 font-normal text-[10px] sm:text-xs">{t("attachments.uploading")}</span>
                                             </div>
                                             <div className="flex flex-col items-center gap-0.5 sm:gap-1 pb-0.5 w-full">
                                                 <span className="text-strong-950 font-medium text-xs sm:text-sm w-full truncate px-1">{file.name}</span>
-                                                <span className="text-sub-600 font-normal text-[10px] sm:text-xs">{(file.size / 1024).toFixed(2)} KB</span>
+                                                <span className="text-sub-600 font-normal text-[10px] sm:text-xs">{t("attachments.fileSize", { size: (file.size / 1024).toFixed(2) })}</span>
                                             </div>
                                         </motion.div>
                                     ))}
@@ -315,7 +317,7 @@ const ChatMain = ({
                                 value={messageText}
                                 onChange={(e) => setMessageText(e.target.value)}
                                 onKeyDown={handleKeyDown}
-                                placeholder="Type a message..."
+                                placeholder={t("input.placeholder")}
                                 className="w-full px-3 pt-2.5 resize-none focus:outline-none text-xs sm:text-sm max-h-[120px] sm:max-h-[150px] overflow-y-auto custom-scroll min-h-[40px]"
                                 rows={1}
                             />
@@ -350,7 +352,7 @@ const ChatMain = ({
                                     className="h-7 sm:h-8 w-[60px] sm:w-[70px] disabled:cursor-auto group rounded-lg text-white text-xs sm:text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
                                     <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
                                     <div className="flex items-center justify-center gap-1">
-                                        Send <Icons.send className="stroke-white w-3 h-3 sm:w-4 sm:h-4" />
+                                        {t("input.send")} <Icons.send className="stroke-white w-3 h-3 sm:w-4 sm:h-4" />
                                     </div>
                                 </Button>
                             </div>

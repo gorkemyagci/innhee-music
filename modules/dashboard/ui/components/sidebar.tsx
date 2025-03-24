@@ -10,11 +10,13 @@ import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/trpc/client";
 import { MobileSidebarSkeleton, SidebarSkeleton } from "@/components/skeletons/sidebar";
+import { useTranslations } from "next-intl";
 
 const Sidebar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { data: user, isLoading } = trpc.auth.getMe.useQuery();
     const isUserAvailable = !isLoading && user?.id;
+    const t = useTranslations("sidebar");
 
     return (
         <>
@@ -41,7 +43,7 @@ const Sidebar = () => {
                         <Separator className="bg-soft-200" />
                         <Tags tags={user.worker?.tags || []} />
                         <Separator className="bg-soft-200" />
-                        <About aboutText={user.worker?.about || "No about text"} />
+                        <About aboutText={user.worker?.about || t("noAboutText")} />
                     </div>
                 ) : (
                     <SidebarSkeleton />
@@ -71,7 +73,7 @@ const Sidebar = () => {
                             }}
                         >
                             <div className="sticky top-0 w-full bg-white p-4 flex items-center justify-between border-b border-soft-200 z-10">
-                                <h2 className="text-lg font-semibold">Menu</h2>
+                                <h2 className="text-lg font-semibold">{t("menu")}</h2>
                                 <button
                                     className="flex items-center justify-center w-8 h-8 rounded-full"
                                     onClick={() => setIsMobileMenuOpen(false)}
@@ -90,7 +92,7 @@ const Sidebar = () => {
                                         <Separator className="bg-soft-200" />
                                         <Tags tags={user.worker?.tags || []} />
                                         <Separator className="bg-soft-200" />
-                                        <About aboutText={user.worker?.about || "No about text"} />
+                                        <About aboutText={user.worker?.about || t("noAboutText")} />
                                     </>
                                 ) : (
                                     <MobileSidebarSkeleton />
