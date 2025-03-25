@@ -3,6 +3,7 @@ import { Icons } from "@/components/icons";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFilterContext } from "../sections/filter";
+import { useTranslations } from "next-intl";
 
 interface Tool {
     id: string;
@@ -11,6 +12,7 @@ interface Tool {
 }
 
 const FilterTools = () => {
+    const t = useTranslations("filter.tools");
     const [allTools, setAllTools] = useState<Tool[]>([
         {
             id: "1",
@@ -67,14 +69,14 @@ const FilterTools = () => {
         <div className="flex flex-col items-start gap-2">
             <div className="w-full flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                    <span className="text-strong-950 font-medium text-sm">Tools</span>
+                    <span className="text-strong-950 font-medium text-sm">{t("title")}</span>
                     <Icons.info />
                 </div>
                 <span
                     className="text-sub-600 font-medium text-xs border-b border-sub-600 cursor-pointer"
                     onClick={handleClearAll}
                 >
-                    Clear
+                    {t("clear")}
                 </span>
             </div>
 

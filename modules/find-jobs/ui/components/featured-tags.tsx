@@ -1,8 +1,8 @@
 "use client"
 import { Icons } from "@/components/icons";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useFilterContext } from "../sections/filter";
+import { useTranslations } from "next-intl";
 
 interface Tag {
     id: string;
@@ -11,6 +11,7 @@ interface Tag {
 }
 
 const FeaturedTags = () => {
+    const t = useTranslations("filter.featuredTags");
     const [tags, setTags] = useState<Tag[]>([
         {
             id: "1",
@@ -57,14 +58,14 @@ const FeaturedTags = () => {
         <div className="flex flex-col items-start gap-2">
             <div className="w-full flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                    <span className="text-strong-950 font-medium text-sm">Featured Tags</span>
+                    <span className="text-strong-950 font-medium text-sm">{t("title")}</span>
                     <Icons.info />
                 </div>
                 <span
                     className="text-sub-600 font-medium text-xs border-b border-sub-600 cursor-pointer"
                     onClick={handleClearAll}
                 >
-                    Clear
+                    {t("clear")}
                 </span>
             </div>
 

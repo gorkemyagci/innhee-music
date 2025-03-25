@@ -13,7 +13,7 @@ import CustomSelect from "@/components/custom/select";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Filter as FilterIcon, X } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTranslations } from "next-intl";
 
 export interface FilterContextType {
     clearAllFilters: () => void;
@@ -28,6 +28,7 @@ export const FilterContext = createContext<FilterContextType>({
 export const useFilterContext = () => useContext(FilterContext);
 
 const FilterSuspense = () => {
+    const t = useTranslations("filter");
     const [tab, setTab] = useQueryState("tab", {
         defaultValue: "workers",
     });
@@ -101,16 +102,16 @@ const FilterSuspense = () => {
     const [selectedValue, setSelectedValue] = useState(defaultDeadline);
     const [selectedProjectType, setSelectedProjectType] = useState(defaultProjectType);
 
-    const options = [
-        { value: "within_7_days", label: "Within seven days" },
-        { value: "within_15_days", label: "Within 15 days" },
-        { value: "within_1_month", label: "Within one month" },
-        { value: "more_than_1_month", label: "More than one month" },
+    const deadlineOptions = [
+        { value: "within_7_days", label: t("deadline.options.within_7_days") },
+        { value: "within_15_days", label: t("deadline.options.within_15_days") },
+        { value: "within_1_month", label: t("deadline.options.within_1_month") },
+        { value: "more_than_1_month", label: t("deadline.options.more_than_1_month") },
     ];
 
     const projectTypeOptions = [
-        { value: "business", label: "Business" },
-        { value: "personal", label: "Personal" },
+        { value: "business", label: t("projectType.options.business") },
+        { value: "personal", label: t("projectType.options.personal") },
     ];
 
     return (
@@ -125,7 +126,7 @@ const FilterSuspense = () => {
                                 className="h-12 px-4 rounded-full bg-white shadow-lg border border-soft-200 flex items-center gap-2"
                             >
                                 <FilterIcon className="h-5 w-5 text-gray-700" />
-                                <span className="font-medium text-strong-950 text-sm">Filters</span>
+                                <span className="font-medium text-strong-950 text-sm">{t("buttons.filters")}</span>
                             </Button>
                         </div>
                     )}
@@ -169,7 +170,7 @@ const FilterSuspense = () => {
                         {/* Mobile header with close button */}
                         {isMobile && (
                             <div className="flex items-center justify-between p-4 border-b border-soft-200">
-                                <h3 className="font-medium text-base">Filters</h3>
+                                <h3 className="font-medium text-base">{t("title")}</h3>
                                 <Button
                                     variant="ghost"
                                     size="icon"
@@ -207,7 +208,7 @@ const FilterSuspense = () => {
                                     {tab === "projects" && (
                                         <>
                                             <CustomSelect
-                                                label="Project type"
+                                                label={t("projectType.title")}
                                                 options={projectTypeOptions}
                                                 value={selectedProjectType}
                                                 onChange={setSelectedProjectType}
@@ -215,8 +216,8 @@ const FilterSuspense = () => {
                                             />
                                             <Separator className="bg-soft-200" />
                                             <CustomSelect
-                                                label="Deadline"
-                                                options={options}
+                                                label={t("deadline.title")}
+                                                options={deadlineOptions}
                                                 value={selectedValue}
                                                 onChange={setSelectedValue}
                                                 defaultValue={defaultDeadline}
@@ -235,7 +236,7 @@ const FilterSuspense = () => {
                                     className="bg-white border-soft-200 p-2.5 h-10 w-full rounded-[10px] text-sub-600 font-medium text-sm"
                                     onClick={clearAllFilters}
                                 >
-                                    Clear Filters
+                                    {t("buttons.clearFilters")}
                                 </Button>
                             </div>
                         </div>

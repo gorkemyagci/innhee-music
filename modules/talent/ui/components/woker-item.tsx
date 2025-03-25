@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 // Define TypeScript interfaces for the data structure
 interface Attachment {
@@ -28,6 +29,7 @@ interface PortfolioItem {
 
 const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
     const [expanded, setExpanded] = useState(false);
+    const t = useTranslations("talent.wokerItem");
 
     // Function to determine if the attachment is audio, video, or document
     const getFileType = (filename: string) => {
@@ -60,6 +62,20 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
         }
     };
 
+    // Function to get file type display name
+    const getFileTypeDisplayName = (type: string) => {
+        switch (type) {
+            case 'pdf':
+                return t("fileTypes.pdf");
+            case 'audio':
+                return t("fileTypes.audio");
+            case 'video':
+                return t("fileTypes.video");
+            default:
+                return t("fileTypes.attachment");
+        }
+    };
+
     return (
         <div key={index} className="w-full">
             {/* Mobile view (collapsed/expanded with animation) */}
@@ -77,11 +93,11 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
                             )}
                         </div>
                         <div className="flex flex-col items-start gap-1">
-                            <span className="text-main-900 font-medium text-sm">{item?.title || 'Untitled'}</span>
-                            <span className="text-soft-400 font-medium text-xs">{item?.description || 'No description'}</span>
+                            <span className="text-main-900 font-medium text-sm">{item?.title || t("untitled")}</span>
+                            <span className="text-soft-400 font-medium text-xs">{item?.description || t("noDescription")}</span>
                             {firstAttachment && (
                                 <span className="text-soft-400 font-medium text-xs">
-                                    {fileType === 'pdf' ? 'PDF Document' : fileType === 'audio' ? 'Audio File' : fileType === 'video' ? 'Video File' : 'Attachment'}
+                                    {getFileTypeDisplayName(fileType)}
                                 </span>
                             )}
                         </div>
@@ -127,7 +143,7 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
                                 {/* Display attachments */}
                                 {item?.attachments && item.attachments.length > 0 && (
                                     <div className="flex flex-col gap-2">
-                                        <span className="text-soft-400 font-medium text-xs">Attachments:</span>
+                                        <span className="text-soft-400 font-medium text-xs">{t("attachments")}:</span>
                                         {item.attachments.map((attachment, idx) => {
                                             const attFileType = getFileType(attachment.filename);
                                             
@@ -154,19 +170,19 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
                                 
                                 <div className="flex flex-wrap items-center gap-1.5">
                                     <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs bg-white">
-                                        Mixing
+                                        {t("skills.mixing")}
                                     </div>
                                     <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs bg-white">
-                                        Singing
+                                        {t("skills.singing")}
                                     </div>
                                     <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs bg-white">
-                                        Jazz
+                                        {t("skills.jazz")}
                                     </div>
                                     <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs bg-white">
-                                        Hip pop
+                                        {t("skills.hipPop")}
                                     </div>
                                     <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs bg-white">
-                                        K pop
+                                        {t("skills.kPop")}
                                     </div>
                                 </div>
                                 
@@ -188,7 +204,7 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
                                 
                                 <div className="flex items-center gap-1.5">
                                     <Icons.profile_star className="size-3.5" />
-                                    <span className="text-soft-400 font-medium text-xs">work / work history / evaluation</span>
+                                    <span className="text-soft-400 font-medium text-xs">{t("workPath")}</span>
                                 </div>
                             </div>
                         </motion.div>
@@ -201,30 +217,30 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
                 <div className="flex items-center gap-2">
                     <Icons.play_pause className="flex-shrink-0 cursor-pointer" />
                     <div className="flex flex-col items-start gap-1">
-                        <span className="text-main-900 font-medium">{item?.title || 'Untitled'}</span>
-                        <span className="text-soft-400 font-medium text-xs">{item?.description || 'No description'}</span>
+                        <span className="text-main-900 font-medium">{item?.title || t("untitled")}</span>
+                        <span className="text-soft-400 font-medium text-xs">{item?.description || t("noDescription")}</span>
                         {firstAttachment && (
                             <span className="text-soft-400 font-medium text-xs">
-                                {fileType === 'pdf' ? 'PDF Document' : fileType === 'audio' ? 'Audio File' : fileType === 'video' ? 'Video File' : 'Attachment'}
+                                {getFileTypeDisplayName(fileType)}
                             </span>
                         )}
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs">
-                        Mixing
+                        {t("skills.mixing")}
                     </div>
                     <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs">
-                        Singing
+                        {t("skills.singing")}
                     </div>
                     <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs">
-                        Jazz
+                        {t("skills.jazz")}
                     </div>
                     <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs">
-                        Hip pop
+                        {t("skills.hipPop")}
                     </div>
                     <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs">
-                        K pop
+                        {t("skills.kPop")}
                     </div>
                 </div>
                 <div className="flex items-center gap-6">
@@ -232,7 +248,7 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
                         <span className="text-main-900 font-medium text-[15px]">0:22</span>
                         <span className="text-soft-400 font-medium text-[13px]">112 BPM</span>
                     </div>
-                    <span className="text-soft-400 font-medium text-sm">work / work history / evaluation</span>
+                    <span className="text-soft-400 font-medium text-sm">{t("workPath")}</span>
                     <Icons.save className="cursor-pointer" />
                 </div>
             </div>

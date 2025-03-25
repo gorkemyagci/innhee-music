@@ -3,6 +3,7 @@ import { Icons } from "@/components/icons";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFilterContext } from "../sections/filter";
+import { useTranslations } from "next-intl";
 
 interface Skill {
     id: string;
@@ -11,6 +12,7 @@ interface Skill {
 }
 
 const FilterSkills = () => {
+    const t = useTranslations("filter.skills");
     const [allSkills, setAllSkills] = useState<Skill[]>([
         {
             id: "1",
@@ -73,14 +75,14 @@ const FilterSkills = () => {
         <div className="flex flex-col items-start gap-2">
             <div className="w-full flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                    <span className="text-strong-950 font-medium text-sm">Skills</span>
+                    <span className="text-strong-950 font-medium text-sm">{t("title")}</span>
                     <Icons.info />
                 </div>
                 <span
                     className="text-sub-600 font-medium text-xs border-b border-sub-600 cursor-pointer"
                     onClick={handleClearAll}
                 >
-                    Clear
+                    {t("clear")}
                 </span>
             </div>
 

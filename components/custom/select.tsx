@@ -3,6 +3,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectI
 import { useEffect } from "react";
 import { useFilterContext } from "@/modules/find-jobs/ui/sections/filter";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface CustomSelectProps {
     label?: string;
@@ -11,6 +12,7 @@ interface CustomSelectProps {
     onChange: (value: string) => void;
     defaultValue?: string;
     className?: string;
+    translationNamespace?: string;
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -19,8 +21,10 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
     value,
     onChange,
     defaultValue,
-    className
+    className,
+    translationNamespace = "common.select"
 }) => {
+    const t = useTranslations(translationNamespace);
     const { isFilterCleared } = useFilterContext();
 
     useEffect(() => {
@@ -34,7 +38,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
             {label && <label className="text-sm font-medium text-strong-950">{label}</label>}
             <Select value={value} onValueChange={onChange}>
                 <SelectTrigger className="w-full h-10 focus-visible:ring-0 focus-visible:border-soft-200 focus-visible:ring-offset-0 border rounded-lg px-3 flex items-center justify-between text-soft-400 bg-white font-normal text-sm focus:ring-0 focus:ring-offset-0">
-                    <SelectValue placeholder="Select an option" />
+                    <SelectValue placeholder={t("placeholder")} />
                 </SelectTrigger>
                 <SelectContent className="border p-0.5 border-soft-200 rounded-lg shadow-lg bg-white">
                     <SelectGroup>

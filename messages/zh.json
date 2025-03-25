@@ -589,24 +589,16 @@
     },
     "reportMessage": {
       "title": "举报消息",
-      "subtitle": "选择举报消息的原因。",
+      "subtitle": "请告诉我们为什么要举报这条消息",
       "reasons": {
-        "spam": {
-          "title": "垃圾信息",
-          "description": "未经请求或不相关的内容。"
-        },
-        "harassment": {
-          "title": "骚扰",
-          "description": "持续、不受欢迎或冒犯性的行为。"
-        },
-        "violation": {
-          "title": "违反规则",
-          "description": "违反社区准则或条款。"
-        }
+        "title": "选择原因",
+        "spam": "垃圾信息",
+        "harassment": "骚扰",
+        "violation-of-rules": "违反规则"
       },
       "detail": {
-        "label": "详情",
-        "placeholder": "请描述举报原因"
+        "label": "详细信息",
+        "placeholder": "请提供更多详细信息（可选）"
       },
       "buttons": {
         "cancel": "取消",
@@ -710,6 +702,116 @@
       "orderCreated": "订单已创建",
       "milestone": "里程碑 {number}",
       "milestoneAmount": "里程碑金额"
+    }
+  },
+  "filter": {
+    "title": "筛选",
+    "tabs": {
+      "workers": "工作者",
+      "projects": "项目",
+      "betas": "测试版"
+    },
+    "skills": {
+      "title": "技能",
+      "clear": "清除"
+    },
+    "featuredTags": {
+      "title": "特色标签",
+      "clear": "清除"
+    },
+    "tools": {
+      "title": "工具",
+      "clear": "清除"
+    },
+    "switch": {
+      "available": {
+        "title": "在线",
+        "description": "最近在线"
+      },
+      "professionalServices": {
+        "title": "专业服务",
+        "description": "经过验证的技能和专业知识"
+      }
+    },
+    "price": {
+      "title": "价格",
+      "format": "¥{amount}"
+    },
+    "projectType": {
+      "title": "项目类型",
+      "options": {
+        "business": "商业",
+        "personal": "个人"
+      }
+    },
+    "deadline": {
+      "title": "截止日期",
+      "options": {
+        "within_7_days": "7天内",
+        "within_15_days": "15天内",
+        "within_1_month": "1个月内",
+        "more_than_1_month": "超过1个月"
+      }
+    },
+    "buttons": {
+      "clearFilters": "清除筛选",
+      "filters": "筛选"
+    }
+  },
+  "common": {
+    "select": {
+      "placeholder": "请选择选项"
+    },
+    "pagination": {
+      "previous": "上一页",
+      "next": "下一页",
+      "morePages": "更多页面",
+      "previousAriaLabel": "转到上一页",
+      "nextAriaLabel": "转到下一页"
+    }
+  },
+  "talent": {
+    "upload": "上传",
+    "tabs": {
+      "woker": "工作者",
+      "review": "评论"
+    },
+    "wokerItem": {
+      "untitled": "无标题",
+      "noDescription": "暂无描述",
+      "attachments": "附件",
+      "fileTypes": {
+        "pdf": "PDF文档",
+        "audio": "音频文件",
+        "video": "视频文件",
+        "attachment": "附件"
+      },
+      "skills": {
+        "mixing": "混音",
+        "singing": "演唱",
+        "jazz": "爵士",
+        "hipPop": "嘻哈",
+        "kPop": "韩流"
+      },
+      "workPath": "工作 / 工作历史 / 评估"
+    },
+    "sidebar": {
+      "unknown": "未知",
+      "hire": "雇用",
+      "touch": "联系",
+      "recentReviews": "最近评论",
+      "userName": "用户名"
+    },
+    "awards": {
+      "title": "获奖经历",
+      "items": {
+        "grammy": "格莱美",
+        "billboardMusic": "公告牌音乐奖",
+        "americanMusic": "美国音乐奖",
+        "brit": "英国音乐奖",
+        "mtvMusic": "MTV音乐奖",
+        "eurovisionAwards": "欧洲歌唱大赛"
+      }
     }
   }
 }

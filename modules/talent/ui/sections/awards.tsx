@@ -1,25 +1,29 @@
+import { useTranslations } from "next-intl";
+
 const Awards = () => {
+    const t = useTranslations("talent.awards");
+
     return (
         <div className="p-4 flex flex-col items-start gap-3">
-            <span className="text-main-900 font-medium text-xs">Awards</span>
+            <span className="text-main-900 font-medium text-xs">{t("title")}</span>
             <div className="flex flex-wrap w-full gap-2">
                 <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs">
-                    Grammy
+                    {t("items.grammy")}
                 </div>
                 <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs">
-                    Billboard Music
+                    {t("items.billboardMusic")}
                 </div>
                 <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs">
-                    American Music
+                    {t("items.americanMusic")}
                 </div>
                 <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs">
-                    BRIT
+                    {t("items.brit")}
                 </div>
                 <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs">
-                    MTV Music
+                    {t("items.mtvMusic")}
                 </div>
                 <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs">
-                    Eurovision Awards
+                    {t("items.eurovisionAwards")}
                 </div>
             </div>
         </div>

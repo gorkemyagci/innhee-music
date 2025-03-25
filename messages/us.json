@@ -590,24 +590,16 @@
     },
     "reportMessage": {
       "title": "Report Message",
-      "subtitle": "Select the reason for reporting the message.",
+      "subtitle": "Please tell us why you want to report this message",
       "reasons": {
-        "spam": {
-          "title": "Spam",
-          "description": "Unsolicited or irrelevant content."
-        },
-        "harassment": {
-          "title": "Harassment",
-          "description": "Persistent, unwanted, or offensive behavior."
-        },
-        "violation": {
-          "title": "Violation of Rules",
-          "description": "Infringement of community guidelines or terms."
-        }
+        "title": "Select a reason",
+        "spam": "Spam",
+        "harassment": "Harassment",
+        "violation-of-rules": "Violation of Rules"
       },
       "detail": {
-        "label": "Detail",
-        "placeholder": "Please describe the reason for reporting"
+        "label": "Details",
+        "placeholder": "Provide more details (optional)"
       },
       "buttons": {
         "cancel": "Cancel",
@@ -766,6 +758,116 @@
       "orderCreated": "Order Created",
       "milestone": "Milestone {number}",
       "milestoneAmount": "Milestone Amount"
+    }
+  },
+  "filter": {
+    "title": "Filters",
+    "tabs": {
+      "workers": "Workers",
+      "projects": "Projects",
+      "betas": "Betas"
+    },
+    "skills": {
+      "title": "Skills",
+      "clear": "Clear"
+    },
+    "featuredTags": {
+      "title": "Featured Tags",
+      "clear": "Clear"
+    },
+    "tools": {
+      "title": "Tools",
+      "clear": "Clear"
+    },
+    "switch": {
+      "available": {
+        "title": "Available",
+        "description": "Recent Online"
+      },
+      "professionalServices": {
+        "title": "Professional Services",
+        "description": "Vetted skills and expertise"
+      }
+    },
+    "price": {
+      "title": "Price",
+      "format": "${amount}"
+    },
+    "projectType": {
+      "title": "Project type",
+      "options": {
+        "business": "Business",
+        "personal": "Personal"
+      }
+    },
+    "deadline": {
+      "title": "Deadline",
+      "options": {
+        "within_7_days": "Within seven days",
+        "within_15_days": "Within 15 days",
+        "within_1_month": "Within one month",
+        "more_than_1_month": "More than one month"
+      }
+    },
+    "buttons": {
+      "clearFilters": "Clear Filters",
+      "filters": "Filters"
+    }
+  },
+  "common": {
+    "select": {
+      "placeholder": "Select an option"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "morePages": "More pages",
+      "previousAriaLabel": "Go to previous page",
+      "nextAriaLabel": "Go to next page"
+    }
+  },
+  "talent": {
+    "upload": "Upload",
+    "tabs": {
+      "woker": "Worker",
+      "review": "Review"
+    },
+    "wokerItem": {
+      "untitled": "Untitled",
+      "noDescription": "No description",
+      "attachments": "Attachments",
+      "fileTypes": {
+        "pdf": "PDF Document",
+        "audio": "Audio File",
+        "video": "Video File",
+        "attachment": "Attachment"
+      },
+      "skills": {
+        "mixing": "Mixing",
+        "singing": "Singing",
+        "jazz": "Jazz",
+        "hipPop": "Hip Pop",
+        "kPop": "K Pop"
+      },
+      "workPath": "work / work history / evaluation"
+    },
+    "sidebar": {
+      "unknown": "Unknown",
+      "hire": "Hire",
+      "touch": "Touch",
+      "recentReviews": "Recent reviews",
+      "userName": "User Name"
+    },
+    "awards": {
+      "title": "Awards",
+      "items": {
+        "grammy": "Grammy",
+        "billboardMusic": "Billboard Music",
+        "americanMusic": "American Music",
+        "brit": "BRIT",
+        "mtvMusic": "MTV Music",
+        "eurovisionAwards": "Eurovision Awards"
+      }
     }
   }
 }
