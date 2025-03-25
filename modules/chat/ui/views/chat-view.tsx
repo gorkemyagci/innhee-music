@@ -1,65 +1,52 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useQueryState } from "nuqs";
 import ChatSidebar from "@/modules/chat/ui/components/chat-sidebar";
 import ChatMain from "@/modules/chat/ui/components/chat-main";
 import ContractDetails from "@/modules/chat/ui/components/contract-details";
-import { User, Message, Offer } from "@/modules/chat/types";
-import { mockUsers, currentUserData, getMockMessages, contractDetailsData } from "@/lib/chatMockData";
+import { Message, Offer, User } from "@/modules/chat/types";
+import { trpc } from "@/trpc/client";
+import { ChatRoom } from "@/lib/types";
+import { io, Socket } from "socket.io-client";
+import { parseCookies } from "nookies";
+
+const SOCKET_URL = "https://inhee-chat-production.up.railway.app";
 
 const ChatView = () => {
-  const [selectedChat, setSelectedChat] = useState<string | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
+  const [chatId, setChatId] = useQueryState("chatId");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [currentUser, setCurrentUser] = useState<User>(currentUserData);
-
-  // Simulate fetching users
+  const { data: chatRooms } = trpc.chat.chatRooms.useQuery();
+  const selectedChat = chatRooms?.find((room: ChatRoom) => room.id === chatId);
   useEffect(() => {
-    if (mockUsers && mockUsers.length > 0) {
-      setUsers(mockUsers);
-      setSelectedChat(mockUsers[0].id);
+    if (!chatId && chatRooms && chatRooms.length > 0) {
+      setChatId(chatRooms[0].id);
     }
-  }, []);
+  }, [chatId, chatRooms, setChatId]);
 
   useEffect(() => {
     if (selectedChat) {
-      setMessages(getMockMessages(selectedChat));
+      setMessages(selectedChat.messages || []);
     }
   }, [selectedChat]);
 
-  const handleSendMessage = (content: string, attachments?: File[]) => {
-    if (!content.trim() && (!attachments || attachments.length === 0)) return;
+  const getOtherUser = (room: ChatRoom): User => {
+    const user = room.users[0]?.user;
+    if (!user) {
+      return {
+        id: "default",
+        name: "Unknown User",
+        avatar: "/assets/images/avatar-4.png",
+        online: false
+      };
+    }
     
-    const newMessage: Message = {
-      id: `msg${messages.length + 1}`,
-      senderId: "current-user",
-      receiverId: selectedChat!,
-      content,
-      timestamp: new Date(),
-      type: "text",
-      attachments: attachments?.map((file, index) => ({
-        id: `new-att-${index}`,
-        name: file.name,
-        url: URL.createObjectURL(file),
-        size: `${(file.size / 1024).toFixed(2)} KB`,
-      })),
+    return {
+      id: user.id,
+      name: user.nickname,
+      avatar: user.avatar || "/assets/images/avatar-4.png",
+      online: room.users[0].isOnline
     };
-
-    setMessages([...messages, newMessage]);
-  };
-
-  const handleSendOffer = (offer: Offer) => {
-    const newMessage: Message = {
-      id: `msg${messages.length + 1}`,
-      senderId: "current-user",
-      receiverId: selectedChat!,
-      content: offer.title,
-      timestamp: new Date(),
-      type: "offer",
-      offer,
-    };
-
-    setMessages([...messages, newMessage]);
   };
 
   return (
@@ -67,36 +54,32 @@ const ChatView = () => {
       <div className="md:hidden w-full">
         {!selectedChat ? (
           <ChatSidebar 
-            users={users} 
-            selectedChat={selectedChat} 
-            onSelectChat={setSelectedChat} 
+            selectedChat={chatId} 
+            onSelectChat={setChatId} 
           />
         ) : (
           <ChatMain 
             messages={messages} 
-            selectedUser={users.find(user => user.id === selectedChat)} 
-            currentUser={currentUser}
-            onSendMessage={handleSendMessage}
-            onSendOffer={handleSendOffer}
-            onBack={() => setSelectedChat(null)}
+            selectedUser={getOtherUser(selectedChat)}
+            currentUser={getOtherUser(selectedChat)}
+            onBack={() => setChatId(null)}
           />
         )}
       </div>
 
       <div className="hidden md:flex w-full h-full">
         <ChatSidebar 
-          users={users} 
-          selectedChat={selectedChat} 
-          onSelectChat={setSelectedChat} 
+          selectedChat={chatId} 
+          onSelectChat={setChatId} 
         />
-        <ChatMain 
-          messages={messages} 
-          selectedUser={users.find(user => user.id === selectedChat)} 
-          currentUser={currentUser}
-          onSendMessage={handleSendMessage}
-          onSendOffer={handleSendOffer}
-        />
-        <ContractDetails {...contractDetailsData} />
+        {selectedChat && (
+          <ChatMain 
+            messages={messages} 
+            selectedUser={getOtherUser(selectedChat)}
+            currentUser={getOtherUser(selectedChat)}
+          />
+        )}
+        {selectedChat && <ContractDetails {...selectedChat.contracts[0]} />}
       </div>
     </div>
   );

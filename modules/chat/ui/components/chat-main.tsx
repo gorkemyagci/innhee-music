@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Message, User, Offer } from "@/modules/chat/types";
+import { Message, User, Offer, Attachment } from "@/modules/chat/types";
 import { format } from "date-fns";
 import { ChevronLeft, Loader2, Paperclip, Send, Smile, User2, UserRound, X } from "lucide-react";
 import MessageItem from "@/modules/chat/ui/components/message-item";
@@ -15,14 +15,18 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import ContractDetails from "@/modules/chat/ui/components/contract-details";
 import { contractDetailsData } from "@/lib/chatMockData";
 import { useTranslations } from "next-intl";
+import { parseCookies } from "nookies";
+import { io, Socket } from "socket.io-client";
+
+const SOCKET_URL = "wss://inhee-chat-production.up.railway.app/chat";
 
 interface ChatMainProps {
     messages: Message[];
     selectedUser: User | undefined;
     currentUser: User;
-    onSendMessage: (content: string, attachments?: File[]) => void;
-    onSendOffer: (offer: Offer) => void;
     onBack?: () => void;
+    onSendMessage?: (content: string, attachments?: File[]) => void;
+    onSendOffer?: (offer: Offer) => void;
 }
 
 interface UploadingFile {
@@ -33,11 +37,9 @@ interface UploadingFile {
 }
 
 const ChatMain = ({
-    messages,
+    messages: initialMessages,
     selectedUser,
     currentUser,
-    onSendMessage,
-    onSendOffer,
     onBack,
 }: ChatMainProps) => {
     const t = useTranslations("chat.main");
@@ -46,10 +48,60 @@ const ChatMain = ({
     const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
     const [isContractDetailsOpen, setIsContractDetailsOpen] = useState(false);
     const [uploadingFiles, setUploadingFiles] = useState<Record<string, UploadingFile>>({});
-    const [filePreview, setFilePreview] = useState<string | null>(null);
+    const [messages, setMessages] = useState<Message[]>(initialMessages);
+    const socketRef = useRef<Socket | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const cookies = parseCookies();
+
+    useEffect(() => {
+        if (!socketRef.current) {
+            socketRef.current = io(SOCKET_URL, {
+                extraHeaders: {
+                    Authorization: `Bearer ${cookies.token}`
+                },
+                auth: {
+                    Authorization: `Bearer ${cookies.token}`
+                },
+                reconnection: true,
+                reconnectionAttempts: 5,
+                reconnectionDelay: 1000
+            });
+
+            socketRef.current.on("connect", () => {
+                console.log("Socket connected with ID:", socketRef.current?.id);
+            });
+
+            socketRef.current.on("connect_error", (error) => {
+                console.error("Socket connection error:", error);
+            });
+
+            socketRef.current.on("disconnect", (reason) => {
+                console.log("Socket disconnected:", reason);
+            });
+
+            socketRef.current.on("error", (error) => {
+                console.error("Socket error:", error);
+            });
+
+            socketRef.current.on("message_sent", (data) => {
+                console.log("Message sent confirmation:", data);
+            });
+
+            socketRef.current.on("message", (message: Message) => {
+                console.log("New message received:", message);
+                setMessages(prev => [...prev, message]);
+            });
+        }
+
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.disconnect();
+                socketRef.current = null;
+            }
+        };
+    }, [cookies.token]);
 
     useEffect(() => {
         scrollToBottom();
@@ -66,18 +118,9 @@ const ChatMain = ({
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    const handleSendMessage = () => {
-        if (messageText.trim() || attachments.length > 0) {
-            onSendMessage(messageText, attachments);
-            setMessageText("");
-            setAttachments([]);
-        }
-    };
-
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            handleSendMessage();
         }
     };
 
@@ -155,8 +198,67 @@ const ChatMain = ({
     };
 
     const handleOfferSubmit = (offer: Offer) => {
-        onSendOffer(offer);
         setIsOfferModalOpen(false);
+    };
+
+    const handleSendMessage = async () => {
+        if (!messageText.trim() && attachments.length === 0) return;
+
+        try {
+            const uploadedAttachments = await Promise.all(
+                attachments.map(async (file) => {
+                    return {
+                        id: `att-${Math.random().toString(36).substring(7)}`,
+                        name: file.name,
+                        url: URL.createObjectURL(file),
+                        size: `${(file.size / 1024).toFixed(2)} KB`
+                    };
+                })
+            );
+
+            if (!socketRef.current?.connected) {
+                console.error("Socket is not connected");
+                return;
+            }
+
+            console.log("Sending message...", {
+                chatRoomId: selectedUser?.id,
+                content: messageText,
+                type: "text",
+                attachmentIds: uploadedAttachments.map(att => att.id)
+            });
+
+            socketRef.current.emit("sendMessage", {
+                chatRoomId: "7df8fd94-7bbd-4bac-878a-bf1d84e9ed32",
+                content: messageText,
+                type: "text",
+                attachmentIds: uploadedAttachments.map(att => att.id)
+            }, (response: { success: boolean; message?: string }) => {
+                if (response.success) {
+                    console.log("Message sent successfully");
+                } else {
+                    console.error("Failed to send message:", response.message);
+                }
+            });
+
+            // Mesajı locale ekle
+            const newMessage: Message = {
+                id: `msg-${Date.now()}`,
+                senderId: currentUser.id,
+                receiverId: selectedUser!.id,
+                content: messageText,
+                timestamp: new Date(),
+                type: "text",
+                attachments: uploadedAttachments
+            };
+
+            setMessages(prev => [...prev, newMessage]);
+            setMessageText("");
+            setAttachments([]);
+
+        } catch (error) {
+            console.error("Error sending message:", error);
+        }
     };
 
     if (!selectedUser) {
@@ -316,7 +418,12 @@ const ChatMain = ({
                                 ref={textareaRef}
                                 value={messageText}
                                 onChange={(e) => setMessageText(e.target.value)}
-                                onKeyDown={handleKeyDown}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleSendMessage();
+                                    }
+                                }}
                                 placeholder={t("input.placeholder")}
                                 className="w-full px-3 pt-2.5 resize-none focus:outline-none text-xs sm:text-sm max-h-[120px] sm:max-h-[150px] overflow-y-auto custom-scroll min-h-[40px]"
                                 rows={1}
@@ -347,8 +454,8 @@ const ChatMain = ({
                                     </button>
                                 </div>
                                 <Button
-                                    type="submit"
                                     onClick={handleSendMessage}
+                                    type="submit"
                                     className="h-7 sm:h-8 w-[60px] sm:w-[70px] disabled:cursor-auto group rounded-lg text-white text-xs sm:text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
                                     <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
                                     <div className="flex items-center justify-center gap-1">

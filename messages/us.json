@@ -608,7 +608,10 @@
     },
     "installWechat": {
       "title": "WeChat QR Code",
-      "scanText": "Scan me with the installed WeChat App."
+      "scanText": "Scan me with the installed WeChat App.",
+      "buttons": {
+        "close": "Close"
+      }
     }
   },
   "calendar": {
