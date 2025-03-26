@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { User } from "@/modules/chat/types";
-const IsTyping = ({ selectedUser }: { selectedUser: User }) => {
+
+const IsTyping = ({ selectedUserNickname }: { selectedUserNickname: string }) => {
     return (
         <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -8,7 +8,7 @@ const IsTyping = ({ selectedUser }: { selectedUser: User }) => {
             exit={{ opacity: 0, y: 10 }}
             className="flex items-center gap-2 text-sub-600 text-sm bg-white/50 p-2 rounded-lg"
         >
-            <span>{selectedUser?.nickname || "Unknown"}</span>
+            <span>{selectedUserNickname || "Unknown"}</span>
             <div className="flex gap-1">
                 <motion.span
                     animate={{ opacity: [0.3, 1, 0.3] }}

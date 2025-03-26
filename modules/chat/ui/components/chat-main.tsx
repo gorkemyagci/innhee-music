@@ -337,11 +337,10 @@ const ChatMain = ({
                     />
                 ))}
                 {isTyping && (
-                    <IsTyping selectedUser={selectedUser} />
+                    <IsTyping selectedUserNickname={messages[messages.length - 1].senderId === currentUser.id ? selectedUser.nickname || "Unknown" : currentUser.nickname || "Unknown"} />
                 )}
                 <div ref={messagesEndRef} />
             </div>
-
             <div className="p-2 sm:p-4">
                 <div className="border border-soft-200 rounded-xl sm:rounded-2xl p-3 sm:p-2 pt-2 bg-white">
                     <AnimatePresence>
