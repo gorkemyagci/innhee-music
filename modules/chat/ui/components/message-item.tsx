@@ -1,15 +1,17 @@
 "use client";
 
-import { Message, User } from "../../types";
+import { Attachment, Message, User } from "../../types";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import UserAvatar from "@/components/user-avatar";
 import { Icons } from "@/components/icons";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import ContractDetailsModal from "@/components/custom/modals/contract-details";
+import ContractDetailsModal from "@/components/custom/modals/contract-details/index";
 import { useTranslations } from "next-intl";
+import { Socket } from "socket.io-client";
+import { toast } from "sonner";
 
 interface MessageItemProps {
   message: Message;
@@ -18,8 +20,9 @@ interface MessageItemProps {
 }
 
 const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
+  const t = useTranslations("chat.main");
   const [showContractDetails, setShowContractDetails] = useState(false);
-  const t = useTranslations("chat.messages");
+  const socketRef = useRef<Socket | null>(null);
 
   const modalVariants = {
     hidden: {
@@ -44,18 +47,6 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
     }
   };
 
-  const backdropVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { duration: 0.3 }
-    },
-    exit: {
-      opacity: 0,
-      transition: { duration: 0.2 }
-    }
-  };
-
   const formatTime = (date: Date) => {
     return format(date, "h:mm a");
   };
@@ -64,34 +55,37 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
     setShowContractDetails(true);
   };
 
-  // Function to detect URLs in text and convert them to clickable links
+  const handleContractAction = (contractId: string, status: "ACCEPTED" | "REJECTED") => {
+    if (!socketRef.current?.connected) return;
+    
+    socketRef.current.emit("updateContractStatus", {
+      contractId,
+      status
+    }, (response: any) => {
+      if (response?.success) {
+        toast.success(`Contract ${status.toLowerCase()} successfully`);
+      } else {
+        toast.error(`Failed to ${status.toLowerCase()} contract`);
+      }
+    });
+  };
+
   const renderTextWithLinks = (text: string) => {
-    // URL regex pattern
     const urlRegex = /(https?:\/\/[^\s]+)/g;
 
-    // If no URLs in text, return the text as is
     if (!text.match(urlRegex)) {
       return text;
     }
 
-    // Create an array to hold the result
     const result = [];
-
-    // Keep track of the last index we've processed
     let lastIndex = 0;
 
-    // Find all matches
     let match;
     let counter = 0;
 
     while ((match = urlRegex.exec(text)) !== null) {
-      // Get the matched URL
       const url = match[0];
-
-      // Get the index where the URL starts
       const urlIndex = match.index;
-
-      // Add the text before the URL
       if (urlIndex > lastIndex) {
         result.push(
           <span key={`text-${counter}`}>
@@ -99,8 +93,6 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
           </span>
         );
       }
-
-      // Add the URL as a link
       result.push(
         <a
           key={`link-${counter}`}
@@ -112,13 +104,9 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
           {url}
         </a>
       );
-
-      // Update the last index to after this URL
       lastIndex = urlIndex + url.length;
       counter++;
     }
-
-    // Add any remaining text after the last URL
     if (lastIndex < text.length) {
       result.push(
         <span key={`text-last`}>
@@ -130,7 +118,6 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
     return result;
   };
 
-  // Render system messages
   if (message.type === "system") {
     return (
       <div className="flex flex-col w-full items-end my-4">
@@ -166,7 +153,6 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
     );
   }
 
-  // Render offer messages
   if (message.type === "offer") {
     return (
       <div
@@ -199,7 +185,7 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
                   {message.offer?.title}
                 </span>
                 <span className="font-medium text-base text-strong-950">
-                  {message.offer?.currency}{message.offer?.amount}
+                  {message.offer?.currency === "USD" ? "USD$" : message.offer?.currency}{message.offer?.amount}
                 </span>
               </div>
               <div className="flex flex-col items-start gap-3 p-4">
@@ -211,7 +197,9 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
                   </span>
                   <div className="flex items-center gap-1">
                     <Icons.time_line />
-                    <span className="text-sub-600 text-xs font-normal">{t("offer.deliveryTime")}</span>
+                    <span className="text-sub-600 text-xs font-normal">
+                      {message.offer?.deliveryDays} {t("offer.deliveryTime")}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -226,10 +214,15 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
                 </div>
               ) : !isOwn && (
                 <div className="p-4 flex gap-3 items-center border-t border-soft-200">
-                  <Button variant="outline" className="h-9 flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => handleContractAction(message.offer?.id || "", "REJECTED")}
+                    className="h-9 flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm"
+                  >
                     {t("offer.cancel")}
                   </Button>
                   <Button
+                    onClick={() => handleContractAction(message.offer?.id || "", "ACCEPTED")}
                     className="h-9 flex-1 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
                     <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
                     {t("offer.accept")}
@@ -336,40 +329,67 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
         className={cn(
           "max-w-[75%]",
           isOwn ? "text-main-900" : "bg-white border border-soft-200",
-          "rounded-lg p-3 overflow-hidden"
+          "rounded-lg p-3 overflow-hidden flex flex-col"
         )}
       >
-        <div className="flex items-center justify-between mb-1">
+        <div className="flex items-center justify-between mb-1 flex-shrink-0">
           <span className="text-xs font-medium text-sub-600">
             {isOwn ? t("regular.me") : sender.name}
           </span>
           <span className="text-xs text-sub-600 ml-2">{formatTime(message.timestamp)}</span>
         </div>
-        <div className="whitespace-pre-wrap break-words overflow-hidden overflow-wrap-break-word hyphens-auto text-sub-600 font-normal text-xs">
+        <div className="whitespace-pre-wrap break-words overflow-hidden overflow-wrap-break-word hyphens-auto text-sub-600 font-normal text-xs max-h-[300px] overflow-y-auto custom-scroll flex-grow">
           {renderTextWithLinks(message.content)}
         </div>
 
         {message.additionalInfo && (
-          <div className="text-xs text-sub-600 mt-1">
+          <div className="text-xs text-sub-600 mt-1 whitespace-pre-wrap break-words overflow-hidden overflow-wrap-break-word hyphens-auto">
             {renderTextWithLinks(message.additionalInfo)}
           </div>
         )}
 
         {message.attachments && message.attachments.length > 0 && (
-          <div className="mt-2 flex items-start gap-5">
-            {message.attachments.map((attachment) => (
-              <div key={attachment.id} className="relative">
-                <img
-                  src={attachment.url}
-                  alt={attachment.name}
-                  className="w-[160px] h-[112px] rounded"
-                />
-                <div className="text-[11px] text-soft-400 font-medium mt-1 flex justify-between">
-                  <span>{attachment.name}</span>
-                  <span>{attachment.size}</span>
+          <div className="mt-2 flex flex-wrap items-start gap-5">
+            {message.attachments.map((attachment) => {
+              const isImage = attachment.path.match(/\.(jpg|jpeg|png|gif|webp)(?:_\d+)?$/i);
+              const isPDF = attachment.path.match(/\.pdf(?:_\d+)?$/i);
+              const isDocument = attachment.path.match(/\.(doc|docx|xls|xlsx|txt)(?:_\d+)?$/i);
+              const isAudio = attachment.path.match(/\.(mp3|wav|ogg)(?:_\d+)?$/i);
+              const isVideo = attachment.path.match(/\.(mp4|mov|avi)(?:_\d+)?$/i);
+              return (
+                <div key={attachment.id} className="relative max-w-[160px]">
+                  {isImage ? (
+                    <img
+                      src={attachment.url}
+                      alt={attachment.path}
+                      className="w-full h-[112px] rounded object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-[112px] rounded bg-soft-50 border border-soft-200 flex flex-col items-center justify-center p-3">
+                      <div className="w-12 h-12 rounded-full bg-white border border-soft-200 flex items-center justify-center mb-2">
+                        {isPDF && <Icons.file className="w-6 h-6 text-red-500" />}
+                        {isDocument && <Icons.file className="w-6 h-6 text-blue-500" />}
+                        {isAudio && <Icons.file className="w-6 h-6 text-green-500" />}
+                        {isVideo && <Icons.file className="w-6 h-6 text-purple-500" />}
+                        {!isPDF && !isDocument && !isAudio && !isVideo && <Icons.file className="w-6 h-6 text-gray-500" />}
+                      </div>
+                      <a
+                        href={attachment.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-primary-base hover:underline font-medium text-center"
+                      >
+                        {t("attachments.downloadFile")}
+                      </a>
+                    </div>
+                  )}
+                  <div className="text-[11px] text-soft-400 font-medium mt-1 flex justify-between">
+                    <span className="truncate">{attachment.path}</span>
+                    <span>{attachment.size} KB</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

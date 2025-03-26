@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Message, Offer, User } from "@/modules/chat/types";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import MessageItem from "@/modules/chat/ui/components/message-item";
 import OfferModal from "@/modules/chat/ui/sections/offer-modal";
 import Image from "next/image";
@@ -15,20 +15,14 @@ import { contractDetailsData } from "@/lib/chatMockData";
 import { useTranslations } from "next-intl";
 import { parseCookies } from "nookies";
 import { io, Socket } from "socket.io-client";
-import { ChatMainProps, UploadingFile } from "@/lib/types";
-import { Dispatch, SetStateAction } from "react";
+import { ExtendedChatMainProps, UploadingFile, UploadedAttachment } from "@/lib/types";
 import { useQueryState } from "nuqs";
 import { trpc } from "@/trpc/client";
 import IsTyping from "./is-typing";
 import AttachmentItem from "./attachment-item";
+import { toast } from "sonner";
 
 const SOCKET_URL = "wss://inhee-chat-production.up.railway.app/chat";
-
-interface ExtendedChatMainProps extends Omit<ChatMainProps, 'setMessages'> {
-    setMessages: Dispatch<SetStateAction<Message[]>>;
-    selectedUser: User;
-    isLoading?: boolean;
-}
 
 const ChatMain = ({
     messages,
@@ -53,7 +47,7 @@ const ChatMain = ({
     const [isTyping, setIsTyping] = useState(false);
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const utils = trpc.useUtils();
-
+    const [isSending, setIsSending] = useState(false);
 
     useEffect(() => {
         if (!socketRef.current) {
@@ -205,47 +199,104 @@ const ChatMain = ({
         if (!messageText.trim() && attachments.length === 0) return;
         if (!selectedUser) return;
 
+        if (attachments.length > 0 && !messageText.trim()) {
+            toast.error("Please add a message with your attachments");
+            return;
+        }
+
+        setIsSending(true);
         try {
-            const uploadedAttachments = await Promise.all(
-                attachments.map(async (file) => {
-                    return {
-                        id: `att-${Math.random().toString(36).substring(7)}`,
-                        name: file.name,
-                        url: URL.createObjectURL(file),
-                        size: `${(file.size / 1024).toFixed(2)} KB`
-                    };
-                })
-            );
+            let uploadedAttachments: UploadedAttachment[] = [];
+
+            if (attachments.length > 0) {
+                const formData = new FormData();
+                attachments.forEach((file) => {
+                    formData.append('attachments', file);
+                });
+
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/attachments`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${cookies.token}`
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to upload attachments');
+                }
+
+                const result = await response.json();
+
+                if (!result || !Array.isArray(result)) {
+                    throw new Error('Invalid response from server');
+                }
+                uploadedAttachments = result;
+                if (uploadedAttachments.length === 0) {
+                    throw new Error('No attachments were uploaded successfully');
+                }
+
+                const invalidAttachments = uploadedAttachments.filter(att => !att.id || !att.path);
+                if (invalidAttachments.length > 0) {
+                    throw new Error('Some attachments were uploaded but are invalid');
+                }
+            }
 
             if (!socketRef.current?.connected) {
+                toast.error("Connection lost. Please try again.");
                 return;
             }
 
-            socketRef.current.emit("sendMessage", {
+            const messageData = {
                 chatRoomId: chatRoomId,
                 content: messageText,
                 type: "text",
-                attachmentIds: uploadedAttachments.map(att => att.id)
-            });
+                attachmentIds: uploadedAttachments.map((att: UploadedAttachment) => att.id)
+            };
 
-            const newMessage: Message = {
+            const optimisticMessage: Message = {
                 id: `msg-${Date.now()}`,
                 senderId: currentUser.id,
                 receiverId: selectedUser.id,
                 content: messageText,
                 timestamp: new Date(),
                 type: "text",
-                attachments: uploadedAttachments
+                attachments: uploadedAttachments.map((att: UploadedAttachment) => ({
+                    id: att.id,
+                    name: att.filename,
+                    filename: att.filename,
+                    path: att.path,
+                    url: att.path,
+                    size: att.size ? Math.round(att.size / 1024) : 0
+                }))
             };
 
-            setMessages((prev: Message[]) => [...prev, newMessage]);
+            setMessages((prev: Message[]) => [...prev, optimisticMessage]);
             setMessageText("");
             setAttachments([]);
+            return new Promise((resolve, reject) => {
+                if (!socketRef.current?.connected) {
+                    reject(new Error("Socket connection lost"));
+                    return;
+                }
 
-            utils.chat.getRoomMessages.invalidate();
-            utils.chat.getRoomMessages.refetch();
+                socketRef.current.emit("sendMessage", messageData, (response: any) => {
+                    if (!response?.success) {
+                        setMessages((prev: Message[]) => prev.filter(msg => msg.id !== optimisticMessage.id));
+                        toast.error("Failed to send message. Please try again.");
+                        reject(new Error("Message sending failed"));
+                    } else {
+                        resolve(response);
+                    }
+                });
+            });
 
-        } catch { }
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : "Failed to send message. Please try again.");
+            throw error;
+        } finally {
+            setIsSending(false);
+        }
     };
 
     const handleTyping = () => {
@@ -334,7 +385,7 @@ const ChatMain = ({
                         </div>
                     </div>
                 ) : (
-                    <>
+                    <div className="max-w-3xl mx-auto">
                         {messages.map((message) => (
                             <MessageItem
                                 key={message.id}
@@ -351,97 +402,108 @@ const ChatMain = ({
                             <IsTyping selectedUserNickname={messages[messages.length - 1].senderId === currentUser.id ? selectedUser.nickname || "Unknown" : currentUser.nickname || "Unknown"} />
                         )}
                         <div ref={messagesEndRef} />
-                    </>
+                    </div>
                 )}
             </div>
             <div className="p-2 sm:p-4">
-                <div className="border border-soft-200 rounded-xl sm:rounded-2xl p-3 sm:p-2 pt-2 bg-white">
-                    <AnimatePresence>
-                        {(uploadingFiles && Object.keys(uploadingFiles).length > 0) || attachments.length > 0 ? (
-                            <motion.div
-                                initial={{ height: 0, opacity: 0, marginBottom: 0 }}
-                                animate={{ height: "auto", opacity: 1, marginBottom: 8 }}
-                                exit={{ height: 0, opacity: 0, marginBottom: 0 }}
-                                transition={{ duration: 0.3, ease: "easeInOut" }}
-                                className="overflow-hidden"
-                            >
-                                <div className="flex mb-2 flex-wrap gap-2 sm:gap-4">
-                                    {Object.entries(uploadingFiles).map(([id, file]) => (
-                                        <motion.div
-                                            initial={{ scale: 0.8, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            exit={{ scale: 0.8, opacity: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                            key={id}
-                                            className="bg-white relative border border-soft-200 p-2 sm:p-3 flex flex-col items-center gap-1 sm:gap-2 rounded-[12px] shadow-sm w-[100px] sm:w-[124px] h-[90px] sm:h-[114px]"
-                                        >
-                                            <Icons.close className="absolute top-1 sm:top-2 right-1 sm:right-2 size-4 sm:size-[18px] text-sub-600" />
-                                            <div className="flex flex-col items-center gap-0.5 sm:gap-1">
-                                                <Icons.loader className="animate-spin w-5 h-5 sm:w-6 sm:h-6" />
-                                                <span className="text-strong-950 font-normal text-[10px] sm:text-xs">{t("attachments.uploading")}</span>
-                                            </div>
-                                            <div className="flex flex-col items-center gap-0.5 sm:gap-1 pb-0.5 w-full">
-                                                <span className="text-strong-950 font-medium text-xs sm:text-sm w-full truncate px-1">{file.name}</span>
-                                                <span className="text-sub-600 font-normal text-[10px] sm:text-xs">{t("attachments.fileSize", { size: (file.size / 1024).toFixed(2) })}</span>
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                    {attachments.length > 0 && attachments?.map((file: File & { preview?: string }, index) => (
-                                        <AttachmentItem key={index} file={file} index={index} removeAttachment={removeAttachment} />
-                                    ))}
-                                </div>
-                            </motion.div>
-                        ) : null}
-                    </AnimatePresence>
-
-                    <div className="flex items-end gap-2">
-                        <div className="flex-1 overflow-hidden rounded-xl">
-                            <textarea
-                                ref={textareaRef}
-                                value={messageText}
-                                onChange={(e) => {
-                                    setMessageText(e.target.value);
-                                    handleTyping();
-                                }}
-                                onKeyDown={(e) => handleKeyDown(e)}
-                                placeholder={t("input.placeholder")}
-                                className="w-full px-3 pt-2.5 resize-none focus:outline-none text-xs sm:text-sm max-h-[120px] sm:max-h-[150px] overflow-y-auto custom-scroll min-h-[40px]"
-                                rows={1}
-                            />
-                            <div className="flex items-center justify-between px-2 py-1.5">
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        className="text-sub-600 hover:text-main-900 cursor-pointer p-1"
-                                    >
-                                        <Icons.emotion_happy_line className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
-                                    </button>
-                                    <input
-                                        type="file"
-                                        ref={fileInputRef}
-                                        onChange={handleFileChange}
-                                        onClick={(e) => {
-                                            (e.target as HTMLInputElement).value = '';
-                                        }}
-                                        className="hidden"
-                                        multiple
-                                        accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.mp3,.mp4"
-                                    />
-                                    <button
-                                        onClick={handleAttachmentClick}
-                                        className="text-sub-600 hover:text-main-900 cursor-pointer p-1"
-                                    >
-                                        <Icons.attachment_line className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
-                                    </button>
-                                </div>
-                                <Button
-                                    onClick={handleSendMessage}
-                                    type="submit"
-                                    className="h-7 sm:h-8 w-[60px] sm:w-[70px] disabled:cursor-auto group rounded-lg text-white text-xs sm:text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
-                                    <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                                    <div className="flex items-center justify-center gap-1">
-                                        {t("input.send")} <Icons.send className="stroke-white w-3 h-3 sm:w-4 sm:h-4" />
+                <div className="max-w-3xl mx-auto">
+                    <div className="border border-soft-200 rounded-xl sm:rounded-2xl p-3 sm:p-2 pt-2 bg-white">
+                        <AnimatePresence>
+                            {(uploadingFiles && Object.keys(uploadingFiles).length > 0) || attachments.length > 0 ? (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0, marginBottom: 0 }}
+                                    animate={{ height: "auto", opacity: 1, marginBottom: 8 }}
+                                    exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+                                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                                    className="overflow-hidden"
+                                >
+                                    <div className="flex mb-2 flex-wrap gap-2 sm:gap-4">
+                                        {Object.entries(uploadingFiles).map(([id, file]) => (
+                                            <motion.div
+                                                initial={{ scale: 0.8, opacity: 0 }}
+                                                animate={{ scale: 1, opacity: 1 }}
+                                                exit={{ scale: 0.8, opacity: 0 }}
+                                                transition={{ duration: 0.2 }}
+                                                key={id}
+                                                className="bg-white relative border border-soft-200 p-2 sm:p-3 flex flex-col items-center gap-1 sm:gap-2 rounded-[12px] shadow-sm w-[100px] sm:w-[124px] h-[90px] sm:h-[114px]"
+                                            >
+                                                <Icons.close className="absolute top-1 sm:top-2 right-1 sm:right-2 size-4 sm:size-[18px] text-sub-600" />
+                                                <div className="flex flex-col items-center gap-0.5 sm:gap-1">
+                                                    <Icons.loader className="animate-spin w-5 h-5 sm:w-6 sm:h-6" />
+                                                    <span className="text-strong-950 font-normal text-[10px] sm:text-xs">{t("attachments.uploading")}</span>
+                                                </div>
+                                                <div className="flex flex-col items-center gap-0.5 sm:gap-1 pb-0.5 w-full">
+                                                    <span className="text-strong-950 font-medium text-xs sm:text-sm w-full truncate px-1">{file.name}</span>
+                                                    <span className="text-sub-600 font-normal text-[10px] sm:text-xs">{t("attachments.fileSize", { size: (file.size / 1024).toFixed(2) })}</span>
+                                                </div>
+                                            </motion.div>
+                                        ))}
+                                        {attachments.length > 0 && attachments?.map((file: File & { preview?: string }, index) => (
+                                            <AttachmentItem key={index} file={file} index={index} removeAttachment={removeAttachment} />
+                                        ))}
                                     </div>
-                                </Button>
+                                </motion.div>
+                            ) : null}
+                        </AnimatePresence>
+
+                        <div className="flex items-end gap-2">
+                            <div className="flex-1 overflow-hidden rounded-xl">
+                                <textarea
+                                    ref={textareaRef}
+                                    value={messageText}
+                                    onChange={(e) => {
+                                        setMessageText(e.target.value);
+                                        handleTyping();
+                                    }}
+                                    onKeyDown={(e) => handleKeyDown(e)}
+                                    placeholder={t("input.placeholder")}
+                                    className="w-full px-3 pt-2.5 resize-none focus:outline-none text-xs sm:text-sm max-h-[120px] sm:max-h-[150px] overflow-y-auto custom-scroll min-h-[40px]"
+                                    rows={1}
+                                />
+                                <div className="flex items-center justify-between px-2 py-1.5">
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            className="text-sub-600 hover:text-main-900 cursor-pointer p-1"
+                                        >
+                                            <Icons.emotion_happy_line className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
+                                        </button>
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            onChange={handleFileChange}
+                                            onClick={(e) => {
+                                                (e.target as HTMLInputElement).value = '';
+                                            }}
+                                            className="hidden"
+                                            multiple
+                                            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.mp3,.mp4"
+                                        />
+                                        <button
+                                            onClick={handleAttachmentClick}
+                                            className="text-sub-600 hover:text-main-900 cursor-pointer p-1"
+                                        >
+                                            <Icons.attachment_line className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
+                                        </button>
+                                    </div>
+                                    <Button
+                                        onClick={handleSendMessage}
+                                        type="submit"
+                                        disabled={isSending}
+                                        className="h-7 sm:h-8 w-[60px] sm:w-[70px] disabled:cursor-auto group rounded-lg text-white text-xs sm:text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
+                                        <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
+                                        <div className="flex items-center justify-center gap-1">
+                                            {isSending ? (
+                                                <>
+                                                    <Loader2 className="animate-spin w-3 h-3 sm:w-4 sm:h-4" />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {t("input.send")} <Icons.send className="stroke-white w-3 h-3 sm:w-4 sm:h-4" />
+                                                </>
+                                            )}
+                                        </div>
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -452,6 +514,10 @@ const ChatMain = ({
                 isOpen={isOfferModalOpen}
                 onClose={() => setIsOfferModalOpen(false)}
                 onSubmit={handleOfferSubmit}
+                socket={socketRef.current}
+                chatRoomId={chatRoomId || ""}
+                receiverId={selectedUser?.id || ""}
+                currentUserId={currentUser?.id || ""}
             />
 
             <Dialog open={isContractDetailsOpen} onOpenChange={setIsContractDetailsOpen}>

@@ -1,4 +1,6 @@
 import { Message, Offer, User } from "@/modules/chat/types";
+import { Dispatch } from "react";
+import { SetStateAction } from "react";
 
 export type RecordType = Record<string, any>;
 
@@ -150,4 +152,17 @@ export interface ContractDetailsProps {
           userType: string;
       };
   }[];
+}
+
+export interface ExtendedChatMainProps extends Omit<ChatMainProps, 'setMessages'> {
+  setMessages: Dispatch<SetStateAction<Message[]>>;
+  selectedUser: User;
+  isLoading?: boolean;
+}
+
+export interface UploadedAttachment {
+  id: string;
+  filename: string;
+  path: string;
+  size: number;
 }

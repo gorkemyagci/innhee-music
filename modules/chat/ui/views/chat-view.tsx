@@ -18,6 +18,10 @@ const ChatView = () => {
     { roomId: chatId || "" },
     { enabled: !!chatId }
   );
+  const { data: contractsData } = trpc.chat.getRoomContracts.useQuery(
+    { roomId: chatId || "" },
+    { enabled: !!chatId }
+  );
   const { user: currentAuthUser, initializeFromToken } = useAuthStore();
   const selectedChat = chatRooms?.find((room: ChatRoom) => room.id === chatId);
 
@@ -33,7 +37,8 @@ const ChatView = () => {
 
   useEffect(() => {
     if (messagesData && selectedChat) {
-      const formattedMessages = messagesData.map((msg: {
+      // Format regular messages
+      const formattedMessages = (Array.isArray(messagesData) ? messagesData : []).map((msg: {
         id: string;
         content: string;
         createdAt: string;
@@ -47,12 +52,39 @@ const ChatView = () => {
         receiverId: msg.senderId === currentAuthUser?.id
           ? selectedChat.users.find((u: { userId: string }) => u.userId !== currentAuthUser?.id)?.userId
           : currentAuthUser?.id,
-        type: "text",
-        attachments: msg.attachments
+        type: "text" as const,
+        attachments: msg.attachments || []
       }));
-      setMessages(formattedMessages);
+
+      // Format contract messages
+      const contractMessages = (contractsData || []).map((contract: any) => ({
+        id: `contract-${contract.id}`,
+        content: "",
+        timestamp: new Date(contract.createdAt),
+        senderId: contract.senderId,
+        receiverId: contract.receiverId,
+        type: "offer" as const,
+        offer: {
+          id: contract.id,
+          title: `Contract Offer`,
+          description: contract.description,
+          amount: contract.amount,
+          currency: contract.amountCurrency,
+          deliveryDays: Math.ceil((new Date(contract.deadline).getTime() - new Date(contract.startDate).getTime()) / (1000 * 60 * 60 * 24)),
+          status: contract.status
+        }
+      }));
+
+      // Combine and sort all messages by timestamp
+      const allMessages = [...formattedMessages, ...contractMessages].sort(
+        (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+      );
+
+      setMessages(allMessages);
+    } else {
+      setMessages([]);
     }
-  }, [messagesData, selectedChat, currentAuthUser]);
+  }, [messagesData, contractsData, selectedChat, currentAuthUser]);
 
   const getOtherUser = (room: ChatRoom): User => {
     const otherUser = room.users.find(u => u.userId !== currentAuthUser?.id)?.user;

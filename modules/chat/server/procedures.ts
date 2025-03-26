@@ -107,4 +107,41 @@ export const chatProcedure = createTRPCRouter({
         });
       }
     }),
+
+  addAttachments: protectedProcedure
+    .input(
+      z.object({
+        attachments: z.array(z.instanceof(File))
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const token = await getTokenFromCookie();
+        const formData = new FormData();
+      
+        input.attachments.forEach((file) => {
+          formData.append('attachments', file);
+        });
+
+        const response = await fetch(`${SERVICE_URL}/chat/attachments`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to upload attachments",
+        });
+      }
+    }),
 });

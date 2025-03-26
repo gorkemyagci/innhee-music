@@ -10,16 +10,26 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import InputElement from "@/components/custom/form-elements/input";
 import { useTranslations } from "next-intl";
+import { parseCookies } from "nookies";
+import { toast } from "sonner";
+import { Socket } from "socket.io-client";
+import { useRef, useEffect } from "react";
 
 interface OfferModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (offer: Offer) => void;
+  socket: Socket | null;
+  chatRoomId: string;
+  receiverId: string;
+  currentUserId: string;
 }
 
-const OfferModal = ({ isOpen, onClose, onSubmit }: OfferModalProps) => {
+const OfferModal = ({ isOpen, onClose, onSubmit, socket, chatRoomId, receiverId, currentUserId }: OfferModalProps) => {
   const t = useTranslations("chat.offerModal");
-  
+  const cookies = parseCookies();
+  const socketRef = useRef<Socket | null>(socket);
+
   const formSchema = z.object({
     title: z.string().min(1, t("form.errors.titleRequired")),
     description: z.string().min(1, t("form.errors.descriptionRequired")),
@@ -46,20 +56,95 @@ const OfferModal = ({ isOpen, onClose, onSubmit }: OfferModalProps) => {
       deliveryDays: "",
     },
   });
+  
+  // Update socketRef when socket prop changes
+  useEffect(() => {
+    socketRef.current = socket;
 
-  const handleSubmit = (values: FormValues) => {
-    const offer: Offer = {
-      id: `offer-${Date.now()}`,
-      title: values.title,
-      description: values.description,
-      amount: parseFloat(values.amount),
-      currency: "US$",
-      deliveryDays: parseInt(values.deliveryDays),
+    if (socketRef.current) {
+      socketRef.current.on("connect", () => {});
+      socketRef.current.on("connect_error", (error) => {});
+      socketRef.current.on("disconnect", (reason) => {});
+      socketRef.current.on("error", (error) => {});
+      socketRef.current.on("contractCreated", (response) => {
+        if (response.success) {
+          const offer: Offer = {
+            id: `offer-${Date.now()}`,
+            title: form.getValues("title"),
+            description: form.getValues("description"),
+            amount: parseFloat(form.getValues("amount")),
+            currency: "US$",
+            deliveryDays: parseInt(form.getValues("deliveryDays")),
+          };
+          onSubmit(offer);
+          form.reset();
+          onClose();
+          toast.success("Contract created successfully!");
+        } else {
+          toast.error(response.message || "Failed to create contract");
+        }
+      });
+    }
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.off("connect");
+        socketRef.current.off("connect_error");
+        socketRef.current.off("disconnect");
+        socketRef.current.off("error");
+        socketRef.current.off("contractCreated");
+      }
     };
+  }, [socket, onSubmit, form]);
 
-    onSubmit(offer);
-    form.reset();
-    onClose();
+  const handleSubmit = async (values: FormValues) => {
+    try {
+      const startDate = new Date();
+      const deadline = new Date();
+      deadline.setDate(deadline.getDate() + parseInt(values.deliveryDays));
+      const contractData = {
+        senderId: currentUserId,
+        receiverId,
+        chatRoomId,
+        amount: parseFloat(values.amount),
+        amountCurrency: "USD",
+        startDate: startDate.toISOString(),
+        deadline: deadline.toISOString(),
+        description: values.description,
+        status: "PENDING"
+      };
+      
+      if (!socketRef.current?.connected) {
+        socketRef.current?.connect();
+        await new Promise((resolve) => {
+          socketRef.current?.once('connect', () => {
+            resolve(true);
+          });
+        });
+      }
+
+      socketRef.current?.emit("createContract", contractData, (response: any) => {
+        if (response?.success) {
+          const offer: Offer = {
+            id: `offer-${Date.now()}`,
+            title: form.getValues("title"),
+            description: form.getValues("description"),
+            amount: parseFloat(form.getValues("amount")),
+            currency: "US$",
+            deliveryDays: parseInt(form.getValues("deliveryDays")),
+          };
+          onSubmit(offer);
+          form.reset();
+          onClose();
+          toast.success("Contract created successfully!");
+        } else {
+          toast.error(response?.message || "Failed to create contract");
+        }
+      });
+
+    } catch (error) {
+      toast.error("Failed to create contract. Please try again.");
+    }
   };
 
   return (
@@ -68,6 +153,9 @@ const OfferModal = ({ isOpen, onClose, onSubmit }: OfferModalProps) => {
         <DialogHeader className="p-6 border-b border-soft-200">
           <div className="flex items-center justify-between w-full">
             <DialogTitle className="text-main-900 font-medium">{t("title")}</DialogTitle>
+            <button onClick={onClose} className="p-1 hover:bg-soft-100 rounded-full">
+              <X className="w-5 h-5 text-sub-600" />
+            </button>
           </div>
         </DialogHeader>
         <Form {...form}>

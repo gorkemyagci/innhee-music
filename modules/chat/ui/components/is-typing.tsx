@@ -1,8 +1,6 @@
 import { motion } from "framer-motion";
 
 const IsTyping = ({ selectedUserNickname }: { selectedUserNickname: string }) => {
-    console.log("selectedUserNickname", selectedUserNickname);
-    
     return (
         <motion.div
             initial={{ opacity: 0, y: 10 }}

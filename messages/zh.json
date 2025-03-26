@@ -342,15 +342,14 @@
     "messages": {
       "system": {
         "acceptedOffer": "已接受报价",
-        "viewContract": "查看合同",
-        "activatedMilestone": "已激活里程碑"
+        "viewContract": "查看合同"
       },
       "offer": {
         "title": "报价",
         "yourOfferIncludes": "您的报价包括",
-        "deliveryTime": "12天交付",
-        "cancel": "取消",
-        "accept": "接受"
+        "deliveryTime": "交付时间",
+        "accept": "接受",
+        "cancel": "取消"
       },
       "milestone": {
         "activated": "已激活里程碑",
@@ -360,6 +359,9 @@
       "regular": {
         "me": "我",
         "files": "{count} 个文件"
+      },
+      "attachments": {
+        "downloadFile": "下载文件"
       }
     },
     "main": {
@@ -371,11 +373,28 @@
       "contractDetails": "合同详情",
       "input": {
         "placeholder": "输入消息...",
-        "send": "发送"
+        "send": "发送",
+        "sending": "发送中..."
       },
       "attachments": {
         "uploading": "上传中",
-        "fileSize": "{size} KB"
+        "fileSize": "{size} KB",
+        "downloadFile": "下载文件"
+      },
+      "offer": {
+        "title": "报价",
+        "yourOfferIncludes": "您的报价包括",
+        "deliveryTime": "天交付",
+        "accept": "接受",
+        "cancel": "取消"
+      },
+      "system": {
+        "acceptedOffer": "已接受报价",
+        "viewContract": "查看合同"
+      },
+      "regular": {
+        "me": "我",
+        "files": "{count} 个文件"
       }
     },
     "offerModal": {

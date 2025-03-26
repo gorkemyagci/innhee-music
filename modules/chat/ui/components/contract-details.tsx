@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ContractDetailsProps } from "@/lib/types";
 import { contentVariants } from "../animation";
+import moment from "moment";
 
 const ContractDetails = ({
     selectedUser,
@@ -41,7 +42,7 @@ const ContractDetails = ({
     const [isPeopleOpen, setIsPeopleOpen] = useState(true);
 
     return (
-        <div className="w-full lg:w-[328px] p-4 lg:p-6 flex-col gap-4 lg:gap-6 border-t lg:border-l border-soft-200 h-full overflow-auto custom-scroll">
+        <div className="w-auto lg:w-[328px] shrink-0 p-4 lg:p-6 flex-col gap-4 lg:gap-6 border-t lg:border-l border-soft-200 h-full overflow-auto custom-scroll">
             <div className="flex flex-col items-center gap-3 lg:gap-4">
                 <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-full p-0.5 overflow-hidden">
                     <Image
@@ -99,14 +100,14 @@ const ContractDetails = ({
                                     <div className="flex justify-between">
                                         <span className="text-xs font-medium text-sub-600">{t("fields.startDate")}</span>
                                         <span className="text-xs text-sub-600 font-medium">
-                                            {startDate}
+                                            {moment(startDate).format("D MMMM, YYYY")}
                                         </span>
                                     </div>
                                     <Separator className="bg-soft-200" />
                                     <div className="flex justify-between">
                                         <span className="text-xs font-medium text-sub-600">{t("fields.deadline")}</span>
                                         <span className="text-xs text-sub-600 font-medium">
-                                            {deadline}
+                                            {moment(deadline).format("D MMMM, YYYY")}
                                         </span>
                                     </div>
                                     <Separator className="bg-soft-200" />

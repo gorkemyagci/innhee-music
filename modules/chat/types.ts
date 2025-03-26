@@ -12,17 +12,22 @@ export interface User {
 export interface Attachment {
   id: string;
   name: string;
+  filename: string;
+  path: string;
   url: string;
-  size: string;
+  size?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Offer {
   id: string;
   title: string;
+  description: string;
   amount: number;
   currency: string;
-  description: string;
   deliveryDays: number;
+  status?: "PENDING" | "ACCEPTED" | "REJECTED" | "COMPLETED";
 }
 
 export interface Milestone {

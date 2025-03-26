@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { TRPCProvider } from "@/trpc/client";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import { Toaster } from "sonner";
+import { Toaster } from "sonner"
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
