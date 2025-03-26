@@ -5,27 +5,9 @@ import { useState } from "react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { motion, AnimatePresence } from "framer-motion";
-import { Icons } from "@/components/icons";
 import { useTranslations } from "next-intl";
-
-interface ContractDetailsProps {
-    contractId: string;
-    contractName: string;
-    startDate: string;
-    deadline: string;
-    amount: number;
-    files?: {
-        name: string;
-        size: string;
-        date: string;
-    }[];
-    people?: {
-        name: string;
-        role: string;
-        avatar: string;
-        status?: string;
-    }[];
-}
+import { ContractDetailsProps } from "@/lib/types";
+import { contentVariants } from "../animation";
 
 const ContractDetails = ({
     contractId,
@@ -33,33 +15,29 @@ const ContractDetails = ({
     startDate,
     deadline,
     amount,
-    files = [],
+    files = [
+        {
+            name: "Audio Script.mp3",
+            size: "2.35mb",
+            date: "3 days ago",
+        },
+        {
+            name: "Design.pdf",
+            size: "1.2mb",
+            date: "2 days ago",
+        },
+        {
+            name: "Requirements.docx",
+            size: "0.8mb",
+            date: "1 day ago",
+        }
+    ],
     people = [],
 }: ContractDetailsProps) => {
     const t = useTranslations("chat.contractDetails");
     const [isContractOpen, setIsContractOpen] = useState(true);
     const [isFilesOpen, setIsFilesOpen] = useState(true);
     const [isPeopleOpen, setIsPeopleOpen] = useState(true);
-
-    // Animation variants
-    const contentVariants = {
-        hidden: {
-            opacity: 0,
-            height: 0,
-            transition: {
-                duration: 0.2,
-                ease: "easeInOut"
-            }
-        },
-        visible: {
-            opacity: 1,
-            height: "auto",
-            transition: {
-                duration: 0.3,
-                ease: "easeInOut"
-            }
-        }
-    };
 
     return (
         <div className="w-full lg:w-[328px] p-4 lg:p-6 flex-col gap-4 lg:gap-6 border-t lg:border-l border-soft-200 h-full overflow-auto custom-scroll">
@@ -79,7 +57,6 @@ const ContractDetails = ({
                 </div>
             </div>
 
-            {/* Contract Details */}
             <div className="flex flex-col gap-2 w-full mt-3">
                 <div className="flex flex-col w-full gap-2">
                     <div
@@ -144,8 +121,7 @@ const ContractDetails = ({
                     </AnimatePresence>
                 </div>
 
-                {/* Files */}
-                <div className="border-b border-soft-200">
+                <div className="border-b pb-2 border-soft-200">
                     <div className="flex items-center h-8 lg:h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-3 lg:px-4 py-1.5 text-left"
                         onClick={() => setIsFilesOpen(!isFilesOpen)}
                     >
@@ -185,7 +161,6 @@ const ContractDetails = ({
                     </AnimatePresence>
                 </div>
 
-                {/* People */}
                 <div className="mt-2.5">
                     <div className="flex items-center h-8 lg:h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-3 lg:px-4 py-1.5 text-left"
                         onClick={() => setIsPeopleOpen(!isPeopleOpen)}
@@ -213,8 +188,8 @@ const ContractDetails = ({
                                             <div className="flex gap-2 items-center">
                                                 <div className="w-9 h-9 lg:w-11 lg:h-11 p-0.5 rounded-full overflow-hidden">
                                                     <Image
-                                                        src={person.avatar}
-                                                        alt={person.name}
+                                                        src={person.user.avatar || "/assets/images/avatar-4.png"}
+                                                        alt={person.user.nickname}
                                                         className="w-9 h-9 lg:w-11 lg:h-11 object-contain"
                                                         width={44}
                                                         height={44}
@@ -222,14 +197,11 @@ const ContractDetails = ({
                                                 </div>
                                                 <div className="flex flex-col gap-1">
                                                     <p className="text-xs lg:text-sm text-sub-600 font-medium">
-                                                        {person.name}
+                                                        {person.user.nickname}
                                                     </p>
-                                                    <p className="text-[10px] lg:text-xs text-sub-600 font-medium">{person.role}</p>
+                                                    <p className="text-[10px] lg:text-xs text-sub-600 font-medium">{person.user.userType}</p>
                                                 </div>
                                             </div>
-                                            {person?.status === "offline" && (
-                                                <Icons.chat_offline className="text-sub-600" />
-                                            )}
                                         </div>
                                     ))}
                                 </div>

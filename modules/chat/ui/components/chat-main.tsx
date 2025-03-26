@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Message, User, Offer, Attachment } from "@/modules/chat/types";
-import { format } from "date-fns";
-import { ChevronLeft, Loader2, Paperclip, Send, Smile, User2, UserRound, X } from "lucide-react";
+import { Message, Offer } from "@/modules/chat/types";
+import { ChevronLeft, Paperclip } from "lucide-react";
 import MessageItem from "@/modules/chat/ui/components/message-item";
 import OfferModal from "@/modules/chat/ui/sections/offer-modal";
 import Image from "next/image";
@@ -17,43 +16,38 @@ import { contractDetailsData } from "@/lib/chatMockData";
 import { useTranslations } from "next-intl";
 import { parseCookies } from "nookies";
 import { io, Socket } from "socket.io-client";
+import { ChatMainProps, UploadingFile } from "@/lib/types";
+import { Dispatch, SetStateAction } from "react";
+import { useQueryState } from "nuqs";
 
 const SOCKET_URL = "wss://inhee-chat-production.up.railway.app/chat";
 
-interface ChatMainProps {
-    messages: Message[];
-    selectedUser: User | undefined;
-    currentUser: User;
-    onBack?: () => void;
-    onSendMessage?: (content: string, attachments?: File[]) => void;
-    onSendOffer?: (offer: Offer) => void;
-}
-
-interface UploadingFile {
-    progress: number;
-    name: string;
-    size: number;
-    preview?: string;
+interface ExtendedChatMainProps extends Omit<ChatMainProps, 'setMessages'> {
+    setMessages: Dispatch<SetStateAction<Message[]>>;
 }
 
 const ChatMain = ({
-    messages: initialMessages,
+    messages,
+    setMessages,
     selectedUser,
     currentUser,
     onBack,
-}: ChatMainProps) => {
+}: ExtendedChatMainProps) => {
     const t = useTranslations("chat.main");
     const [messageText, setMessageText] = useState("");
     const [attachments, setAttachments] = useState<File[]>([]);
     const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
     const [isContractDetailsOpen, setIsContractDetailsOpen] = useState(false);
     const [uploadingFiles, setUploadingFiles] = useState<Record<string, UploadingFile>>({});
-    const [messages, setMessages] = useState<Message[]>(initialMessages);
     const socketRef = useRef<Socket | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const cookies = parseCookies();
+    const [chatRoomId, setChatRoomId] = useQueryState("chatId");
+    const [isTyping, setIsTyping] = useState(false);
+    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    
 
     useEffect(() => {
         if (!socketRef.current) {
@@ -91,7 +85,14 @@ const ChatMain = ({
 
             socketRef.current.on("message", (message: Message) => {
                 console.log("New message received:", message);
-                setMessages(prev => [...prev, message]);
+                setMessages((prev: Message[]) => [...prev, message]);
+            });
+
+            socketRef.current.on("typing", (data) => {
+                console.log("Typing event received:", data);
+                if (data.chatRoomId === chatRoomId) {
+                    setIsTyping(data.isTyping);
+                }
             });
         }
 
@@ -100,8 +101,11 @@ const ChatMain = ({
                 socketRef.current.disconnect();
                 socketRef.current = null;
             }
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
+            }
         };
-    }, [cookies.token]);
+    }, [cookies.token, chatRoomId]);
 
     useEffect(() => {
         scrollToBottom();
@@ -121,6 +125,7 @@ const ChatMain = ({
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
+            handleSendMessage();
         }
     };
 
@@ -203,6 +208,7 @@ const ChatMain = ({
 
     const handleSendMessage = async () => {
         if (!messageText.trim() && attachments.length === 0) return;
+        if (!selectedUser) return;
 
         try {
             const uploadedAttachments = await Promise.all(
@@ -221,44 +227,50 @@ const ChatMain = ({
                 return;
             }
 
-            console.log("Sending message...", {
-                chatRoomId: selectedUser?.id,
-                content: messageText,
-                type: "text",
-                attachmentIds: uploadedAttachments.map(att => att.id)
-            });
-
             socketRef.current.emit("sendMessage", {
-                chatRoomId: "7df8fd94-7bbd-4bac-878a-bf1d84e9ed32",
+                chatRoomId: chatRoomId,
                 content: messageText,
                 type: "text",
                 attachmentIds: uploadedAttachments.map(att => att.id)
-            }, (response: { success: boolean; message?: string }) => {
-                if (response.success) {
-                    console.log("Message sent successfully");
-                } else {
-                    console.error("Failed to send message:", response.message);
-                }
             });
 
-            // Mesajı locale ekle
             const newMessage: Message = {
                 id: `msg-${Date.now()}`,
                 senderId: currentUser.id,
-                receiverId: selectedUser!.id,
+                receiverId: selectedUser.id,
                 content: messageText,
                 timestamp: new Date(),
                 type: "text",
                 attachments: uploadedAttachments
             };
 
-            setMessages(prev => [...prev, newMessage]);
+            setMessages((prev: Message[]) => [...prev, newMessage]);
             setMessageText("");
             setAttachments([]);
 
         } catch (error) {
             console.error("Error sending message:", error);
         }
+    };
+
+    const handleTyping = () => {
+        if (!socketRef.current?.connected || !chatRoomId) return;
+
+        socketRef.current.emit("typing", {
+            chatRoomId,
+            isTyping: true
+        });
+
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            socketRef.current?.emit("typing", {
+                chatRoomId,
+                isTyping: false
+            });
+        }, 1000);
     };
 
     if (!selectedUser) {
@@ -329,6 +341,12 @@ const ChatMain = ({
                         }
                     />
                 ))}
+                {isTyping && (
+                    <div className="flex items-center gap-2 text-sub-600 text-sm">
+                        <span>{selectedUser?.name}</span>
+                        <span>is typing...</span>
+                    </div>
+                )}
                 <div ref={messagesEndRef} />
             </div>
 
@@ -417,13 +435,11 @@ const ChatMain = ({
                             <textarea
                                 ref={textareaRef}
                                 value={messageText}
-                                onChange={(e) => setMessageText(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter" && !e.shiftKey) {
-                                        e.preventDefault();
-                                        handleSendMessage();
-                                    }
+                                onChange={(e) => {
+                                    setMessageText(e.target.value);
+                                    handleTyping();
                                 }}
+                                onKeyDown={(e) => handleKeyDown(e)}
                                 placeholder={t("input.placeholder")}
                                 className="w-full px-3 pt-2.5 resize-none focus:outline-none text-xs sm:text-sm max-h-[120px] sm:max-h-[150px] overflow-y-auto custom-scroll min-h-[40px]"
                                 rows={1}

@@ -142,23 +142,37 @@ export const contractDetailsData = {
       size: "2.35mb",
       date: "3 days ago",
     },
+    {
+      name: "Design.pdf",
+      size: "1.2mb",
+      date: "2 days ago",
+    },
+    {
+      name: "Requirements.docx",
+      size: "0.8mb",
+      date: "1 day ago",
+    }
   ],
   people: [
     {
-      name: "Juyan Che",
-      role: "Owner (you)",
-      avatar: "/assets/images/Avatar-6.png",
+      userId: "1",
+      isOnline: true,
+      user: {
+        id: "1",
+        nickname: "Juyan Che",
+        avatar: "/assets/images/Avatar-6.png",
+        userType: "Owner"
+      }
     },
     {
-      name: "Tanvir Ahammed",
-      role: "Worker",
-      avatar: "/assets/images/avatar-3.png",
-    },
-    {
-        name: "Tanvir Ahammed",
-        role: "Worker",
+      userId: "2",
+      isOnline: false,
+      user: {
+        id: "2",
+        nickname: "Tanvir Ahammed",
         avatar: "/assets/images/avatar-3.png",
-        status: "offline"
-      },
-  ],
+        userType: "Worker"
+      }
+    }
+  ]
 }; 

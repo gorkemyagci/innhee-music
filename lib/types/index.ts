@@ -1,3 +1,5 @@
+import { Message, Offer, User } from "@/modules/chat/types";
+
 export type RecordType = Record<string, any>;
 
 export type ProjectItemType = {
@@ -106,4 +108,45 @@ export interface ChatRoom {
   }[];
   messages: any[];
   contracts: any[];
+}
+
+export interface ChatMainProps {
+  messages: Message[];
+  setMessages: (messages: Message[]) => void;
+  selectedUser: User | undefined;
+  currentUser: User;
+  onBack?: () => void;
+  onSendMessage?: (content: string, attachments?: File[]) => void;
+  onSendOffer?: (offer: Offer) => void;
+}
+
+export interface UploadingFile {
+  progress: number;
+  name: string;
+  size: number;
+  preview?: string;
+}
+
+
+export interface ContractDetailsProps {
+  contractId: string;
+  contractName: string;
+  startDate: string;
+  deadline: string;
+  amount: number;
+  files?: {
+      name: string;
+      size: string;
+      date: string;
+  }[];
+  people?: {
+      userId: string;
+      isOnline: boolean;
+      user: {
+          id: string;
+          nickname: string;
+          avatar?: string;
+          userType: string;
+      };
+  }[];
 }
