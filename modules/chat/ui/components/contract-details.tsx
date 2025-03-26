@@ -40,8 +40,6 @@ const ContractDetails = ({
     const [isFilesOpen, setIsFilesOpen] = useState(true);
     const [isPeopleOpen, setIsPeopleOpen] = useState(true);
 
-    console.log(selectedUser);
-
     return (
         <div className="w-full lg:w-[328px] p-4 lg:p-6 flex-col gap-4 lg:gap-6 border-t lg:border-l border-soft-200 h-full overflow-auto custom-scroll">
             <div className="flex flex-col items-center gap-3 lg:gap-4">

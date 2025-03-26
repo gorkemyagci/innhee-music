@@ -44,10 +44,7 @@ const FileWork = () => {
         return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
     };
 
-    const handleDownload = (file: FileData) => {
-        // Simüle edilmiş indirme - gerçek uygulamada API'den dosya URL'i alınacak
-        console.log(`Downloading file: ${file.name}`);
-    };
+    const handleDownload = (file: FileData) => {};
 
     return (
         <div className="border border-soft-200 rounded-2xl">

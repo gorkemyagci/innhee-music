@@ -72,11 +72,7 @@ const SendOrder = () => {
             termsAgreed: false
         }
     })
-    const onSubmit = (data: SendOrderFormValues) => {
-        console.log(data);
-    }
-    console.log(form.watch("receiver"));
-
+    const onSubmit = (data: SendOrderFormValues) => {}
     return <div className="w-full flex items-start gap-6">
         <div className="flex-1 w-full lg:max-w-[856px] flex flex-col items-start gap-8">
             <h3 className="text-strong-950 font-medium text-[40px] leading-[48px]">Send an offer</h3>

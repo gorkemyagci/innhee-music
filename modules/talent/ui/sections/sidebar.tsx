@@ -25,7 +25,6 @@ const Sidebar = ({ data }: { data: any }) => {
             router.push(`/chat?chatId=${roomId}`);
         },
         onError: (error) => {
-            console.log(error);
             toast.error(error.message);
         }
     });
