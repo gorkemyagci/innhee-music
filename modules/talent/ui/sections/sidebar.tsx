@@ -7,10 +7,33 @@ import About from "@/modules/dashboard/ui/sections/sidebar/about";
 import Skills from "@/modules/dashboard/ui/sections/sidebar/skills";
 import Awards from "./awards";
 import { useTranslations } from "next-intl";
-
+import { useEffect } from "react";
+import { useAuthStore } from "@/store/auth-store";
+import { trpc } from "@/trpc/client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 const Sidebar = ({ data }: { data: any }) => {
     const t = useTranslations("talent.sidebar");
-
+    const { user: currentAuthUser, initializeFromToken } = useAuthStore();
+    const router = useRouter();
+    useEffect(() => {
+        initializeFromToken();
+    }, [initializeFromToken]);
+    const create = trpc.chat.createRoom.useMutation({
+        onSuccess: (response) => {
+            const roomId = response.id;
+            router.push(`/chat?chatId=${roomId}`);
+        },
+        onError: (error) => {
+            console.log(error);
+            toast.error(error.message);
+        }
+    });
+    const createRoom = async () => {
+        await create.mutate({
+            userIds: [data?.id]
+        });
+    };
     return <div className="w-full md:w-[352px] shrink-0 min-h-[calc(100vh-120px)] shadow-sm bg-white border border-soft-200 rounded-[20px] pb-6">
         <div className="p-4 relative flex flex-col items-center gap-5">
             <div className="flex flex-col items-center gap-2">
@@ -38,18 +61,20 @@ const Sidebar = ({ data }: { data: any }) => {
                     </div>
                 </div>
             </div>
-            <div className="flex items-center gap-5">
-                <Button variant="outline" className="w-[69px] h-8 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
-                    {t("hire")} <Icons.chevron_short_right className="fill-sub-600 size-3" />
-                </Button>
-                <Button
-                    type="button"
-                    className="w-[83px] h-8 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
-                    <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                    {t("touch")} <Icons.send className="stroke-white" />
-                </Button>
-            </div>
-
+            {currentAuthUser?.id !== data?.id && (
+                <div className="flex items-center gap-5">
+                    <Button variant="outline" className="w-[69px] h-8 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
+                        {t("hire")} <Icons.chevron_short_right className="fill-sub-600 size-3" />
+                    </Button>
+                    <Button
+                        type="button"
+                        onClick={createRoom}
+                        className="w-[83px] h-8 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
+                        <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
+                        {t("touch")} <Icons.send className="stroke-white" />
+                    </Button>
+                </div>
+            )}
             <div className="flex items-center w-full justify-between">
                 <div className="flex items-center gap-1.5">
                     <Icons.profile_star />

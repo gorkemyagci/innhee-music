@@ -297,7 +297,7 @@ const ChatMain = ({
                         <div className="w-9 h-9 sm:w-11 sm:h-11 p-0.5 flex items-center justify-center rounded-full overflow-hidden">
                             <Image
                                 src={selectedUser.avatar}
-                                alt={selectedUser.name}
+                                alt={selectedUser.name || "Unknown"}
                                 className="w-9 h-9 sm:w-11 sm:h-11 object-contain"
                                 width={44}
                                 height={44}
@@ -308,7 +308,7 @@ const ChatMain = ({
                         )}
                     </div>
                     <div className="ml-2 sm:ml-3">
-                        <h3 className="font-medium text-sub-600 text-[11px] sm:text-xs">{selectedUser.name}</h3>
+                        <h3 className="font-medium text-sub-600 text-[11px] sm:text-xs">{selectedUser.name || "Unknown"}</h3>
                         <p className="text-[11px] sm:text-xs text-sub-600 font-normal">
                             {selectedUser.online ? t("status.online") : t("status.offline")}
                         </p>
@@ -492,7 +492,7 @@ const ChatMain = ({
 
             <Dialog open={isContractDetailsOpen} onOpenChange={setIsContractDetailsOpen}>
                 <DialogContent className="sm:max-w-[425px] p-0">
-                    <ContractDetails {...contractDetailsData} />
+                    <ContractDetails selectedUser={selectedUser} {...contractDetailsData} />
                 </DialogContent>
             </Dialog>
         </div>

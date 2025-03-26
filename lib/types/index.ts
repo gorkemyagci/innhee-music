@@ -134,6 +134,7 @@ export interface ContractDetailsProps {
   startDate: string;
   deadline: string;
   amount: number;
+  selectedUser: any;
   files?: {
       name: string;
       size: string;

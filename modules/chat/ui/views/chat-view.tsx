@@ -126,6 +126,7 @@ const ChatView = () => {
         )}
         {selectedChat && <ContractDetails
           people={selectedChat?.users || []}
+          selectedUser={selectedChat?.users.find((u: { userId: string }) => u.userId !== currentAuthUser?.id)?.user}
           {...selectedChat.contracts[0]} />}
       </div>
     </div>

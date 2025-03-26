@@ -10,6 +10,7 @@ import { ContractDetailsProps } from "@/lib/types";
 import { contentVariants } from "../animation";
 
 const ContractDetails = ({
+    selectedUser,
     contractId,
     contractName,
     startDate,
@@ -39,6 +40,8 @@ const ContractDetails = ({
     const [isFilesOpen, setIsFilesOpen] = useState(true);
     const [isPeopleOpen, setIsPeopleOpen] = useState(true);
 
+    console.log(selectedUser);
+
     return (
         <div className="w-full lg:w-[328px] p-4 lg:p-6 flex-col gap-4 lg:gap-6 border-t lg:border-l border-soft-200 h-full overflow-auto custom-scroll">
             <div className="flex flex-col items-center gap-3 lg:gap-4">
@@ -52,7 +55,7 @@ const ContractDetails = ({
                     />
                 </div>
                 <div className="flex flex-col gap-1 items-center">
-                    <h3 className="font-medium text-sub-600 text-sm lg:text-base">James Brown</h3>
+                    <h3 className="font-medium text-sub-600 text-sm lg:text-base">{selectedUser.nickname || "Unknown"}</h3>
                     <p className="text-xs font-normal text-sub-600">CEO</p>
                 </div>
             </div>
@@ -189,7 +192,7 @@ const ContractDetails = ({
                                                 <div className="w-9 h-9 lg:w-11 lg:h-11 p-0.5 rounded-full overflow-hidden">
                                                     <Image
                                                         src={person.user.avatar || "/assets/images/avatar-4.png"}
-                                                        alt={person.user.nickname}
+                                                        alt={person.user.nickname || "Unknown"}
                                                         className="w-9 h-9 lg:w-11 lg:h-11 object-contain"
                                                         width={44}
                                                         height={44}
@@ -197,7 +200,7 @@ const ContractDetails = ({
                                                 </div>
                                                 <div className="flex flex-col gap-1">
                                                     <p className="text-xs lg:text-sm text-sub-600 font-medium">
-                                                        {person.user.nickname}
+                                                        {person.user.nickname || "Unknown"}
                                                     </p>
                                                     <p className="text-[10px] lg:text-xs text-sub-600 font-medium">{person.user.userType}</p>
                                                 </div>

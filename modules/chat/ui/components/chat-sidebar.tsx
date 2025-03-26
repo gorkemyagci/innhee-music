@@ -48,7 +48,6 @@ const ChatSidebar = ({ selectedChat, onSelectChat }: ChatSidebarProps) => {
           chatRooms?.map((room: ChatRoom) => {
             const otherUser = getOtherUser(room);
             if (!otherUser) return null;
-
             return (
               <div
                 key={room.id}
@@ -62,7 +61,7 @@ const ChatSidebar = ({ selectedChat, onSelectChat }: ChatSidebarProps) => {
                   <div className="w-11 h-11 p-0.5 flex items-center justify-center rounded-full bg-gray-100">
                     <Image
                       src={otherUser.avatar || "/assets/images/avatar-4.png"}
-                      alt={otherUser.nickname}
+                      alt={otherUser.nickname || "Unknown"}
                       className="w-full h-full object-contain rounded-full"
                       width={44}
                       height={44}
@@ -73,7 +72,7 @@ const ChatSidebar = ({ selectedChat, onSelectChat }: ChatSidebarProps) => {
                   )}
                 </div>
                 <div className="flex flex-col gap-1">
-                  <h3 className="font-medium text-sub-600 text-xs">{otherUser.nickname}</h3>
+                  <h3 className="font-medium text-sub-600 text-xs">{otherUser.nickname || "Unknown"}</h3>
                   <p className="text-sub-600 text-xs font-normal truncate mt-1">
                     {getLastMessageTime(room)}
                   </p>
