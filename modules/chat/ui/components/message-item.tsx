@@ -382,7 +382,7 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
       {isOwn && (
         <div className="w-10 h-10 rounded-full p-1 overflow-hidden ml-2 flex-shrink-0 mt-1">
           <img
-            src={sender.avatar}
+            src={sender.avatar || "/assets/images/avatar-4.png"}
             alt={sender.name}
             className="w-full h-full object-cover"
           />

@@ -27,6 +27,7 @@ const SOCKET_URL = "wss://inhee-chat-production.up.railway.app/chat";
 interface ExtendedChatMainProps extends Omit<ChatMainProps, 'setMessages'> {
     setMessages: Dispatch<SetStateAction<Message[]>>;
     selectedUser: User;
+    isLoading?: boolean;
 }
 
 const ChatMain = ({
@@ -35,6 +36,7 @@ const ChatMain = ({
     selectedUser,
     currentUser,
     onBack,
+    isLoading = false,
 }: ExtendedChatMainProps) => {
     const t = useTranslations("chat.main");
     const [messageText, setMessageText] = useState("");
@@ -324,22 +326,33 @@ const ChatMain = ({
                 </div>
             </div>
             <div className="flex-1 overflow-y-auto custom-scroll p-2 sm:p-4 space-y-3 sm:space-y-4 bg-soft-50">
-                {messages.map((message) => (
-                    <MessageItem
-                        key={message.id}
-                        message={message}
-                        isOwn={message.senderId === currentUser.id}
-                        sender={
-                            message.senderId === currentUser.id
-                                ? currentUser
-                                : selectedUser
-                        }
-                    />
-                ))}
-                {isTyping && (
-                    <IsTyping selectedUserNickname={messages[messages.length - 1].senderId === currentUser.id ? selectedUser.nickname || "Unknown" : currentUser.nickname || "Unknown"} />
+                {isLoading ? (
+                    <div className="flex items-center justify-center h-full">
+                        <div className="flex flex-col items-center gap-2">
+                            <Icons.loader className="animate-spin w-8 h-8 text-sub-600" />
+                            <span className="text-sub-600 text-sm">Loading messages...</span>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        {messages.map((message) => (
+                            <MessageItem
+                                key={message.id}
+                                message={message}
+                                isOwn={message.senderId === currentUser.id}
+                                sender={
+                                    message.senderId === currentUser.id
+                                        ? currentUser
+                                        : selectedUser
+                                }
+                            />
+                        ))}
+                        {isTyping && (
+                            <IsTyping selectedUserNickname={messages[messages.length - 1].senderId === currentUser.id ? selectedUser.nickname || "Unknown" : currentUser.nickname || "Unknown"} />
+                        )}
+                        <div ref={messagesEndRef} />
+                    </>
                 )}
-                <div ref={messagesEndRef} />
             </div>
             <div className="p-2 sm:p-4">
                 <div className="border border-soft-200 rounded-xl sm:rounded-2xl p-3 sm:p-2 pt-2 bg-white">

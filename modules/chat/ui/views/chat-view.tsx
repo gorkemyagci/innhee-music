@@ -14,7 +14,7 @@ const ChatView = () => {
   const [chatId, setChatId] = useQueryState("chatId");
   const [messages, setMessages] = useState<Message[]>([]);
   const { data: chatRooms } = trpc.chat.chatRooms.useQuery();
-  const { data: messagesData } = trpc.chat.getRoomMessages.useQuery(
+  const { data: messagesData, isPending } = trpc.chat.getRoomMessages.useQuery(
     { roomId: chatId || "" },
     { enabled: !!chatId }
   );
@@ -107,6 +107,7 @@ const ChatView = () => {
             selectedUser={getOtherUser(selectedChat)}
             currentUser={getCurrentUser(selectedChat)}
             onBack={() => setChatId(null)}
+            isLoading={isPending}
           />
         )}
       </div>
@@ -122,6 +123,7 @@ const ChatView = () => {
             setMessages={setMessages}
             selectedUser={getOtherUser(selectedChat)}
             currentUser={getCurrentUser(selectedChat)}
+            isLoading={isPending}
           />
         )}
         {selectedChat && <ContractDetails
