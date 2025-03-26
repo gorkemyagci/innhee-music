@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Message, Offer } from "@/modules/chat/types";
-import { ChevronLeft, Paperclip } from "lucide-react";
+import { Message, Offer, User } from "@/modules/chat/types";
+import { ChevronLeft } from "lucide-react";
 import MessageItem from "@/modules/chat/ui/components/message-item";
 import OfferModal from "@/modules/chat/ui/sections/offer-modal";
 import Image from "next/image";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import ContractDetails from "@/modules/chat/ui/components/contract-details";
@@ -20,11 +19,14 @@ import { ChatMainProps, UploadingFile } from "@/lib/types";
 import { Dispatch, SetStateAction } from "react";
 import { useQueryState } from "nuqs";
 import { trpc } from "@/trpc/client";
+import IsTyping from "./is-typing";
+import AttachmentItem from "./attachment-item";
 
 const SOCKET_URL = "wss://inhee-chat-production.up.railway.app/chat";
 
 interface ExtendedChatMainProps extends Omit<ChatMainProps, 'setMessages'> {
     setMessages: Dispatch<SetStateAction<Message[]>>;
+    selectedUser: User;
 }
 
 const ChatMain = ({
@@ -65,41 +67,18 @@ const ChatMain = ({
                 reconnectionDelay: 1000
             });
 
-            socketRef.current.on("connect", () => {
-                console.log("Socket connected with ID:", socketRef.current?.id);
-            });
-
-            socketRef.current.on("connect_error", (error) => {
-                console.error("Socket connection error:", error);
-            });
-
-            socketRef.current.on("disconnect", (reason) => {
-                console.log("Socket disconnected:", reason);
-            });
-
-            socketRef.current.on("error", (error) => {
-                console.error("Socket error:", error);
-            });
-
-            socketRef.current.on("message_sent", (data) => {
-                console.log("Message sent confirmation:", data);
-            });
-
+            socketRef.current.on("connect", () => { });
+            socketRef.current.on("connect_error", (error) => { });
+            socketRef.current.on("disconnect", (reason) => { });
+            socketRef.current.on("error", (error) => { });
+            socketRef.current.on("message_sent", (data) => { });
             socketRef.current.on("message", (message: Message) => {
-                console.log("New message received:", message);
                 setMessages((prev: Message[]) => [...prev, message]);
             });
 
             socketRef.current.on("userTyping", (data) => {
-                console.log("Typing event received:", data);
                 if (data.userId !== currentUser?.id) {
-                    console.log("Setting typing state for other user:", {
-                        isTyping: data.isTyping,
-                        userId: data.userId
-                    });
                     setIsTyping(data.isTyping);
-                } else {
-                    console.log("Ignoring own typing event");
                 }
             });
         }
@@ -118,6 +97,12 @@ const ChatMain = ({
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+
+    useEffect(() => {
+        if (isTyping) {
+            scrollToBottom();
+        }
+    }, [isTyping]);
 
     useEffect(() => {
         if (textareaRef.current) {
@@ -231,7 +216,6 @@ const ChatMain = ({
             );
 
             if (!socketRef.current?.connected) {
-                console.error("Socket is not connected");
                 return;
             }
 
@@ -259,25 +243,13 @@ const ChatMain = ({
             utils.chat.getRoomMessages.invalidate();
             utils.chat.getRoomMessages.refetch();
 
-        } catch (error) {
-            console.error("Error sending message:", error);
-        }
+        } catch { }
     };
 
     const handleTyping = () => {
         if (!socketRef.current?.connected || !chatRoomId || !currentUser) {
-            console.log("Socket not connected or missing data:", {
-                connected: socketRef.current?.connected,
-                chatRoomId,
-                currentUser
-            });
             return;
         }
-
-        console.log("Emitting typing event:", {
-            chatRoomId,
-            isTyping: true
-        });
 
         socketRef.current.emit("typing", {
             chatRoomId,
@@ -285,12 +257,10 @@ const ChatMain = ({
         });
 
         if (typingTimeoutRef.current) {
-            console.log("Clearing previous typing timeout");
             clearTimeout(typingTimeoutRef.current);
         }
 
         typingTimeoutRef.current = setTimeout(() => {
-            console.log("Emitting typing stop event");
             socketRef.current?.emit("typing", {
                 chatRoomId,
                 isTyping: false
@@ -367,10 +337,7 @@ const ChatMain = ({
                     />
                 ))}
                 {isTyping && (
-                    <div className="flex items-center gap-2 text-sub-600 text-sm">
-                        <span>{selectedUser?.name}</span>
-                        <span>is typing...</span>
-                    </div>
+                    <IsTyping selectedUser={selectedUser} />
                 )}
                 <div ref={messagesEndRef} />
             </div>
@@ -408,47 +375,7 @@ const ChatMain = ({
                                         </motion.div>
                                     ))}
                                     {attachments.length > 0 && attachments?.map((file: File & { preview?: string }, index) => (
-                                        <motion.div
-                                            initial={{ scale: 0.8, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            exit={{ scale: 0.8, opacity: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                            key={index}
-                                            className="flex flex-col items-start gap-1 sm:gap-2 w-[100px] sm:w-[124px]"
-                                        >
-                                            <div className="relative group w-full">
-                                                <div className={cn(
-                                                    "rounded-[12px] overflow-hidden"
-                                                )}>
-                                                    <div className="absolute inset-0 bg-black/50 rounded-lg" />
-                                                    {file.preview ? (
-                                                        <img
-                                                            src={file.preview}
-                                                            alt={file.name}
-                                                            className="w-full h-[90px] sm:h-[104px] object-cover"
-                                                        />
-                                                    ) : (
-                                                        <div className="w-full h-[90px] sm:h-[104px] flex items-center justify-center">
-                                                            <Paperclip size={20} className="text-gray-400 sm:size-24" />
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <button
-                                                    onClick={() => removeAttachment(index)}
-                                                    className="text-white cursor-pointer absolute top-1 sm:top-2 right-1 sm:right-2"
-                                                >
-                                                    <Icons.close className="w-4 h-4 sm:w-5 sm:h-5" />
-                                                </button>
-                                            </div>
-                                            <div className="w-full px-1">
-                                                <p className="text-[11px] sm:text-xs font-medium text-main-900 truncate">
-                                                    {file.name}
-                                                </p>
-                                                <p className="text-[10px] sm:text-xs text-sub-600">
-                                                    {(file.size / 1024).toFixed(2)} KB
-                                                </p>
-                                            </div>
-                                        </motion.div>
+                                        <AttachmentItem key={index} file={file} index={index} removeAttachment={removeAttachment} />
                                     ))}
                                 </div>
                             </motion.div>
