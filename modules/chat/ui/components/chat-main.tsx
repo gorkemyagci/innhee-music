@@ -49,7 +49,7 @@ const ChatMain = ({
     const [isTyping, setIsTyping] = useState(false);
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const utils = trpc.useUtils();
-    
+
 
     useEffect(() => {
         if (!socketRef.current) {
@@ -245,7 +245,7 @@ const ChatMain = ({
                 content: messageText,
                 type: "text",
                 attachmentIds: uploadedAttachments.map(att => att.id)
-            });            
+            });
 
             const newMessage: Message = {
                 id: `msg-${Date.now()}`,
@@ -271,8 +271,8 @@ const ChatMain = ({
 
     const handleTyping = () => {
         if (!socketRef.current?.connected || !chatRoomId || !currentUser) {
-            console.log("Socket not connected or missing data:", { 
-                connected: socketRef.current?.connected, 
+            console.log("Socket not connected or missing data:", {
+                connected: socketRef.current?.connected,
                 chatRoomId,
                 currentUser
             });
@@ -289,8 +289,6 @@ const ChatMain = ({
         socketRef.current.emit("typing", {
             chatRoomId,
             isTyping: true,
-            senderId: currentUser.id,
-            senderName: currentUser.name
         });
 
         if (typingTimeoutRef.current) {
@@ -299,17 +297,9 @@ const ChatMain = ({
         }
 
         typingTimeoutRef.current = setTimeout(() => {
-            console.log("Emitting typing stop event:", {
-                chatRoomId,
-                isTyping: false,
-                senderId: currentUser.id,
-                senderName: currentUser.name
-            });
             socketRef.current?.emit("typing", {
-                chatRoomId,
+                chatRoomId: chatRoomId,
                 isTyping: false,
-                senderId: currentUser.id,
-                senderName: currentUser.name
             });
         }, 1000);
     };
