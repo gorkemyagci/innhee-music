@@ -19,6 +19,7 @@ import { io, Socket } from "socket.io-client";
 import { ChatMainProps, UploadingFile } from "@/lib/types";
 import { Dispatch, SetStateAction } from "react";
 import { useQueryState } from "nuqs";
+import { trpc } from "@/trpc/client";
 
 const SOCKET_URL = "wss://inhee-chat-production.up.railway.app/chat";
 
@@ -47,6 +48,7 @@ const ChatMain = ({
     const [chatRoomId, setChatRoomId] = useQueryState("chatId");
     const [isTyping, setIsTyping] = useState(false);
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const utils = trpc.useUtils();
     
 
     useEffect(() => {
@@ -91,7 +93,13 @@ const ChatMain = ({
             socketRef.current.on("typing", (data) => {
                 console.log("Typing event received:", data);
                 if (data.chatRoomId === chatRoomId) {
+                    console.log("Setting typing state:", data.isTyping);
                     setIsTyping(data.isTyping);
+                } else {
+                    console.log("Ignoring typing event for different chat room:", {
+                        receivedRoomId: data.chatRoomId,
+                        currentRoomId: chatRoomId
+                    });
                 }
             });
         }
@@ -232,7 +240,7 @@ const ChatMain = ({
                 content: messageText,
                 type: "text",
                 attachmentIds: uploadedAttachments.map(att => att.id)
-            });
+            });            
 
             const newMessage: Message = {
                 id: `msg-${Date.now()}`,
@@ -248,13 +256,27 @@ const ChatMain = ({
             setMessageText("");
             setAttachments([]);
 
+            utils.chat.getRoomMessages.invalidate();
+            utils.chat.getRoomMessages.refetch();
+
         } catch (error) {
             console.error("Error sending message:", error);
         }
     };
 
     const handleTyping = () => {
-        if (!socketRef.current?.connected || !chatRoomId) return;
+        if (!socketRef.current?.connected || !chatRoomId) {
+            console.log("Socket not connected or no chatRoomId:", { 
+                connected: socketRef.current?.connected, 
+                chatRoomId 
+            });
+            return;
+        }
+
+        console.log("Emitting typing event:", {
+            chatRoomId,
+            isTyping: true
+        });
 
         socketRef.current.emit("typing", {
             chatRoomId,
@@ -262,10 +284,15 @@ const ChatMain = ({
         });
 
         if (typingTimeoutRef.current) {
+            console.log("Clearing previous typing timeout");
             clearTimeout(typingTimeoutRef.current);
         }
 
         typingTimeoutRef.current = setTimeout(() => {
+            console.log("Emitting typing stop event:", {
+                chatRoomId,
+                isTyping: false
+            });
             socketRef.current?.emit("typing", {
                 chatRoomId,
                 isTyping: false
