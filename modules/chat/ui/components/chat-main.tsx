@@ -291,7 +291,7 @@ const ChatMain = ({
                     <div className="relative">
                         <div className="w-9 h-9 sm:w-11 sm:h-11 p-0.5 flex items-center justify-center rounded-full overflow-hidden">
                             <Image
-                                src={selectedUser.avatar}
+                                src={selectedUser.avatar || "/assets/images/avatar-4.png"}
                                 alt={selectedUser.name || "Unknown"}
                                 className="w-9 h-9 sm:w-11 sm:h-11 object-contain"
                                 width={44}
