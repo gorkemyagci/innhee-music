@@ -92,13 +92,18 @@ const ChatMain = ({
 
             socketRef.current.on("typing", (data) => {
                 console.log("Typing event received:", data);
-                if (data.chatRoomId === chatRoomId) {
-                    console.log("Setting typing state:", data.isTyping);
+                if (data.chatRoomId === chatRoomId && data.senderId !== currentUser?.id) {
+                    console.log("Setting typing state for other user:", {
+                        isTyping: data.isTyping,
+                        senderName: data.senderName
+                    });
                     setIsTyping(data.isTyping);
                 } else {
-                    console.log("Ignoring typing event for different chat room:", {
+                    console.log("Ignoring typing event:", {
                         receivedRoomId: data.chatRoomId,
-                        currentRoomId: chatRoomId
+                        currentRoomId: chatRoomId,
+                        senderId: data.senderId,
+                        currentUserId: currentUser?.id
                     });
                 }
             });
@@ -113,7 +118,7 @@ const ChatMain = ({
                 clearTimeout(typingTimeoutRef.current);
             }
         };
-    }, [cookies.token, chatRoomId]);
+    }, [cookies.token, chatRoomId, currentUser]);
 
     useEffect(() => {
         scrollToBottom();
@@ -265,22 +270,27 @@ const ChatMain = ({
     };
 
     const handleTyping = () => {
-        if (!socketRef.current?.connected || !chatRoomId) {
-            console.log("Socket not connected or no chatRoomId:", { 
+        if (!socketRef.current?.connected || !chatRoomId || !currentUser) {
+            console.log("Socket not connected or missing data:", { 
                 connected: socketRef.current?.connected, 
-                chatRoomId 
+                chatRoomId,
+                currentUser
             });
             return;
         }
 
         console.log("Emitting typing event:", {
             chatRoomId,
-            isTyping: true
+            isTyping: true,
+            senderId: currentUser.id,
+            senderName: currentUser.name
         });
 
         socketRef.current.emit("typing", {
             chatRoomId,
-            isTyping: true
+            isTyping: true,
+            senderId: currentUser.id,
+            senderName: currentUser.name
         });
 
         if (typingTimeoutRef.current) {
@@ -291,11 +301,15 @@ const ChatMain = ({
         typingTimeoutRef.current = setTimeout(() => {
             console.log("Emitting typing stop event:", {
                 chatRoomId,
-                isTyping: false
+                isTyping: false,
+                senderId: currentUser.id,
+                senderName: currentUser.name
             });
             socketRef.current?.emit("typing", {
                 chatRoomId,
-                isTyping: false
+                isTyping: false,
+                senderId: currentUser.id,
+                senderName: currentUser.name
             });
         }, 1000);
     };
