@@ -95,8 +95,9 @@ const Footer = async () => {
                 </div>
             </div>
             <Separator className="bg-soft-200" />
-            <div className="pb-8 md:pb-10 pt-3 md:pt-4 w-full flex items-center justify-center px-4 text-center">
+            <div className="pb-8 md:pb-10 pt-3 md:pt-4 w-full flex items-center gap-3 justify-center px-4 text-center">
                 <span className="text-soft-400 text-xs md:text-sm font-normal">{t("copyright")}</span>
+                <Link href="https://beian.miit.gov.cn/" className="text-soft-400 font-medium text-sm">鄂ICP备2025102709号-1</Link>
             </div>
         </footer>
     )

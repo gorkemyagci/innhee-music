@@ -153,9 +153,6 @@ const OfferModal = ({ isOpen, onClose, onSubmit, socket, chatRoomId, receiverId,
         <DialogHeader className="p-6 border-b border-soft-200">
           <div className="flex items-center justify-between w-full">
             <DialogTitle className="text-main-900 font-medium">{t("title")}</DialogTitle>
-            <button onClick={onClose} className="p-1 hover:bg-soft-100 rounded-full">
-              <X className="w-5 h-5 text-sub-600" />
-            </button>
           </div>
         </DialogHeader>
         <Form {...form}>

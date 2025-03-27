@@ -24,6 +24,9 @@ const ChatView = () => {
   );
   const { user: currentAuthUser, initializeFromToken } = useAuthStore();
   const selectedChat = chatRooms?.find((room: ChatRoom) => room.id === chatId);
+  const totalContractAmount = selectedChat?.contracts?.reduce((acc: number, contract: any) => {
+    return acc + Number(contract.amount);
+  }, 0);
 
   useEffect(() => {
     initializeFromToken();
@@ -37,7 +40,6 @@ const ChatView = () => {
 
   useEffect(() => {
     if (messagesData && selectedChat) {
-      // Format regular messages
       const formattedMessages = (Array.isArray(messagesData) ? messagesData : []).map((msg: {
         id: string;
         content: string;
@@ -56,7 +58,6 @@ const ChatView = () => {
         attachments: msg.attachments || []
       }));
 
-      // Format contract messages
       const contractMessages = (contractsData || []).map((contract: any) => ({
         id: `contract-${contract.id}`,
         content: "",
@@ -75,7 +76,6 @@ const ChatView = () => {
         }
       }));
 
-      // Combine and sort all messages by timestamp
       const allMessages = [...formattedMessages, ...contractMessages].sort(
         (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
       );
@@ -161,7 +161,7 @@ const ChatView = () => {
         {selectedChat && <ContractDetails
           people={selectedChat?.users || []}
           selectedUser={selectedChat?.users.find((u: { userId: string }) => u.userId !== currentAuthUser?.id)?.user}
-          {...selectedChat.contracts[0]} />}
+          contracts={contractsData || []} />}
       </div>
     </div>
   );

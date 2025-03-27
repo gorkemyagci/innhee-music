@@ -131,11 +131,13 @@ export interface UploadingFile {
 
 
 export interface ContractDetailsProps {
-  contractId: string;
-  contractName: string;
-  startDate: string;
-  deadline: string;
-  amount: number;
+  contracts: {
+    id: string;
+    name: string;
+    startDate: string;
+    deadline: string;
+    amount: number;
+  }[];
   selectedUser: any;
   files?: {
       name: string;

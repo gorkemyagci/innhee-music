@@ -375,7 +375,11 @@
       "input": {
         "placeholder": "Type a message...",
         "send": "Send",
-        "sending": "Sending..."
+        "sending": "Sending...",
+        "searchEmoji": "Search emoji...",
+        "fields": {
+          "totalAmount": "Total Amount"
+        }
       },
       "attachments": {
         "uploading": "Uploading",
@@ -396,7 +400,8 @@
       "regular": {
         "me": "Me",
         "files": "{count} files"
-      }
+      },
+      "loading": "Loading messages..."
     },
     "offerModal": {
       "title": "Create an Offer",
@@ -447,7 +452,8 @@
         "contractId": "Contract ID",
         "startDate": "Start Date",
         "deadline": "Deadline",
-        "amount": "Amount"
+        "amount": "Amount",
+        "totalAmount": "Total Amount"
       }
     }
   },
