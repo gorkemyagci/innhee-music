@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import ContractDetails from "@/modules/chat/ui/components/contract-details";
-import { contractDetailsData } from "@/lib/chatMockData";
 import { useTranslations } from "next-intl";
 import { parseCookies } from "nookies";
 import { io, Socket } from "socket.io-client";
@@ -21,6 +20,7 @@ import { trpc } from "@/trpc/client";
 import IsTyping from "./is-typing";
 import AttachmentItem from "./attachment-item";
 import { toast } from "sonner";
+import EmojiPicker from 'emoji-picker-react';
 
 const SOCKET_URL = "wss://inhee-chat-production.up.railway.app/chat";
 
@@ -38,6 +38,8 @@ const ChatMain = ({
     const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
     const [isContractDetailsOpen, setIsContractDetailsOpen] = useState(false);
     const [uploadingFiles, setUploadingFiles] = useState<Record<string, UploadingFile>>({});
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const emojiPickerRef = useRef<HTMLDivElement>(null);
     const socketRef = useRef<Socket | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -48,6 +50,11 @@ const ChatMain = ({
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const utils = trpc.useUtils();
     const [isSending, setIsSending] = useState(false);
+
+    const { data: contractsData } = trpc.chat.getRoomContracts.useQuery(
+        { roomId: chatRoomId || "" },
+        { enabled: !!chatRoomId }
+    );
 
     useEffect(() => {
         if (!socketRef.current) {
@@ -321,6 +328,24 @@ const ChatMain = ({
         }, 1000);
     };
 
+    const onEmojiClick = (emojiObject: any) => {
+        setMessageText((prev) => prev + emojiObject.emoji);
+        setShowEmojiPicker(false);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
+                setShowEmojiPicker(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     if (!selectedUser) {
         return (
             <div className="flex-1 flex items-center justify-center bg-soft-50">
@@ -365,7 +390,7 @@ const ChatMain = ({
                 <div className="flex items-center gap-2 flex-row-reverse">
                     <button
                         onClick={() => setIsOfferModalOpen(true)}
-                        className="p-1 sm:p-2"
+                        className="p-1 sm:p-2 cursor-pointer"
                     >
                         <Icons.hamburger_menu className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
@@ -381,7 +406,7 @@ const ChatMain = ({
                     <div className="flex items-center justify-center h-full">
                         <div className="flex flex-col items-center gap-2">
                             <Icons.loader className="animate-spin w-8 h-8 text-sub-600" />
-                            <span className="text-sub-600 text-sm">Loading messages...</span>
+                            <span className="text-sub-600 text-sm">{t("loading")}</span>
                         </div>
                     </div>
                 ) : (
@@ -447,7 +472,7 @@ const ChatMain = ({
                         </AnimatePresence>
 
                         <div className="flex items-end gap-2">
-                            <div className="flex-1 overflow-hidden rounded-xl">
+                            <div className="flex-1 rounded-xl relative">
                                 <textarea
                                     ref={textareaRef}
                                     value={messageText}
@@ -462,11 +487,25 @@ const ChatMain = ({
                                 />
                                 <div className="flex items-center justify-between px-2 py-1.5">
                                     <div className="flex items-center gap-2">
-                                        <button
-                                            className="text-sub-600 hover:text-main-900 cursor-pointer p-1"
-                                        >
-                                            <Icons.emotion_happy_line className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
-                                        </button>
+                                        <div className="relative" ref={emojiPickerRef}>
+                                            <button
+                                                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                                                className="text-sub-600 hover:text-main-900 cursor-pointer p-1"
+                                            >
+                                                <Icons.emotion_happy_line className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
+                                            </button>
+                                            {showEmojiPicker && (
+                                                <div className="absolute bottom-full left-0 mb-2 z-[9999]">
+                                                    <EmojiPicker
+                                                        searchPlaceholder={t("input.searchEmoji")}
+                                                        lazyLoadEmojis
+                                                        width={300}
+                                                        height={400}
+                                                        onEmojiClick={onEmojiClick}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
                                         <input
                                             type="file"
                                             ref={fileInputRef}
@@ -521,8 +560,17 @@ const ChatMain = ({
             />
 
             <Dialog open={isContractDetailsOpen} onOpenChange={setIsContractDetailsOpen}>
-                <DialogContent className="sm:max-w-[425px] p-0">
-                    <ContractDetails selectedUser={selectedUser} {...contractDetailsData} />
+                <DialogContent className="sm:max-w-[425px] max-h-[80%] overflow-y-auto custom-scroll p-0">
+                    <ContractDetails
+                        selectedUser={selectedUser}
+                        contracts={contractsData || []}
+                    />
+                    <div className="flex items-center justify-between p-4 border-t border-soft-200">
+                        <span className="text-xs font-medium text-sub-600">{t("input.fields.totalAmount")}</span>
+                        <span className="text-xs font-medium text-strong-950">
+                            ${(contractsData || []).reduce((total: number, contract: { amount: number }) => total + (contract.amount || 0), 0)}
+                        </span>
+                    </div>
                 </DialogContent>
             </Dialog>
         </div>

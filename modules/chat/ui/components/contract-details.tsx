@@ -12,11 +12,7 @@ import moment from "moment";
 
 const ContractDetails = ({
     selectedUser,
-    contractId,
-    contractName,
-    startDate,
-    deadline,
-    amount,
+    contracts = [],
     files = [
         {
             name: "Audio Script.mp3",
@@ -38,8 +34,21 @@ const ContractDetails = ({
 }: ContractDetailsProps) => {
     const t = useTranslations("chat.contractDetails");
     const [isContractOpen, setIsContractOpen] = useState(true);
+    const [openContracts, setOpenContracts] = useState<{ [key: string]: boolean }>(() => {
+        return contracts.reduce((acc, contract) => ({
+            ...acc,
+            [contract.id]: true
+        }), {});
+    });
     const [isFilesOpen, setIsFilesOpen] = useState(true);
     const [isPeopleOpen, setIsPeopleOpen] = useState(true);
+
+    const toggleContract = (contractId: string) => {
+        setOpenContracts(prev => ({
+            ...prev,
+            [contractId]: !prev[contractId]
+        }));
+    };
 
     return (
         <div className="w-auto lg:w-[328px] shrink-0 p-4 lg:p-6 flex-col gap-4 lg:gap-6 border-t lg:border-l border-soft-200 h-full overflow-auto custom-scroll">
@@ -60,69 +69,148 @@ const ContractDetails = ({
             </div>
 
             <div className="flex flex-col gap-2 w-full mt-3">
-                <div className="flex flex-col w-full gap-2">
-                    <div
-                        className="flex items-center h-8 lg:h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-3 lg:px-4 py-1.5 text-left"
-                        onClick={() => setIsContractOpen(!isContractOpen)}
-                    >
-                        <h3 className="font-medium text-[#525866] text-sm lg:text-base">{t("sections.contract")}</h3>
-                        <motion.div
-                            animate={{ rotate: isContractOpen ? 180 : 0 }}
-                            transition={{ duration: 0.3 }}
+                {contracts.length > 0 && (
+                    <div className="flex flex-col w-full gap-2">
+                        <div
+                            className="flex items-center h-8 lg:h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-3 lg:px-4 py-1.5 text-left"
+                            onClick={() => setIsContractOpen(!isContractOpen)}
                         >
-                            <ChevronDown size={16} className="text-sub-600" />
-                        </motion.div>
-                    </div>
-                    <AnimatePresence>
-                        {isContractOpen && (
+                            <h3 className="font-medium text-[#525866] text-sm lg:text-base">{t("sections.contract")}</h3>
                             <motion.div
-                                initial="hidden"
-                                animate="visible"
-                                exit="hidden"
-                                variants={contentVariants}
-                                className="overflow-hidden"
+                                animate={{ rotate: isContractOpen ? 180 : 0 }}
+                                transition={{ duration: 0.3 }}
                             >
-                                <div className="p-3 lg:p-[14px] space-y-2">
-                                    <div className="flex justify-between">
-                                        <span className="text-xs font-medium text-sub-600">{t("fields.contract")}</span>
-                                        <span className="text-xs text-sub-600 font-medium truncate max-w-[150px]">
-                                            {contractName}
-                                        </span>
-                                    </div>
-                                    <Separator className="bg-soft-200" />
-                                    <div className="flex justify-between">
-                                        <span className="text-xs font-medium text-sub-600">{t("fields.contractId")}</span>
-                                        <span className="text-xs text-sub-600 font-medium">
-                                            #{contractId}
-                                        </span>
-                                    </div>
-                                    <Separator className="bg-soft-200" />
-                                    <div className="flex justify-between">
-                                        <span className="text-xs font-medium text-sub-600">{t("fields.startDate")}</span>
-                                        <span className="text-xs text-sub-600 font-medium">
-                                            {moment(startDate).format("D MMMM, YYYY")}
-                                        </span>
-                                    </div>
-                                    <Separator className="bg-soft-200" />
-                                    <div className="flex justify-between">
-                                        <span className="text-xs font-medium text-sub-600">{t("fields.deadline")}</span>
-                                        <span className="text-xs text-sub-600 font-medium">
-                                            {moment(deadline).format("D MMMM, YYYY")}
-                                        </span>
-                                    </div>
-                                    <Separator className="bg-soft-200" />
-                                    <div className="flex justify-between">
-                                        <span className="text-xs font-medium text-sub-600">{t("fields.amount")}</span>
-                                        <span className="text-sm lg:text-base font-medium">
-                                            ${typeof amount === 'number' ? amount.toFixed(2) : '0.00'}
-                                        </span>
-                                    </div>
-                                </div>
+                                <ChevronDown size={16} className="text-sub-600" />
                             </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-
+                        </div>
+                        <AnimatePresence>
+                            {isContractOpen && (
+                                <motion.div
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="hidden"
+                                    variants={contentVariants}
+                                    className="overflow-hidden"
+                                >
+                                    <div className="p-3 lg:p-[14px] space-y-4">
+                                        {contracts.map((contract, index) => (
+                                            <div key={contract.id} className="space-y-2">
+                                                {contracts.length > 1 ? (
+                                                    <>
+                                                        <div
+                                                            className="flex items-center justify-between cursor-pointer py-1 rounded-lg"
+                                                            onClick={() => toggleContract(contract.id)}
+                                                        >
+                                                            <span className="text-xs font-medium text-sub-600">Contract {index + 1}</span>
+                                                            <motion.div
+                                                                animate={{ rotate: openContracts[contract.id] ? 180 : 0 }}
+                                                                transition={{ duration: 0.3 }}
+                                                            >
+                                                                <ChevronDown size={16} className="text-sub-600" />
+                                                            </motion.div>
+                                                        </div>
+                                                        <AnimatePresence>
+                                                            {openContracts[contract.id] && (
+                                                                <motion.div
+                                                                    initial="hidden"
+                                                                    animate="visible"
+                                                                    exit="hidden"
+                                                                    variants={contentVariants}
+                                                                    className="overflow-hidden"
+                                                                >
+                                                                    <div className="space-y-2">
+                                                                        <div className="flex justify-between">
+                                                                            <span className="text-xs font-medium text-sub-600">{t("fields.contract")}</span>
+                                                                            <span className="text-xs text-sub-600 font-medium truncate max-w-[150px]">
+                                                                                {contract.name || `Contract ${index + 1}`}
+                                                                            </span>
+                                                                        </div>
+                                                                        <Separator className="bg-soft-200" />
+                                                                        <div className="flex justify-between">
+                                                                            <span className="text-xs font-medium text-sub-600">{t("fields.contractId")}</span>
+                                                                            <span className="text-xs text-sub-600 font-medium line-clamp-1 truncate max-w-[150px]">
+                                                                                #{contract.id}
+                                                                            </span>
+                                                                        </div>
+                                                                        <Separator className="bg-soft-200" />
+                                                                        <div className="flex justify-between">
+                                                                            <span className="text-xs font-medium text-sub-600">{t("fields.startDate")}</span>
+                                                                            <span className="text-xs text-sub-600 font-medium">
+                                                                                {moment(contract.startDate).format("D MMMM, YYYY")}
+                                                                            </span>
+                                                                        </div>
+                                                                        <Separator className="bg-soft-200" />
+                                                                        <div className="flex justify-between">
+                                                                            <span className="text-xs font-medium text-sub-600">{t("fields.deadline")}</span>
+                                                                            <span className="text-xs text-sub-600 font-medium">
+                                                                                {moment(contract.deadline).format("D MMMM, YYYY")}
+                                                                            </span>
+                                                                        </div>
+                                                                        <Separator className="bg-soft-200" />
+                                                                        <div className="flex justify-between">
+                                                                            <span className="text-xs font-medium text-sub-600">{t("fields.amount")}</span>
+                                                                            <span className="text-sm lg:text-base font-medium">
+                                                                                ${Number(contract.amount).toFixed(2)}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </motion.div>
+                                                            )}
+                                                        </AnimatePresence>
+                                                    </>
+                                                ) : (
+                                                    <div className="space-y-2">
+                                                        <div className="flex justify-between">
+                                                            <span className="text-xs font-medium text-sub-600">{t("fields.contract")}</span>
+                                                            <span className="text-xs text-sub-600 font-medium truncate max-w-[150px]">
+                                                                {contract.name || `Contract 1`}
+                                                            </span>
+                                                        </div>
+                                                        <Separator className="bg-soft-200" />
+                                                        <div className="flex justify-between">
+                                                            <span className="text-xs font-medium text-sub-600">{t("fields.contractId")}</span>
+                                                            <span className="text-xs text-sub-600 font-medium line-clamp-1 truncate max-w-[150px]">
+                                                                #{contract.id}
+                                                            </span>
+                                                        </div>
+                                                        <Separator className="bg-soft-200" />
+                                                        <div className="flex justify-between">
+                                                            <span className="text-xs font-medium text-sub-600">{t("fields.startDate")}</span>
+                                                            <span className="text-xs text-sub-600 font-medium">
+                                                                {moment(contract.startDate).format("D MMMM, YYYY")}
+                                                            </span>
+                                                        </div>
+                                                        <Separator className="bg-soft-200" />
+                                                        <div className="flex justify-between">
+                                                            <span className="text-xs font-medium text-sub-600">{t("fields.deadline")}</span>
+                                                            <span className="text-xs text-sub-600 font-medium">
+                                                                {moment(contract.deadline).format("D MMMM, YYYY")}
+                                                            </span>
+                                                        </div>
+                                                        <Separator className="bg-soft-200" />
+                                                        <div className="flex justify-between">
+                                                            <span className="text-xs font-medium text-sub-600">{t("fields.amount")}</span>
+                                                            <span className="text-sm lg:text-base font-medium">
+                                                                ${Number(contract.amount).toFixed(2)}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                        <Separator className="bg-soft-200 my-2" />
+                                        <div className="flex justify-between">
+                                            <span className="text-xs font-medium text-sub-600">Total Amount</span>
+                                            <span className="text-sm lg:text-base font-medium">
+                                                ${contracts.reduce((acc, contract) => acc + Number(contract.amount), 0).toFixed(2)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                )}
                 <div className="border-b pb-2 border-soft-200">
                     <div className="flex items-center h-8 lg:h-9 cursor-pointer bg-weak-50 rounded-lg justify-between w-full px-3 lg:px-4 py-1.5 text-left"
                         onClick={() => setIsFilesOpen(!isFilesOpen)}

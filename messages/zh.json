@@ -374,7 +374,11 @@
       "input": {
         "placeholder": "输入消息...",
         "send": "发送",
-        "sending": "发送中..."
+        "sending": "发送中...",
+        "searchEmoji": "搜索表情...",
+        "fields": {
+          "totalAmount": "总金额"
+        }
       },
       "attachments": {
         "uploading": "上传中",
@@ -395,7 +399,8 @@
       "regular": {
         "me": "我",
         "files": "{count} 个文件"
-      }
+      },
+      "loading": "正在加载消息..."
     },
     "offerModal": {
       "title": "创建报价",
@@ -446,7 +451,8 @@
         "contractId": "合同编号",
         "startDate": "开始日期",
         "deadline": "截止日期",
-        "amount": "金额"
+        "amount": "金额",
+        "totalAmount": "总金额"
       }
     }
   },
@@ -637,7 +643,15 @@
     "currentOrders": "当前未完成订单数 {count}。",
     "weekDays": {
       "short": ["日", "一", "二", "三", "四", "五", "六"],
-      "long": ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
+      "long": [
+        "星期日",
+        "星期一",
+        "星期二",
+        "星期三",
+        "星期四",
+        "星期五",
+        "星期六"
+      ]
     },
     "timeline": {
       "tabs": {

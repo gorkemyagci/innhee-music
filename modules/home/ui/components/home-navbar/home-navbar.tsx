@@ -31,7 +31,7 @@ const HomeNavbarModule = ({ isAuthenticated }: { isAuthenticated: boolean }) => 
 
     const navItems = [
         { label: t("header.navigation.findWorker"), href: pageUrls.DASHBOARD },
-        { label: t("header.navigation.findServices"), href: pageUrls.BEATS_MARKET },
+        { label: t("header.navigation.findServices"), href: pageUrls.FIND_SERVICES },
         { label: t("header.navigation.findProjects"), href: pageUrls.FIND_JOBS },
         { label: t("header.navigation.bonus"), href: pageUrls.REFERRAL }
     ];

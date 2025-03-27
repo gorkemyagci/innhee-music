@@ -13,5 +13,6 @@ export const pageUrls = {
     ORDERS: "/settings/orders",
     CHAT: "/chat",
     BEATS_MARKET: "/beats-market",
-    REFERRAL: "/referral"
+    REFERRAL: "/referral",
+    FIND_SERVICES: "/find-jobs?tab=projects"
 }

@@ -49,6 +49,7 @@
     "currency-formatter": "^1.5.9",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.5.2",
+    "emoji-picker-react": "^4.12.2",
     "framer-motion": "^12.4.7",
     "input-otp": "^1.4.2",
     "jwt-decode": "^4.0.0",

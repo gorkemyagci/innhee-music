@@ -308,7 +308,6 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
     );
   }
 
-  // Render regular text messages
   return (
     <div
       className={cn(
