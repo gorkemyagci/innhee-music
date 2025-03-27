@@ -101,7 +101,7 @@ const EditTags = ({ children, initialTags = [], onSave }: EditTagsProps) => {
                         <div className="w-10 h-10 rounded-full border border-soft-200 flex items-center justify-center bg-white">
                             <Icons.settings />
                         </div>
-                        <div className="flex flex-col gap-1">
+                        <div className="flex flex-col items-start gap-1">
                             <DialogTitle><span className="text-main-900 font-medium text-sm">{t("title")}</span></DialogTitle>
                             <span className="text-sub-600 font-normal text-xs">{t("subtitle")}</span>
                         </div>

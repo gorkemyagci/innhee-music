@@ -33,7 +33,7 @@ const ChatView = () => {
   }, [initializeFromToken]);
 
   useEffect(() => {
-    if (!chatId && chatRooms && chatRooms.length > 0) {
+    if (!chatId && chatRooms && chatRooms.length > 0 && window.innerWidth >= 768) {
       setChatId(chatRooms[0].id);
     }
   }, [chatId, chatRooms, setChatId]);

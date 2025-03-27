@@ -21,6 +21,7 @@ import IsTyping from "./is-typing";
 import AttachmentItem from "./attachment-item";
 import { toast } from "sonner";
 import EmojiPicker from 'emoji-picker-react';
+import { useRouter } from "next/navigation";
 
 const SOCKET_URL = "wss://inhee-chat-production.up.railway.app/chat";
 
@@ -33,6 +34,7 @@ const ChatMain = ({
     isLoading = false,
 }: ExtendedChatMainProps) => {
     const t = useTranslations("chat.main");
+    const router = useRouter();
     const [messageText, setMessageText] = useState("");
     const [attachments, setAttachments] = useState<File[]>([]);
     const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
@@ -346,6 +348,10 @@ const ChatMain = ({
         };
     }, []);
 
+    const handleBack = () => {
+        setChatRoomId(null);
+    };
+
     if (!selectedUser) {
         return (
             <div className="flex-1 flex items-center justify-center bg-soft-50">
@@ -360,7 +366,7 @@ const ChatMain = ({
                 <div className="flex items-center">
                     {onBack && (
                         <button
-                            onClick={onBack}
+                            onClick={handleBack}
                             className="mr-2 p-1 rounded-full md:hidden"
                         >
                             <ChevronLeft className="w-5 h-5 text-sub-600" />

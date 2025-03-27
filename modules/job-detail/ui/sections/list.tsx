@@ -4,8 +4,12 @@ import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/user-avatar";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { pageUrls } from "@/lib/constants/page-urls";
+import { ProjectItemType } from "@/lib/types";
 
-const List = () => {
+const List = ({ data, isOwner }: { data: any, isOwner: boolean }) => {
     const t = useTranslations("jobDetail.list");
     const [playingIndex, setPlayingIndex] = useState<number | null>(null);
 
@@ -39,11 +43,23 @@ const List = () => {
                         </div>
                     </div>
                 </div>
-                <div
-                    className="cursor-pointer"
-                    onClick={() => handlePlayClick(i)}
-                >
-                    {playingIndex === i ? <Icons.pause_fill className="size-5 md:size-6" /> : <Icons.play_mini_fill className="size-5 md:size-6" />}
+                <div className="flex items-center gap-2">
+                    <div
+                        className="cursor-pointer"
+                        onClick={() => handlePlayClick(i)}
+                    >
+                        {playingIndex === i ? <Icons.pause_fill className="size-5 md:size-6" /> : <Icons.play_mini_fill className="size-5 md:size-6" />}
+                    </div>
+                    {isOwner && (
+                        <>
+                            <Icons.send_message />
+                            <Link href={`${pageUrls.SEND_OFFER}?jobId=${data.id}`}>
+                                <Button variant="outline"
+                                    className="bg-white border border-soft-200 rounded-lg shadow-[0_1px_2px_0_rgba(27,28,29,0.05)] hover:border-weak-50 hover:bg-weak-50 transition-all duration-150 text-strong-950 h-7 w-14 font-medium text-sm"
+                                >Invite</Button>
+                            </Link>
+                        </>
+                    )}
                 </div>
             </div>
         ))}

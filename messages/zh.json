@@ -846,5 +846,10 @@
         "eurovisionAwards": "欧洲歌唱大赛"
       }
     }
+  },
+  "notFound": {
+    "title": "页面未找到",
+    "message": "您访问的页面不存在或已被移动。",
+    "backToHome": "返回仪表板"
   }
 }

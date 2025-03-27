@@ -38,7 +38,7 @@ const TalentPage = ({ workerId, userId }: TalentPageProps) => {
     }
 
     return <>
-        <SidebarLayout data={data} />
+        <SidebarLayout data={data} isOwner={data?.id === userId} />
         <div className="w-full mt-0">
             <div className="flex flex-col w-full items-start gap-4 md:gap-6">
                 <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
