@@ -27,7 +27,7 @@ const InstallWechatModal = ({ isOpen, onClose, children }: InstallWechatModalPro
                 <div className="flex flex-col items-center space-y-4 py-4">
                     <div className="relative w-48 h-48">
                         <Image
-                            src="/wechat-qr.png"
+                            src="/assets/images/wechat-qr.png"
                             alt="WeChat QR Code"
                             fill
                             className="object-contain"
