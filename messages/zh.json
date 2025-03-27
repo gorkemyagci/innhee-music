@@ -966,6 +966,10 @@
         "cancel": "取消",
         "continue": "继续"
       }
+    },
+    "toast": {
+      "createSuccess": "合同创建成功！",
+      "createError": "创建合同失败，请重试。"
     }
   },
   "orders": {

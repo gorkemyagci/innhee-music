@@ -61,7 +61,6 @@ const OfferModal = ({ isOpen, onClose, onSubmit, socket, chatRoomId, receiverId,
   
   useEffect(() => {
     socketRef.current = socket;
-
     if (socketRef.current) {
       socketRef.current.on("connect", () => {});
       socketRef.current.on("connect_error", (error) => {});

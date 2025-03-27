@@ -1017,6 +1017,10 @@
         "cancel": "Cancel",
         "continue": "Continue"
       }
+    },
+    "toast": {
+      "createSuccess": "Contract created successfully!",
+      "createError": "Failed to create contract. Please try again."
     }
   },
   "Sidebar": {

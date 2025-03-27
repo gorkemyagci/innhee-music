@@ -66,7 +66,7 @@ const Sidebar = ({ data, isOwner }: { data: any, isOwner: boolean }) => {
             </div>
             {!isOwner && (
                 <div className="flex items-center gap-5">
-                    <Link href={`${pageUrls.SEND_OFFER}`} prefetch>
+                    <Link href={`${pageUrls.SEND_OFFER}?receiverId=${data?.id}`} prefetch>
                         <Button variant="outline" className="w-[69px] h-8 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
                             {t("hire")} <Icons.chevron_short_right className="fill-sub-600 size-3" />
                         </Button>

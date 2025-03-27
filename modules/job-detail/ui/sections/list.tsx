@@ -60,6 +60,8 @@ const List = ({ data, isOwner }: ListProps) => {
         }, 3000);
     };
 
+    console.log(data);
+
     return (
         <div className="bg-white w-full rounded-[20px] p-3 md:p-4 flex flex-col items-start gap-3 md:gap-4 shadow-sm">
             <p className="text-strong-950 font-medium text-sm md:text-base">{t("title")}</p>
@@ -99,7 +101,7 @@ const List = ({ data, isOwner }: ListProps) => {
                             {isOwner && (
                                 <>
                                     <Icons.send_message />
-                                    <Link href={`${pageUrls.SEND_OFFER}?jobId=${data.id}`}>
+                                    <Link href={`${pageUrls.SEND_OFFER}?receiverId=${application?.workerId}`}>
                                         <Button
                                             variant="outline"
                                             className="bg-white border border-soft-200 rounded-lg shadow-[0_1px_2px_0_rgba(27,28,29,0.05)] hover:border-weak-50 hover:bg-weak-50 transition-all duration-150 text-strong-950 h-7 w-14 font-medium text-sm"

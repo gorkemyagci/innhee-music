@@ -63,25 +63,43 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                 [field]: value
             };
             form.setValue("milestones", updatedMilestones);
+            
+            // Calculate total amount from all milestones
+            const totalAmount = updatedMilestones.reduce((sum: number, milestone: { amount: number }) => sum + (milestone.amount || 0), 0);
+            form.setValue("amount", totalAmount);
         }
     };
 
-    const addMilestone = () => {
+    const handleAddMilestone = () => {
         const currentMilestones = form.getValues("milestones") || [];
-        form.setValue("milestones", [...currentMilestones, {
+        const newMilestone = {
             title: "",
             amount: 0,
-            deadline: "",
+            deadline: new Date(),
             currency: "CNY"
-        }]);
+        };
+        const updatedMilestones = [...currentMilestones, newMilestone];
+        form.setValue("milestones", updatedMilestones);
+        form.setValue("deadline", newMilestone.deadline);
+        const totalAmount = updatedMilestones.reduce((sum: number, milestone: { amount: number }) => sum + (milestone.amount || 0), 0);
+        form.setValue("amount", totalAmount);
     };
 
-    const removeMilestone = (index: number) => {
+    const handleRemoveMilestone = (index: number) => {
         const currentMilestones = form.getValues("milestones") || [];
-        if (currentMilestones.length <= 1) return;
+        const newMilestones = currentMilestones.filter((_: any, i: number) => i !== index);
+        form.setValue("milestones", newMilestones);
         
-        const updatedMilestones = currentMilestones.filter((_: any, i: number) => i !== index);
-        form.setValue("milestones", updatedMilestones);
+        if (newMilestones.length > 0) {
+            const lastMilestone = newMilestones[newMilestones.length - 1];
+            form.setValue("deadline", lastMilestone.deadline);
+            
+            const totalAmount = newMilestones.reduce((sum: number, milestone: { amount: number }) => sum + (milestone.amount || 0), 0);
+            form.setValue("amount", totalAmount);
+        } else {
+            form.setValue("deadline", undefined);
+            form.setValue("amount", 0);
+        }
     };
 
     return <div className="w-full flex flex-col gap-5 items-start">
@@ -196,7 +214,7 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                         {index > 0 && (
                             <Icons.delete_bin_line 
                                 className="size-5 cursor-pointer shrink-0" 
-                                onClick={() => removeMilestone(index)} 
+                                onClick={() => handleRemoveMilestone(index)} 
                             />
                         )}
                     </div>
@@ -272,7 +290,7 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
         </div>
         {form.watch("paymentType") === "installment" && (
             <div
-                onClick={addMilestone}
+                onClick={handleAddMilestone}
                 className="flex cursor-pointer items-center gap-1 border border-soft-200 py-1 px-2 rounded-lg"
             >
                 <span className="text-sub-600 font-medium text-sm">{t("milestone.add")}</span>

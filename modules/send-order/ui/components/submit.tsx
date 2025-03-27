@@ -35,7 +35,12 @@ const Submit = ({ form }: SubmitProps) => {
             <Button variant="outline" className="h-10 w-full sm:flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
                 {t("buttons.cancel")}
             </Button>
-            <SubmitButton text={t("buttons.continue")} buttonType="submit" className="w-full sm:flex-1" />
+            <SubmitButton 
+                text={t("buttons.continue")} 
+                buttonType="submit" 
+                className="w-full sm:flex-1"
+                loading={form.formState.isSubmitting}
+            />
         </div>
     </div>
 }

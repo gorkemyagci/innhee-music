@@ -18,7 +18,6 @@ const JobDetail = ({ id }: { id: string }) => {
     }, []);
     const { data, isLoading } = trpc.jobPosting.getJobPostById.useQuery({ id, userId: user?.id });    
     const isOwner = data?.employerId === user?.id;
-    console.log(data);
     if (isLoading) {
         return (
             <div className="w-full flex flex-col items-start gap-[14px]">

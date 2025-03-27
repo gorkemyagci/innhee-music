@@ -15,19 +15,20 @@ import { SkillLevel } from "@/lib/types";
 import { useTranslations } from "next-intl";
 
 interface JobDetailsProps {
+    receiver: any;
     form: UseFormReturn<any>;
 }
 
-const mockUsers = [
-    { id: 1, name: "Cleve Music", imageUrl: "/assets/images/avatar-4-1.png" },
-    { id: 2, name: "John Smith", imageUrl: "/assets/images/avatar-4-1.png" },
-    { id: 3, name: "Emma Wilson", imageUrl: "/assets/images/avatar-4-1.png" },
-    { id: 4, name: "Michael Brown", imageUrl: "/assets/images/avatar-4-1.png" },
-    { id: 5, name: "Sarah Davis", imageUrl: "/assets/images/avatar-4-1.png" },
-];
 
-const JobDetails = ({ form }: JobDetailsProps) => {
-    const t = useTranslations("sendOrder.jobDetails");
+const JobDetails = ({ receiver, form }: JobDetailsProps) => {
+    const t = useTranslations("sendOrder.jobDetails");    
+    const mockUsers = [
+        { id: receiver?.user?.id || 1, name: receiver?.user?.nickname || "Unknown", imageUrl: "/assets/images/avatar-4-1.png" },
+        { id: 2, name: "John Smith", imageUrl: "/assets/images/avatar-4-1.png" },
+        { id: 3, name: "Emma Wilson", imageUrl: "/assets/images/avatar-4-1.png" },
+        { id: 4, name: "Michael Brown", imageUrl: "/assets/images/avatar-4-1.png" },
+        { id: 5, name: "Sarah Davis", imageUrl: "/assets/images/avatar-4-1.png" },
+    ];
     const { data: skillsData } = trpc.jobPosting.getAllSkillLevels.useQuery();
     const [skillLevels, setSkillLevels] = useState<SkillLevel[]>([]);
     const { control, setValue, watch } = form;
@@ -60,7 +61,7 @@ const JobDetails = ({ form }: JobDetailsProps) => {
         }
     }, [skillsData]);
     const maxChars = 1000;
-    const filteredUsers = mockUsers.filter(user => user.name.toLowerCase().includes(sendValue.toLowerCase()));
+    const filteredUsers = mockUsers.filter(user => user?.name?.toLowerCase().includes(sendValue.toLowerCase()));
     return <div className="w-full flex flex-col items-start gap-5">
         <span className="text-strong-950 text-[24px] lg:text-[32px] font-medium">{t("title")}</span>
         <div className="flex w-full flex-col gap-5">
