@@ -28,6 +28,7 @@ export interface Offer {
   currency: string;
   deliveryDays: number;
   status?: "PENDING" | "ACCEPTED" | "REJECTED" | "COMPLETED";
+  skillLevels?: any[];
 }
 
 export interface Milestone {

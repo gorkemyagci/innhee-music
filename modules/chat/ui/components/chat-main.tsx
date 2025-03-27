@@ -14,7 +14,7 @@ import ContractDetails from "@/modules/chat/ui/components/contract-details";
 import { useTranslations } from "next-intl";
 import { parseCookies } from "nookies";
 import { io, Socket } from "socket.io-client";
-import { ExtendedChatMainProps, UploadingFile, UploadedAttachment } from "@/lib/types";
+import { ExtendedChatMainProps, UploadingFile, UploadedAttachment, ChatRoom } from "@/lib/types";
 import { useQueryState } from "nuqs";
 import { trpc } from "@/trpc/client";
 import IsTyping from "./is-typing";
@@ -352,6 +352,9 @@ const ChatMain = ({
         setChatRoomId(null);
     };
 
+    const { data: chatRooms } = trpc.chat.chatRooms.useQuery();
+    const selectedChat = chatRooms?.find((room: ChatRoom) => room.id === chatRoomId);
+
     if (!selectedUser) {
         return (
             <div className="flex-1 flex items-center justify-center bg-soft-50">
@@ -570,6 +573,7 @@ const ChatMain = ({
                     <ContractDetails
                         selectedUser={selectedUser}
                         contracts={contractsData || []}
+                        people={selectedChat?.users || []}
                     />
                     <div className="flex items-center justify-between p-4 border-t border-soft-200">
                         <span className="text-xs font-medium text-sub-600">{t("input.fields.totalAmount")}</span>

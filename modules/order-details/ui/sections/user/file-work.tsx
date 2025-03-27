@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface FileData {
     id: string;
@@ -35,6 +36,7 @@ const staticFiles: FileData[] = [
 
 const FileWork = () => {
     const [isOpen, setIsOpen] = useState(true);
+    const t = useTranslations("orderDetails.fileWork");
 
     const formatFileSize = (bytes: number): string => {
         if (bytes === 0) return '0 B';
@@ -52,7 +54,7 @@ const FileWork = () => {
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn("w-full h-12 py-3 px-4 rounded-t-2xl flex items-center justify-between cursor-pointer", !isOpen && "rounded-b-2xl")}
             >
-                <span className="text-strong-950 font-medium">Work files</span>
+                <span className="text-strong-950 font-medium">{t("title")}</span>
                 <motion.div
                     animate={{ rotate: isOpen ? 0 : 180 }}
                     transition={{ duration: 0.2 }}
@@ -91,7 +93,7 @@ const FileWork = () => {
                                             className="h-8 px-4 py-2 rounded-lg text-sub-600 hover:text-sub-600 hover:bg-transparent"
                                             onClick={() => handleDownload(file)}
                                         >
-                                            Download
+                                            {t("download")}
                                         </Button>
                                     </div>
                                 </div>

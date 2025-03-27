@@ -3,17 +3,17 @@
 import { Offer } from "../../types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import InputElement from "@/components/custom/form-elements/input";
 import { useTranslations } from "next-intl";
-import { parseCookies } from "nookies";
 import { toast } from "sonner";
 import { Socket } from "socket.io-client";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { trpc } from "@/trpc/client";
 
 interface OfferModalProps {
   isOpen: boolean;
@@ -27,8 +27,10 @@ interface OfferModalProps {
 
 const OfferModal = ({ isOpen, onClose, onSubmit, socket, chatRoomId, receiverId, currentUserId }: OfferModalProps) => {
   const t = useTranslations("chat.offerModal");
-  const cookies = parseCookies();
+  const tToast = useTranslations("chat.offerModal.form.toast");
+  const utils = trpc.useUtils();
   const socketRef = useRef<Socket | null>(socket);
+  const [isLoading, setIsLoading] = useState(false);
 
   const formSchema = z.object({
     title: z.string().min(1, t("form.errors.titleRequired")),
@@ -57,7 +59,6 @@ const OfferModal = ({ isOpen, onClose, onSubmit, socket, chatRoomId, receiverId,
     },
   });
   
-  // Update socketRef when socket prop changes
   useEffect(() => {
     socketRef.current = socket;
 
@@ -75,13 +76,14 @@ const OfferModal = ({ isOpen, onClose, onSubmit, socket, chatRoomId, receiverId,
             amount: parseFloat(form.getValues("amount")),
             currency: "US$",
             deliveryDays: parseInt(form.getValues("deliveryDays")),
+            skillLevels: []
           };
           onSubmit(offer);
           form.reset();
           onClose();
-          toast.success("Contract created successfully!");
+          toast.success(tToast("createSuccess"));
         } else {
-          toast.error(response.message || "Failed to create contract");
+          toast.error(response.message || tToast("createError"));
         }
       });
     }
@@ -99,6 +101,7 @@ const OfferModal = ({ isOpen, onClose, onSubmit, socket, chatRoomId, receiverId,
 
   const handleSubmit = async (values: FormValues) => {
     try {
+      setIsLoading(true);
       const startDate = new Date();
       const deadline = new Date();
       deadline.setDate(deadline.getDate() + parseInt(values.deliveryDays));
@@ -136,14 +139,18 @@ const OfferModal = ({ isOpen, onClose, onSubmit, socket, chatRoomId, receiverId,
           onSubmit(offer);
           form.reset();
           onClose();
-          toast.success("Contract created successfully!");
+          toast.success(tToast("createSuccess"));
+          utils.chat.getRoomContracts.invalidate();
+          setIsLoading(false);
         } else {
-          toast.error(response?.message || "Failed to create contract");
+          toast.error(response?.message || tToast("createError"));
         }
+        setIsLoading(false);
       });
 
     } catch (error) {
-      toast.error("Failed to create contract. Please try again.");
+      toast.error(tToast("createError"));
+      setIsLoading(false);
     }
   };
 
@@ -224,9 +231,10 @@ const OfferModal = ({ isOpen, onClose, onSubmit, socket, chatRoomId, receiverId,
               </Button>
               <Button
                 type="submit"
+                disabled={isLoading}
                 className="h-10 flex-1 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
                 <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                {t("form.buttons.submit")}
+                {isLoading ? <Loader2 className="animate-spin" /> : t("form.buttons.submit")}
               </Button>
             </div>
           </form>

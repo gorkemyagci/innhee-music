@@ -19,8 +19,6 @@ import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth-store";
 import { PasswordInput } from "@/components/custom/form-elements/password-input";
-import { jwtDecode } from "jwt-decode";
-import { DecodedToken } from "@/lib/types";
 import { useTranslations } from "next-intl";
 
 const signinSchema = z.object({

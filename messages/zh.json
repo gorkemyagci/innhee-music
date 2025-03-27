@@ -7,7 +7,16 @@
       "bonus": "奖金"
     },
     "search": {
-      "placeholder": "发现更多"
+      "placeholder": "搜索...",
+      "suggested": "建议：",
+      "sort": {
+        "placeholder": "排序方式",
+        "options": {
+          "rating": "评分",
+          "orderVolume": "订单量",
+          "activity": "活跃度"
+        }
+      }
     },
     "buttons": {
       "freeStart": "免费开始"
@@ -442,6 +451,10 @@
           "amountGreaterThanZero": "金额必须大于0",
           "deliveryDaysRequired": "交付天数是必需的",
           "deliveryDaysGreaterThanZero": "交付天数必须大于0"
+        },
+        "toast": {
+          "createSuccess": "合同创建成功！",
+          "createError": "创建合同失败，请重试。"
         }
       }
     },
@@ -725,10 +738,13 @@
       "deadline": "截止日期",
       "proposals": "提案",
       "message": "消息",
-      "apply": "申请"
+      "apply": "申请",
+      "applied": "已申请"
     },
     "list": {
-      "title": "列表"
+      "title": "列表",
+      "noApplicants": "暂无申请人",
+      "invite": "邀请"
     },
     "jobLink": {
       "title": "工作链接",
@@ -986,5 +1002,47 @@
     "contractTitle": "合同标题文本...",
     "reviewText": "与Ralph合作进行网站用户体验审计是一次改变游戏规则的经历。Ralph不仅发现了痛点，还提供了创新的解决方案，使我能够自信地做出关键的业务决策。",
     "price": "$1000.00"
+  },
+  "orderDetails": {
+    "userHead": {
+      "rating": "4.9(125)",
+      "special": "特别"
+    },
+    "paymentInfo": {
+      "totalAmount": "总金额",
+      "settled": "已结算",
+      "inEscrow": "托管中",
+      "refunded": "已退款"
+    },
+    "milestone": {
+      "title": "里程碑",
+      "description": "每月仅需 $4.99！",
+      "learnMore": "了解更多"
+    },
+    "timeline": {
+      "title": "时间线",
+      "addNew": "添加新里程碑"
+    },
+    "milestoneItem": {
+      "confirmPayment": "确认付款"
+    },
+    "uploadWork": {
+      "title": "上传作品",
+      "dropHere": "将文件拖放到此处",
+      "chooseFile": "选择文件或拖放到此处。",
+      "fileTypes": "支持 JPEG、PNG、PDF 和 MP4 格式，最大 50 MB。",
+      "browseFile": "浏览文件",
+      "download": "下载"
+    },
+    "details": {
+      "title": "详情",
+      "contract": "合同",
+      "contractId": "合同编号",
+      "deadline": "截止日期"
+    },
+    "fileWork": {
+      "title": "工作文件",
+      "download": "下载"
+    }
   }
 }

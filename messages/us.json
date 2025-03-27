@@ -7,7 +7,16 @@
       "bonus": "Bonus"
     },
     "search": {
-      "placeholder": "Discover more"
+      "placeholder": "Search...",
+      "suggested": "Suggested:",
+      "sort": {
+        "placeholder": "Sort by",
+        "options": {
+          "rating": "Rating",
+          "orderVolume": "Order Volume",
+          "activity": "Activity"
+        }
+      }
     },
     "buttons": {
       "freeStart": "Free Start"
@@ -443,6 +452,10 @@
           "amountGreaterThanZero": "Amount must be greater than 0",
           "deliveryDaysRequired": "Delivery days is required",
           "deliveryDaysGreaterThanZero": "Delivery days must be greater than 0"
+        },
+        "toast": {
+          "createSuccess": "Contract created successfully!",
+          "createError": "Failed to create contract. Please try again."
         }
       }
     },
@@ -721,10 +734,13 @@
       "deadline": "Deadline",
       "proposals": "Proposals",
       "message": "Message",
-      "apply": "Apply"
+      "apply": "Apply",
+      "applied": "Applied"
     },
     "list": {
-      "title": "List"
+      "title": "List",
+      "noApplicants": "No applicants yet",
+      "invite": "Invite"
     },
     "jobLink": {
       "title": "Job Link",
@@ -1042,5 +1058,47 @@
     "contractTitle": "Contract title text here...",
     "reviewText": "Working with Ralph on a UX audit for our website was a game-changer. Ralph didn't just identify pain points-he offered innovative solutions that empowered me to make key business decisions with confidence.",
     "price": "$1000.00"
+  },
+  "orderDetails": {
+    "userHead": {
+      "rating": "4.9(125)",
+      "special": "Special"
+    },
+    "paymentInfo": {
+      "totalAmount": "Total Amount",
+      "settled": "Settled",
+      "inEscrow": "In Escrow",
+      "refunded": "Refunded"
+    },
+    "milestone": {
+      "title": "Milestone",
+      "description": "For only $4.99 per month!",
+      "learnMore": "Learn More"
+    },
+    "timeline": {
+      "title": "Timeline",
+      "addNew": "Add a new milestone"
+    },
+    "milestoneItem": {
+      "confirmPayment": "Confirm Payment"
+    },
+    "uploadWork": {
+      "title": "Upload work",
+      "dropHere": "Drop your file here",
+      "chooseFile": "Choose a file or drag & drop it here.",
+      "fileTypes": "JPEG, PNG, PDF, and MP4 formats, up to 50 MB.",
+      "browseFile": "Browse File",
+      "download": "Download"
+    },
+    "details": {
+      "title": "Details",
+      "contract": "Contract",
+      "contractId": "Contract ID",
+      "deadline": "Deadline"
+    },
+    "fileWork": {
+      "title": "Work files",
+      "download": "Download"
+    }
   }
 }

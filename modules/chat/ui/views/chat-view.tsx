@@ -98,7 +98,7 @@ const ChatView = () => {
 
     return {
       id: otherUser.id,
-      name: otherUser.nickname,
+      name: otherUser.nickname || "Unknown User",
       avatar: otherUser.avatar || "/assets/images/avatar-4.png",
       online: room.users.find(u => u.userId !== currentAuthUser?.id)?.isOnline || false
     };
@@ -117,7 +117,7 @@ const ChatView = () => {
 
     return {
       id: user.id,
-      name: user.nickname,
+      name: user.nickname || "Current User",
       avatar: user.avatar || "/assets/images/avatar-4.png",
       online: true
     };

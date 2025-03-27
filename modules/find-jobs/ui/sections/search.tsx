@@ -4,6 +4,7 @@ import { Icons } from "@/components/icons";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 interface SuggestedTag {
     id: string;
@@ -13,6 +14,7 @@ interface SuggestedTag {
 
 const Search = () => {
     const [sort, setSort] = useState("");
+    const t = useTranslations("header.search");
     const [suggestedTags, setSuggestedTags] = useState<SuggestedTag[]>([
         { id: "1", name: "All", selected: false },
         { id: "2", name: "Digital Art", selected: false },
@@ -31,12 +33,12 @@ const Search = () => {
             <div className="flex items-center flex-1 justify-between gap-2 w-full">
                 <div className="bg-white border border-[#E1E4EA] hover:border-weak-50 hover:bg-weak-50 transition-all duration-200 rounded-xl flex-1 h-10 flex items-center pl-3 pr-2.5 py-2.5">
                     <Icons.search />
-                    <Input className="bg-transparent shadow-none border-none placeholder:text-[#99A0AE] focus-visible:ring-0 focus-visible:ring-offset-0" placeholder="Search..." />
+                    <Input className="bg-transparent shadow-none border-none placeholder:text-[#99A0AE] focus-visible:ring-0 focus-visible:ring-offset-0" placeholder={t("placeholder")} />
                 </div>
                 <SortSelect value={sort} onChange={setSort} />
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-sub-600 font-normal text-xs">Suggested:</span>
+                <span className="text-sub-600 font-normal text-xs">{t("suggested")}</span>
                 <div className="flex items-center gap-1 flex-wrap">
                     {suggestedTags.map((tag) => (
                         <motion.div 

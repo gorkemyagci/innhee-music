@@ -1,8 +1,13 @@
+"use client";
+
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/user-avatar";
+import { useTranslations } from "next-intl";
 
 const UserHead = () => {
+    const t = useTranslations("orderDetails.userHead");
+    
     return (
         <div className="w-full p-4 border border-soft-200 rounded-[12px] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-[18px]">
             <div className="flex flex-row items-center gap-2 md:gap-3">
@@ -16,14 +21,14 @@ const UserHead = () => {
                         <span className="text-surface-700 font-medium text-base md:text-lg">Cleve Music</span>
                         <div className="flex items-center gap-0.5">
                             <Icons.star />
-                            <span className="text-sub-600 font-normal text-xs">4.9(125)</span>
+                            <span className="text-sub-600 font-normal text-xs">{t("rating")}</span>
                         </div>
                     </div>
                     <div className="flex items-center gap-0.5">
                         <Icons.google />
                         <Icons.google />
                         <Icons.google />
-                        <span className="text-sub-600 font-medium text-xs">Specia</span>
+                        <span className="text-sub-600 font-medium text-xs">{t("special")}</span>
                     </div>
                 </div>
             </div>
