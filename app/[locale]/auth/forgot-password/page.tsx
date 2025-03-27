@@ -3,6 +3,8 @@ import PasswordChanged from "@/modules/auth/ui/components/password-changed";
 import ForgotForm from "@/modules/auth/ui/views/forgot-form";
 import { getTranslations } from "next-intl/server";
 
+export const dynamic = "force-dynamic";
+
 const ForgotPassword = async () => {
     const t = await getTranslations("auth.forgot");
     const isChanged = false;

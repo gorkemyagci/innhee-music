@@ -20,7 +20,7 @@ const AuthNavbar = () => {
                     <span className="text-sub-600 font-normal text-sm">
                         {t("noAccount")}
                     </span>
-                    <Link href={pageUrls.SIGN_UP} prefetch>
+                    <Link href={pageUrls.SIGN_IN} prefetch>
                         <span className="text-main-900 font-medium text-sm underline">
                             {t("signUp")}
                         </span>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useQueryState } from "nuqs";
+import { useTranslations } from "next-intl";
 import ChatSidebar from "@/modules/chat/ui/components/chat-sidebar";
 import ChatMain from "@/modules/chat/ui/components/chat-main";
 import ContractDetails from "@/modules/chat/ui/components/contract-details";
@@ -11,6 +12,7 @@ import { ChatRoom } from "@/lib/types";
 import { useAuthStore } from "@/store/auth-store";
 
 const ChatView = () => {
+  const t = useTranslations("chat.main");
   const [chatId, setChatId] = useQueryState("chatId");
   const [messages, setMessages] = useState<Message[]>([]);
   const { data: chatRooms } = trpc.chat.chatRooms.useQuery();
@@ -24,9 +26,6 @@ const ChatView = () => {
   );
   const { user: currentAuthUser, initializeFromToken } = useAuthStore();
   const selectedChat = chatRooms?.find((room: ChatRoom) => room.id === chatId);
-  const totalContractAmount = selectedChat?.contracts?.reduce((acc: number, contract: any) => {
-    return acc + Number(contract.amount);
-  }, 0);
 
   useEffect(() => {
     initializeFromToken();
@@ -157,6 +156,11 @@ const ChatView = () => {
             currentUser={getCurrentUser(selectedChat)}
             isLoading={isPending}
           />
+        )}
+        {!selectedChat && (
+          <div className="flex-1 flex items-center justify-center bg-soft-50">
+            <p className="text-sub-600">{t("selectChat")}</p>
+          </div>
         )}
         {selectedChat && <ContractDetails
           people={selectedChat?.users || []}

@@ -12,6 +12,8 @@ import { useAuthStore } from "@/store/auth-store";
 import { trpc } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Link from "next/link";
+import { pageUrls } from "@/lib/constants/page-urls";
 const Sidebar = ({ data, isOwner }: { data: any, isOwner: boolean }) => {
     const t = useTranslations("talent.sidebar");
     const { user: currentAuthUser, initializeFromToken } = useAuthStore();
@@ -64,9 +66,11 @@ const Sidebar = ({ data, isOwner }: { data: any, isOwner: boolean }) => {
             </div>
             {!isOwner && (
                 <div className="flex items-center gap-5">
-                    <Button variant="outline" className="w-[69px] h-8 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
-                        {t("hire")} <Icons.chevron_short_right className="fill-sub-600 size-3" />
-                    </Button>
+                    <Link href={`${pageUrls.SEND_OFFER}`} prefetch>
+                        <Button variant="outline" className="w-[69px] h-8 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
+                            {t("hire")} <Icons.chevron_short_right className="fill-sub-600 size-3" />
+                        </Button>
+                    </Link>
                     <Button
                         type="button"
                         onClick={createRoom}

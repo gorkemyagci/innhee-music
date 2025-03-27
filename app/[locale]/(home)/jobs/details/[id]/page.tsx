@@ -9,7 +9,7 @@ interface PageProps {
 
 const Page = async ({ params }: PageProps) => {
     const { id } = await params;
-    void trpc.jobPosting.getJobPostById.prefetch(id);
+    void trpc.jobPosting.getJobPostById.prefetch({ id });
     void trpc.jobPosting.getJobPosts.prefetch();
     return <HydrateClient>
         <JobDetail id={id} />

@@ -11,6 +11,8 @@ interface DecodedToken {
     id: string;
 }
 
+export const dynamic = "force-dynamic";
+
 const Page = async ({ params }: PageProps) => {
     const { userId } = await params;
     const token = await getTokenFromCookie();

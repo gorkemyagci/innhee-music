@@ -9,6 +9,7 @@ import ContractTerms from "../sections/contract-terms";
 import Attachments from "../sections/attachments";
 import FAQ from "../sections/FAQ";
 import Submit from "../components/submit";
+import { useTranslations } from "next-intl";
 
 const formSchema = z.object({
     receiver: z.object({
@@ -51,6 +52,7 @@ const formSchema = z.object({
 type SendOrderFormValues = z.infer<typeof formSchema>;
 
 const SendOrder = () => {
+    const t = useTranslations("sendOrder");
     const form = useForm<SendOrderFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -73,9 +75,9 @@ const SendOrder = () => {
         }
     })
     const onSubmit = (data: SendOrderFormValues) => {}
-    return <div className="w-full flex items-start gap-6">
+    return <div className="w-full flex flex-col lg:flex-row items-start gap-6 px-4 lg:px-0">
         <div className="flex-1 w-full lg:max-w-[856px] flex flex-col items-start gap-8">
-            <h3 className="text-strong-950 font-medium text-[40px] leading-[48px]">Send an offer</h3>
+            <h3 className="text-strong-950 font-medium text-[32px] lg:text-[40px] leading-[40px] lg:leading-[48px]">{t("title")}</h3>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-full flex flex-col items-start gap-8">
                     <JobDetails form={form} />
@@ -86,7 +88,9 @@ const SendOrder = () => {
                 </form>
             </Form>
         </div>
-        <Sidebar />
+        <div className="w-full lg:w-[300px] lg:sticky lg:top-6">
+            <Sidebar />
+        </div>
     </div>
 }
 

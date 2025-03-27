@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import CustomSelect from "@/components/custom/select";
 import { trpc } from "@/trpc/client";
 import { SkillLevel } from "@/lib/types";
+import { useTranslations } from "next-intl";
 
 interface JobDetailsProps {
     form: UseFormReturn<any>;
@@ -26,6 +27,7 @@ const mockUsers = [
 ];
 
 const JobDetails = ({ form }: JobDetailsProps) => {
+    const t = useTranslations("sendOrder.jobDetails");
     const { data: skillsData } = trpc.jobPosting.getAllSkillLevels.useQuery();
     const [skillLevels, setSkillLevels] = useState<SkillLevel[]>([]);
     const { control, setValue, watch } = form;
@@ -60,15 +62,15 @@ const JobDetails = ({ form }: JobDetailsProps) => {
     const maxChars = 1000;
     const filteredUsers = mockUsers.filter(user => user.name.toLowerCase().includes(sendValue.toLowerCase()));
     return <div className="w-full flex flex-col items-start gap-5">
-        <span className="text-strong-950 text-[32px] font-medium">Job details</span>
+        <span className="text-strong-950 text-[24px] lg:text-[32px] font-medium">{t("title")}</span>
         <div className="flex w-full flex-col gap-5">
-            <div className="flex w-full gap-5 items-center">
+            <div className="flex w-full flex-col sm:flex-row gap-5 items-start sm:items-center">
                 <FormField
                     control={form.control}
                     name="receiver.userId"
                     render={({ field }) => (
                         <FormItem className="w-full">
-                            <FormLabel className="text-strong-950 text-sm font-medium">Send</FormLabel>
+                            <FormLabel className="text-strong-950 text-sm font-medium">{t("send.label")}</FormLabel>
                             <FormControl>
                                 <div className={cn("border relative h-11 py-2.5 pl-1.5 pr-2.5 border-soft-200 rounded-[10px] flex items-center justify-between w-full", filteredUsers.length > 0 && sendValue && "rounded-b-none")}>
                                     <AnimatePresence mode="wait">
@@ -108,7 +110,7 @@ const JobDetails = ({ form }: JobDetailsProps) => {
                                                 className="w-full"
                                             >
                                                 <Input
-                                                    placeholder="Search.."
+                                                    placeholder={t("send.placeholder")}
                                                     className="h-full outline-none placeholder:text-sm focus:outline-none focus:ring-0 p-2.5 border-none shadow-none"
                                                     onChange={(e) => setSendValue(e.target.value)}
                                                     value={sendValue}
@@ -168,8 +170,8 @@ const JobDetails = ({ form }: JobDetailsProps) => {
                     control={form.control}
                     name="orderTitle"
                     render={({ field }) => (
-                        <FormItem className="w-full">
-                            <FormLabel className="text-strong-950 text-sm font-medium">Select Order</FormLabel>
+                        <FormItem className="w-full sm:w-[200px]">
+                            <FormLabel className="text-strong-950 text-sm font-medium">{t("orderTitle.label")}</FormLabel>
                             <FormControl>
                                 <Select
                                     value={field.value}
@@ -177,7 +179,7 @@ const JobDetails = ({ form }: JobDetailsProps) => {
                                 >
                                     <SelectTrigger className="focus-visible:ring-0 cursor-pointer h-11 flex items-center gap-1.5 p-2.5 pl-3 border border-soft-200 rounded-[10px] shadow-none">
                                         <span className="text-sub-600 text-sm font-normal">
-                                            {field.value || "Order title"}
+                                            {field.value || t("orderTitle.placeholder")}
                                         </span>
                                     </SelectTrigger>
                                     <SelectContent className="border-soft-200">
@@ -196,10 +198,10 @@ const JobDetails = ({ form }: JobDetailsProps) => {
                 name="contractTitle"
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel className="text-strong-950 text-sm font-medium">Contract title</FormLabel>
+                        <FormLabel className="text-strong-950 text-sm font-medium">{t("contractTitle.label")}</FormLabel>
                         <FormControl>
                             <Input
-                                placeholder="Enter the contract title..."
+                                placeholder={t("contractTitle.placeholder")}
                                 className="h-10 outline-none placeholder:text-sm focus:outline-none focus:ring-0 rounded-[10px] p-2.5 border border-soft-200 shadow-none"
                                 value={field.value}
                                 onChange={(e) => field.onChange(e.target.value)}
@@ -213,11 +215,11 @@ const JobDetails = ({ form }: JobDetailsProps) => {
                 name="description"
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel className="text-strong-950 text-sm font-medium">Description</FormLabel>
+                        <FormLabel className="text-strong-950 text-sm font-medium">{t("description.label")}</FormLabel>
                         <FormControl className="w-full">
                             <div className="relative my-0.5">
                                 <Textarea
-                                    placeholder="Description text here..."
+                                    placeholder={t("description.placeholder")}
                                     className="h-[112px] outline-none placeholder:text-sm focus:outline-none focus:ring-0 rounded-[10px] p-2.5 border border-soft-200 shadow-none"
                                     value={textareaValue}
                                     onChange={(e) => {
@@ -229,7 +231,6 @@ const JobDetails = ({ form }: JobDetailsProps) => {
                                 />
                                 <div className="absolute bottom-2 right-2 text-sub-400 text-xs flex items-center">
                                     <span className="w-[60px] text-right">{textareaValue.length}/{maxChars}</span>
-
                                 </div>
                             </div>
                         </FormControl>
@@ -242,8 +243,8 @@ const JobDetails = ({ form }: JobDetailsProps) => {
                 render={({ field }) => (
                     <FormItem className="w-full">
                         <div className="flex items-center gap-1">
-                            <FormLabel className="text-sub-600 font-medium text-sm">Skill Levels</FormLabel>
-                            <span className="text-sub-600 font-normal text-sm">(max. 4)</span>
+                            <FormLabel className="text-sub-600 font-medium text-sm">{t("skillLevels.label")}</FormLabel>
+                            <span className="text-sub-600 font-normal text-sm">{t("skillLevels.max")}</span>
                             <Icons.info className="size-5 text-sub-600 ml-1" />
                         </div>
                         <FormControl>

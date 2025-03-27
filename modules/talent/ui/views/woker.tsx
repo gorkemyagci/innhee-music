@@ -3,12 +3,15 @@ import WokerItem from "../components/woker-item";
 import { useState } from "react";
 import CustomPagination from "@/components/pagination";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 interface WokerProps {
     portfolio: any;
 }
 
 const Woker = ({ portfolio }: WokerProps) => {
+    const t = useTranslations("talent");
+
     const filteredItems = portfolio?.portfolioItems?.filter((item: any) => 
         item.attachments && item.attachments.length > 0
     ) || [];
@@ -83,7 +86,7 @@ const Woker = ({ portfolio }: WokerProps) => {
                 </>
             ) : (
                 <div className="w-full text-center py-8 text-soft-400">
-                    No portfolio items with attachments found.
+                    {t("noPortfolioItems")}
                 </div>
             )}
         </div>

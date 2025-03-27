@@ -12,11 +12,11 @@ import { useEffect } from "react";
 
 
 const JobDetail = ({ id }: { id: string }) => {
-    const { data, isLoading } = trpc.jobPosting.getJobPostById.useQuery(id);    
     const { initializeFromToken, user } = useAuthStore();
     useEffect(() => {
         initializeFromToken();
     }, []);
+    const { data, isLoading } = trpc.jobPosting.getJobPostById.useQuery({ id, userId: user?.id });    
     const isOwner = data?.employerId === user?.id;
     console.log(data);
     if (isLoading) {

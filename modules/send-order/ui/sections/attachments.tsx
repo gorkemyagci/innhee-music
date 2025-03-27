@@ -2,6 +2,7 @@
 import { Icons } from "@/components/icons";
 import { UseFormReturn } from "react-hook-form";
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 
 interface Attachment {
     name: string;
@@ -14,6 +15,7 @@ interface AttachmentsProps {
 }
 
 const Attachments = ({ form }: AttachmentsProps) => {
+    const t = useTranslations("sendOrder.attachments");
     const fileInputRef = useRef<HTMLInputElement>(null);
     const attachments = form.watch("attachments") || [];
 
@@ -35,16 +37,16 @@ const Attachments = ({ form }: AttachmentsProps) => {
     };
 
     const formatFileSize = (bytes: number) => {
-        if (bytes === 0) return '0 Bytes';
+        if (bytes === 0) return '0 ' + t("fileSize.bytes");
         const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const sizes = [t("fileSize.bytes"), t("fileSize.kb"), t("fileSize.mb"), t("fileSize.gb")];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
 
     return <div className="w-full flex flex-col items-start gap-5">
         {attachments?.length > 0 && (
-            <div className="w-full grid grid-cols-3 gap-5">
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {attachments.map((attachment: Attachment, index: number) => (
                     <div key={index} className="border border-soft-200 w-full rounded-[12px] px-4 py-2 flex flex-row items-start justify-between">
                         <div className="flex flex-col items-start gap-1">
@@ -71,7 +73,7 @@ const Attachments = ({ form }: AttachmentsProps) => {
             onClick={() => fileInputRef.current?.click()}
         >
             <Icons.links_line className="size-5 fill-sub-600" />
-            <span className="text-sub-600 font-medium text-sm">Attach file</span>
+            <span className="text-sub-600 font-medium text-sm">{t("add")}</span>
         </div>
     </div>
 }
