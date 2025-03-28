@@ -2,14 +2,17 @@
 import { Icons } from "@/components/icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/custom-tabs";
 import SignInForm from "./signin-form";
-import { useState } from "react";
+import { useQueryState } from "nuqs";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 
 const SignInWrapper = () => {
-    const [activeTab, setActiveTab] = useState<"code" | "password">("code");
+    const [activeTab, setActiveTab] = useQueryState<"code" | "password">("tab", {
+        defaultValue: "code",
+        parse: (value): "code" | "password" => 
+            value === "password" ? "password" : "code"
+    });
     const t = useTranslations("auth.signIn");
-
     return (
         <>
             <motion.div

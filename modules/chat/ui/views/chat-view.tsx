@@ -15,7 +15,7 @@ const ChatView = () => {
   const t = useTranslations("chat.main");
   const [chatId, setChatId] = useQueryState("chatId");
   const [messages, setMessages] = useState<Message[]>([]);
-  const { data: chatRooms } = trpc.chat.chatRooms.useQuery();
+  const { data: chatRooms = [] } = trpc.chat.chatRooms.useQuery();
   const { data: messagesData, isPending } = trpc.chat.getRoomMessages.useQuery(
     { roomId: chatId || "" },
     { enabled: !!chatId }
@@ -25,7 +25,7 @@ const ChatView = () => {
     { enabled: !!chatId }
   );
   const { user: currentAuthUser, initializeFromToken } = useAuthStore();
-  const selectedChat = chatRooms?.find((room: ChatRoom) => room.id === chatId);
+  const selectedChat = chatId ? chatRooms.find((room: ChatRoom) => room.id === chatId) : undefined;
 
   useEffect(() => {
     initializeFromToken();
@@ -122,6 +122,14 @@ const ChatView = () => {
       online: true
     };
   };
+
+  if (!chatRooms) {
+    return (
+      <div className="flex h-[calc(100vh-80px)] bg-white lg:px-8 items-center justify-center">
+        <p className="text-sub-600">{t("loading")}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-[calc(100vh-80px)] bg-white lg:px-8">

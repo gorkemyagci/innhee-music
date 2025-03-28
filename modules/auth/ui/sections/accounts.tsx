@@ -12,7 +12,7 @@ const Accounts = () => {
     const pathname = usePathname();
     return (
         <div className={cn("flex w-full items-center gap-2", {
-            "pt-6": pathname === pageUrls.SIGN_IN
+            "pt-6": pathname.includes(pageUrls.SIGN_IN)
         })}>
             <InstallWechat>
                 <Button className="bg-white border border-soft-200 hover:bg-white flex-1 h-10 rounded-xl flex items-center justify-center">

@@ -7,6 +7,7 @@ import SubmitButton from "@/modules/auth/ui/components/submit-button";
 import { useQueryState } from "nuqs";
 import { useMockData } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 interface CardLayoutProps {
     isOpen: boolean;
@@ -18,6 +19,7 @@ interface CardLayoutProps {
 }
 
 const CardLayout = ({ isOpen, toggleOpen, children, item, onSubmit, loading }: CardLayoutProps) => {
+    const t = useTranslations("jobPosting.cardLayout");
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
     const { jobPostingMenu } = useMockData();
 
@@ -61,9 +63,9 @@ const CardLayout = ({ isOpen, toggleOpen, children, item, onSubmit, loading }: C
                         </CardContent>
                         {item.value === "preview" ?
                             <CardFooter className="flex gap-2 justify-center p-5 mt-5 pb-0 pt-0">
-                                <Button variant="outline" className="h-9 flex-1 rounded-lg border-soft-200 text-sub-600 font-medium text-sm">Draft</Button>
+                                <Button variant="outline" className="h-9 flex-1 rounded-lg border-soft-200 text-sub-600 font-medium text-sm">{t("draft")}</Button>
                                 <SubmitButton
-                                    text="Post"
+                                    text={t("post")}
                                     className="h-9 flex-1 rounded-lg"
                                     onClick={onSubmit}
                                     loading={loading}
@@ -71,9 +73,14 @@ const CardLayout = ({ isOpen, toggleOpen, children, item, onSubmit, loading }: C
                             </CardFooter>
                             : <CardFooter className="flex justify-end p-5 mt-5 pb-0 pt-0">
                                 <SubmitButton
-                                    text="Next"
+                                    text={t("next")}
                                     className="h-9 w-14 rounded-lg"
-                                    onClick={() => nextItem && setTab(nextItem.value)}
+                                    onClick={() => {
+                                        if (nextItem) {
+                                            setTab(nextItem.value);
+                                        }
+                                        onSubmit?.();
+                                    }}
                                     disabled={!nextItem}
                                 />
                             </CardFooter>}

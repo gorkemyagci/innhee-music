@@ -763,6 +763,133 @@
       "orderCreated": "订单已创建",
       "milestone": "里程碑 {number}",
       "milestoneAmount": "里程碑金额"
+    },
+    "editJob": "编辑工作",
+    "createJob": "创建工作",
+    "subtitle": "定义详细信息，设置预算并概述偏好",
+    "basicInfo": {
+      "title": "基本信息",
+      "subject": {
+        "label": "主题",
+        "placeholder": "项目主题"
+      },
+      "detail": {
+        "label": "详情",
+        "placeholder": "请描述您的需求"
+      },
+      "amount": {
+        "label": "金额",
+        "placeholder": "0.00"
+      },
+      "deadline": {
+        "label": "截止日期"
+      },
+      "budgetConfirm": "预算待确认",
+      "next": "下一步",
+      "createSuccess": "工作发布成功",
+      "createError": "工作发布失败"
+    },
+    "selectCategory": {
+      "skillLevels": {
+        "title": "技能等级",
+        "max": "(最多4个)"
+      },
+      "tools": {
+        "title": "工具"
+      },
+      "files": {
+        "title": "添加下载文件",
+        "limit": "(最多3个音频文件)",
+        "format": "MP3格式，大小限制25MB",
+        "upload": "上传",
+        "uploading": "上传中...",
+        "uploaded": "已上传"
+      }
+    },
+    "usage": {
+      "usageSection": {
+        "title": "用途",
+        "business": {
+          "title": "商业",
+          "description": "用于签订合同和开具发票等目的。"
+        },
+        "private": {
+          "title": "私人",
+          "description": "用于兴趣爱好等目的。"
+        }
+      },
+      "privacySection": {
+        "title": "隐私",
+        "public": {
+          "title": "公开",
+          "description": "任何工作者都可以申请工作。"
+        },
+        "private": {
+          "title": "私密",
+          "description": "只有受邀请的人才能参与工作。"
+        }
+      }
+    },
+    "sidebar": {
+      "navigation": "导航",
+      "transferSequence": "转账流程",
+      "troubleTransfer": "转账遇到问题？",
+      "contact": "联系我们",
+      "menu": {
+        "basic-information": "基本信息",
+        "select-category": "选择类别",
+        "usage": "用途",
+        "preview": "预览"
+      }
+    },
+    "preview": {
+      "updateSuccess": "工作发布更新成功",
+      "updateError": "更新工作发布失败",
+      "notSet": "未设置",
+      "notProvided": "未提供",
+      "step1": {
+        "title": "第1步 描述",
+        "subject": "主题",
+        "detail": "详情"
+      },
+      "step2": {
+        "title": "第2步 标签",
+        "experienceLevels": "经验等级",
+        "noSkillLevels": "未选择技能等级",
+        "candidateSources": "候选来源",
+        "noCandidateSources": "未选择候选来源",
+        "file": "文件",
+        "noFile": "未上传文件"
+      },
+      "step3": {
+        "title": "第3步 隐私",
+        "business": {
+          "title": "商业",
+          "description": "用于签订合同和开具发票等目的。"
+        },
+        "private": {
+          "title": "私人",
+          "description": "用于兴趣爱好等目的。"
+        },
+        "public": {
+          "title": "公开",
+          "description": "任何工作者都可以申请工作。"
+        },
+        "noUsage": "未选择用途类型",
+        "noPrivacy": "未选择隐私类型"
+      },
+      "step4": {
+        "title": "第4步 订单金额和日期",
+        "deadline": "截止日期",
+        "orderAmount": "订单金额",
+        "budgetConfirm": "预算待确认",
+        "yes": "是"
+      }
+    },
+    "cardLayout": {
+      "draft": "草稿",
+      "post": "发布",
+      "next": "下一步"
     }
   },
   "filter": {
@@ -1048,5 +1175,12 @@
       "title": "工作文件",
       "download": "下载"
     }
+  },
+  "transactionMethodDetails": {
+    "thanksOrder": "感谢您的订单！",
+    "whatNext": "接下来您想做什么？",
+    "invite": "邀请",
+    "inviteDescription": "工作者或联系客服获取帮助。",
+    "liveSupport": "在线客服"
   }
 }

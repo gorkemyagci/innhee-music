@@ -23,8 +23,10 @@ import { useQueryState } from "nuqs";
 import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
+    const t = useTranslations("jobPosting.basicInfo");
     const [id, setId] = useQueryState("id", { defaultValue: "" });
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
     const [text, setText] = useState("");
@@ -32,13 +34,9 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
     const maxChars = 200;
     const utils = trpc.useUtils();
 
-    // Initialize values from form
     useEffect(() => {
-        // Initialize textarea value
         const detail = form.getValues("detail") || "";
         setText(detail);
-
-        // Initialize amount input
         const salary = form.getValues("salary");
         if (salary && salary > 0) {
             setAmountInput(salary.toString());
@@ -57,13 +55,17 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
 
     const create = trpc.jobPosting.createJob.useMutation({
         onSuccess: (data) => {
-            toast.success("Job posting created successfully");
-            utils.jobPosting.getMyJobPosts.invalidate();
-            setTab("select-category");
-            setId(data.id);
+            if (data?.id) {
+                toast.success(t("createSuccess"));
+                utils.jobPosting.getMyJobPosts.invalidate();
+                setTab("select-category");
+                setId(data.id);
+            } else {
+                toast.error(t("createError"));
+            }
         },
         onError: (error) => {
-            toast.error(error.message || "Failed to create job posting");
+            toast.error(error.message || t("createError"));
         }
     })
 
@@ -79,7 +81,8 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                 "usage": form.getValues("usage") ? form.getValues("usage").toUpperCase() : "PRIVATE",
                 "privacy": form.getValues("privacy") ? form.getValues("privacy").toUpperCase() : "PRIVATE",
                 "skillLevelIds": form.getValues("skillLevelIds"),
-                "candidateSourceIds": form.getValues("candidateSourceIds")
+                "candidateSourceIds": form.getValues("candidateSourceIds"),
+                "status": "INACTIVE"
             }
             create.mutate(data);
             return;
@@ -95,7 +98,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
             >
                 <div className="flex items-center gap-3">
                     <span className="rounded-full flex items-center justify-center h-10 w-10 border border-soft-200 text-strong-950 font-medium text-sm">01</span>
-                    <span className="text-strong-950 font-medium text-sm">Basic information</span>
+                    <span className="text-strong-950 font-medium text-sm">{t("title")}</span>
                 </div>
                 <motion.div
                     className="w-6 h-6 rounded-md border border-soft-200 flex items-center justify-center p-0.5"
@@ -118,19 +121,18 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                         <CardContent className="space-y-6">
                             <Form {...form}>
                                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                                    {/* Subject Field */}
                                     <FormField
                                         control={form.control}
                                         name="subject"
                                         render={({ field }) => (
                                             <FormItem className="space-y-1">
                                                 <FormLabel className="block text-sub-600 text-sm font-medium">
-                                                    Subject
+                                                    {t("subject.label")}
                                                 </FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         {...field}
-                                                        placeholder="Project subject"
+                                                        placeholder={t("subject.placeholder")}
                                                         className="bg-transparent shadow-none h-10 hover:border-weak-50 hover:bg-weak-50 transition-all duration-200 border border-soft-200 placeholder:text-[#99A0AE] focus-visible:ring-0 focus-visible:ring-offset-0"
                                                     />
                                                 </FormControl>
@@ -138,21 +140,19 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                             </FormItem>
                                         )}
                                     />
-
-                                    {/* Detail Field */}
                                     <FormField
                                         control={form.control}
                                         name="detail"
                                         render={({ field }) => (
                                             <FormItem className="space-y-1">
                                                 <FormLabel className="block text-sub-600 text-sm font-medium">
-                                                    Detail
+                                                    {t("detail.label")}
                                                 </FormLabel>
                                                 <FormControl>
                                                     <div className="relative">
                                                         <Textarea
                                                             value={text}
-                                                            placeholder="Please describe your needs"
+                                                            placeholder={t("detail.placeholder")}
                                                             className="w-full min-h-[120px] border-soft-200 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-sub-400 resize-none pr-3"
                                                             onChange={(e) => {
                                                                 const newText = e.target.value;
@@ -171,10 +171,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                             </FormItem>
                                         )}
                                     />
-
-                                    {/* Amount and Deadline Row */}
                                     <div className="flex sm:flex-row flex-col items-start sm:items-center w-full gap-4">
-                                        {/* Amount Field */}
                                         <div>
                                             <FormField
                                                 control={form.control}
@@ -182,7 +179,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                                 render={({ field }) => (
                                                     <FormItem className="space-y-1">
                                                         <FormLabel className="text-sub-600 text-sm font-medium">
-                                                            Amount
+                                                            {t("amount.label")}
                                                         </FormLabel>
                                                         <FormControl>
                                                             <div className="flex">
@@ -190,7 +187,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sub-600">¥</span>
                                                                     <Input
                                                                         type="number"
-                                                                        placeholder="0.00"
+                                                                        placeholder={t("amount.placeholder")}
                                                                         className="w-full pl-8 h-10 border-r-0 rounded-r-none border-soft-200 focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none shadow-b"
                                                                         value={amountInput}
                                                                         onChange={(e) => {
@@ -228,24 +225,20 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                                 )}
                                             />
                                         </div>
-
-                                        {/* Deadline Field */}
                                         <DatePickerForm
                                             form={form}
                                             name="deadline"
-                                            label="Deadline"
+                                            label={t("deadline.label")}
                                             className="shadow-sm border border-soft-200 h-10 py-0 w-40 rounded-[10px] flex items-center justify-center"
                                             icon={<Icons.calendar_line className="size-5" />}
                                             customLabel={
                                                 <div className="flex items-center gap-1">
-                                                    <span className="text-sub-600 font-medium text-sm">Deadline</span>
+                                                    <span className="text-sub-600 font-medium text-sm">{t("deadline.label")}</span>
                                                     <Icons.info />
                                                 </div>
                                             }
                                         />
                                     </div>
-
-                                    {/* Budget Confirmation Checkbox */}
                                     <FormField
                                         control={form.control}
                                         name="budgetsActive"
@@ -261,7 +254,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                                 <FormLabel
                                                     className="text-strong-950 font-normal text-sm cursor-pointer"
                                                 >
-                                                    Budget to be confirmed
+                                                    {t("budgetConfirm")}
                                                 </FormLabel>
                                                 <FormMessage />
                                             </FormItem>
@@ -272,7 +265,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                         </CardContent>
                         <Separator className="bg-soft-200 my-5" />
                         <CardFooter className="flex justify-end p-5 pb-0 pt-0">
-                            <SubmitButton text="Next" className="h-9 w-14 rounded-lg" onClick={handleNext} loading={create.isPending} disabled={create.isPending} />
+                            <SubmitButton text={t("next")} className="h-9 w-14 rounded-lg" onClick={handleNext} loading={create.isPending} disabled={create.isPending} />
                         </CardFooter>
                     </motion.div>
                 )}

@@ -49,9 +49,7 @@ const ContractDetails = ({
             [contractId]: !prev[contractId]
         }));
     };
-
-    console.log(people);
-
+    
     return (
         <div className="w-auto lg:w-[328px] shrink-0 p-4 lg:p-6 flex-col gap-4 lg:gap-6 border-t lg:border-l border-soft-200 h-full overflow-auto custom-scroll">
             <div className="flex flex-col items-center gap-3 lg:gap-4">

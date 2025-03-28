@@ -6,32 +6,25 @@ import { cn } from "@/lib/utils";
 import { useQueryState } from "nuqs";
 import { Suspense, useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, Menu, X } from "lucide-react";
+import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const SidebarSuspense = () => {
+    const t = useTranslations("jobPosting.sidebar");
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
     const [isMobile, setIsMobile] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const sidebarRef = useRef<HTMLDivElement>(null);
     const { jobPostingMenu } = useMockData();
 
-    // Detect screen size
     useEffect(() => {
         const checkIfMobile = () => {
             setIsMobile(window.innerWidth < 768);
         };
-        
-        // Initial check
         checkIfMobile();
-        
-        // Add event listener for window resize
         window.addEventListener("resize", checkIfMobile);
-        
-        // Cleanup
         return () => window.removeEventListener("resize", checkIfMobile);
     }, []);
-
-    // Close sidebar when clicking outside on mobile
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (isMobile && isSidebarOpen) {
@@ -46,7 +39,6 @@ const SidebarSuspense = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isMobile, isSidebarOpen]);
 
-    // Handle tab selection
     const handleTabSelect = (value: string) => {
         setTab(value);
         if (isMobile) {
@@ -56,7 +48,6 @@ const SidebarSuspense = () => {
 
     return (
         <>
-            {/* Mobile toggle button */}
             {isMobile && (
                 <div className="fixed bottom-4 left-4 z-40">
                     <Button
@@ -64,13 +55,12 @@ const SidebarSuspense = () => {
                         className="h-12 px-4 rounded-full bg-white shadow-lg border border-soft-200 flex items-center gap-2"
                     >
                         <span className="font-medium text-strong-950 text-sm">
-                            Navigation
+                            {t("navigation")}
                         </span>
                     </Button>
                 </div>
             )}
 
-            {/* Overlay for mobile */}
             <AnimatePresence>
                 {isMobile && isSidebarOpen && (
                     <motion.div
@@ -84,14 +74,11 @@ const SidebarSuspense = () => {
                 )}
             </AnimatePresence>
 
-            {/* Sidebar */}
             <motion.div
                 ref={sidebarRef}
                 className={cn(
                     "bg-weak-50 pt-5 pb-4 px-4 rounded-[16px] flex flex-col justify-between",
-                    // Desktop styles
                     !isMobile && "w-[264px] min-h-[calc(100vh-114px)]",
-                    // Mobile styles
                     isMobile && "fixed left-4 right-4 bottom-20 z-50 max-h-[80vh] overflow-hidden"
                 )}
                 initial={false}
@@ -106,10 +93,9 @@ const SidebarSuspense = () => {
                     damping: 40
                 }}
             >
-                {/* Mobile header */}
                 {isMobile && (
                     <div className="flex items-center justify-between mb-4 border-b border-soft-200 pb-3">
-                        <h3 className="font-medium text-base">Navigation</h3>
+                        <h3 className="font-medium text-base">{t("navigation")}</h3>
                         <Button
                             variant="ghost"
                             size="icon"
@@ -120,14 +106,13 @@ const SidebarSuspense = () => {
                         </Button>
                     </div>
                 )}
-
-                {/* Scrollable content area */}
+                
                 <div className={cn(
                     "flex flex-col h-full",
                     isMobile && "overflow-y-auto custom-scroll"
                 )}>
                     <div className="flex flex-col gap-4 items-start">
-                        <span className="text-soft-400 text-xs font-medium">Transfer Sequence</span>
+                        <span className="text-soft-400 text-xs font-medium">{t("transferSequence")}</span>
                         <div className="flex flex-col items-start gap-2 w-full">
                             {jobPostingMenu.map((item, index) => (
                                 <div 
@@ -158,7 +143,7 @@ const SidebarSuspense = () => {
                                                 "text-strong-950": tab === item.value,
                                             }
                                         )}>
-                                            {item.title}
+                                            {t(`menu.${item.value}`)}
                                         </span>
                                     </div>
                                     <span className={cn("opacity-0 group-hover:opacity-100 transition-all duration-100", {
@@ -173,10 +158,10 @@ const SidebarSuspense = () => {
                 </div>
 
                 <div className="flex flex-col items-center gap-4 mt-4">
-                    <span className="text-sub-600 font-normal text-sm">Having trouble with transfer?</span>
+                    <span className="text-sub-600 font-normal text-sm">{t("troubleTransfer")}</span>
                     <Button className="bg-white w-full h-10 rounded-[10px] flex items-center gap-1 text-sm text-sub-600 font-medium">
                         <Icons.headphone />
-                        Contact
+                        {t("contact")}
                     </Button>
                 </div>
             </motion.div>

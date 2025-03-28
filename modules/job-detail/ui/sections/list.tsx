@@ -60,8 +60,6 @@ const List = ({ data, isOwner }: ListProps) => {
         }, 3000);
     };
 
-    console.log(data);
-
     return (
         <div className="bg-white w-full rounded-[20px] p-3 md:p-4 flex flex-col items-start gap-3 md:gap-4 shadow-sm">
             <p className="text-strong-950 font-medium text-sm md:text-base">{t("title")}</p>

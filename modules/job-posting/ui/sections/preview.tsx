@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
 import TransactionMethodDetails from "@/components/custom/modals/transaction-method-details";
+import { useTranslations } from "next-intl";
 
 interface SkillLevel {
     id: string;
@@ -16,6 +17,7 @@ interface SkillLevel {
 }
 
 const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
+    const t = useTranslations("jobPosting.preview");
     const [tab, setTab] = useQueryState("tab", { defaultValue: "basic-information" });
     const { jobPostingMenu } = useMockData();
     const isOpen = tab === "preview";
@@ -24,22 +26,19 @@ const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
     const { data: toolsData } = trpc.jobPosting.getAllCandidateSources.useQuery();
     const utils = trpc.useUtils();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [id, setId] = useQueryState("id", { defaultValue: "" });
 
     const [selectedSkillLevels, setSelectedSkillLevels] = useState<SkillLevel[]>([]);
     const [selectedTools, setSelectedTools] = useState<SkillLevel[]>([]);
 
-    // Watch for changes in form values
     useEffect(() => {
         const subscription = form.watch((value) => {
-            // Update skill levels when form values change
             if (skillsData && Array.isArray(skillsData) && value.skillLevelIds && Array.isArray(value.skillLevelIds)) {
                 const selectedLevels = skillsData.filter(level =>
                     value.skillLevelIds!.includes(level.id)
                 );
                 setSelectedSkillLevels(selectedLevels);
             }
-
-            // Update tools when form values change
             if (toolsData && Array.isArray(toolsData) && value.candidateSourceIds && Array.isArray(value.candidateSourceIds)) {
                 const selectedToolItems = toolsData.filter(tool =>
                     value.candidateSourceIds!.includes(tool.id)
@@ -51,7 +50,6 @@ const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
         return () => subscription.unsubscribe();
     }, [form, skillsData, toolsData]);
 
-    // Initial load of skill levels and tools data
     useEffect(() => {
         if (skillsData && Array.isArray(skillsData)) {
             const formSkillLevelIds = form.getValues("skillLevelIds");
@@ -72,62 +70,72 @@ const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
         }
     }, [toolsData, form]);
 
-    const create = trpc.jobPosting.createJob.useMutation({
-        onSuccess: (data) => {
-            toast.success("Job posting created successfully");
+    const update = trpc.jobPosting.updateJobPost.useMutation({
+        onSuccess: () => {
+            toast.success(t("updateSuccess"));
             utils.jobPosting.getMyJobPosts.invalidate();
             setIsModalOpen(true);
         },
         onError: (error) => {
-            toast.error(error.message || "Failed to create job posting");
+            toast.error(error.message || t("updateError"));
         }
     })
 
     const handleSubmit = () => {
         const formData = form.getValues();
-        create.mutate({
+        update.mutate({
             ...formData,
             salaryCurrency: "CNY",
             deadline: formData.deadline.toISOString(),
             usage: formData.usage ? formData.usage.toUpperCase() : "PRIVATE",
             privacy: formData.privacy ? formData.privacy.toUpperCase() : "PRIVATE",
+            status: "ACTIVE",
+            id: id
         });
-
     }
 
     const formattedDeadline = form.getValues("deadline")
         ? format(new Date(form.getValues("deadline")), "dd MMM, yyyy")
-        : "Not set";
+        : t("notSet");
 
     const formattedAmount = form.getValues("salary")
         ? `¥ ${form.getValues("salary")}`
-        : "Not set";
+        : t("notSet");
 
-    return <CardLayout isOpen={isOpen} toggleOpen={() => setTab(tab === "preview" ? "" : "preview")} item={item} onSubmit={handleSubmit} loading={create.isPending}>
+    const getUsageValue = () => {
+        const usage = form.getValues("usage");
+        return usage ? usage.toLowerCase() : "";
+    };
+
+    const getPrivacyValue = () => {
+        const privacy = form.getValues("privacy");
+        return privacy ? privacy.toLowerCase() : "";
+    };
+
+    return <CardLayout isOpen={isOpen} toggleOpen={() => setTab(tab === "preview" ? "" : "preview")} item={item} onSubmit={handleSubmit} loading={update.isPending}>
         <div className="w-full flex flex-col gap-0">
             <div className="flex flex-col gap-0">
                 <span className="bg-weak-50 py-1.5 px-3  h-7 w-full text-soft-400 text-xs font-medium flex items-center">
-                    STEP 1 DESCRIPTON
+                    {t("step1.title")}
                 </span>
                 <div className="p-4 flex flex-col gap-4">
                     <div className="flex flex-col gap-1">
-                        <h3 className="text-sub-600 font-medium text-sm">Subject</h3>
-                        <p className="text-sub-600 font-normal text-sm">{form.getValues("subject") || "Not provided"}</p>
+                        <h3 className="text-sub-600 font-medium text-sm">{t("step1.subject")}</h3>
+                        <p className="text-sub-600 font-normal text-sm">{form.getValues("subject") || t("notProvided")}</p>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <h3 className="text-sub-600 font-medium text-sm">Detail</h3>
-                        <p className="text-sub-600 font-normal text-sm">{form.getValues("detail") || "Not provided"}</p>
+                        <h3 className="text-sub-600 font-medium text-sm">{t("step1.detail")}</h3>
+                        <p className="text-sub-600 font-normal text-sm">{form.getValues("detail") || t("notProvided")}</p>
                     </div>
                 </div>
             </div>
             <div className="flex flex-col gap-0">
                 <span className="bg-weak-50 py-1.5 px-3 h-7 w-full text-soft-400 text-xs font-medium flex items-center">
-                    STEP 2 TAGS
+                    {t("step2.title")}
                 </span>
                 <div className="p-4 flex flex-col gap-8">
-                    {/* Experience Levels */}
                     <div className="flex flex-row justify-between gap-10 items-start">
-                        <h3 className="text-gray-600 text-sm font-normal shrink-0">Experience Levels</h3>
+                        <h3 className="text-gray-600 text-sm font-normal shrink-0">{t("step2.experienceLevels")}</h3>
                         <div className="flex flex-wrap gap-2 justify-end">
                             {selectedSkillLevels.length > 0 ? (
                                 selectedSkillLevels.map(skill => (
@@ -136,14 +144,12 @@ const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
                                     </div>
                                 ))
                             ) : (
-                                <span className="text-sub-600 text-xs">No skill levels selected</span>
+                                <span className="text-sub-600 text-xs">{t("step2.noSkillLevels")}</span>
                             )}
                         </div>
                     </div>
-
-                    {/* Candidate Sources */}
                     <div className="flex flex-row justify-between items-center">
-                        <h3 className="text-gray-600 text-sm font-normal">Candidate Sources</h3>
+                        <h3 className="text-gray-600 text-sm font-normal">{t("step2.candidateSources")}</h3>
                         <div className="flex flex-wrap gap-3 justify-end">
                             {selectedTools.length > 0 ? (
                                 selectedTools.map(tool => (
@@ -152,82 +158,77 @@ const Preview = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
                                     </div>
                                 ))
                             ) : (
-                                <span className="text-sub-600 text-xs">No candidate sources selected</span>
+                                <span className="text-sub-600 text-xs">{t("step2.noCandidateSources")}</span>
                             )}
                         </div>
                     </div>
-
-                    {/* File */}
                     <div className="flex flex-row justify-between items-center">
-                        <h3 className="text-gray-600 text-sm font-normal">File</h3>
+                        <h3 className="text-gray-600 text-sm font-normal">{t("step2.file")}</h3>
                         <span className="text-sub-600 text-sm font-medium">
-                            No file uploaded
+                            {t("step2.noFile")}
                         </span>
                     </div>
                 </div>
             </div>
-
-
             <div className="flex flex-col gap-0">
                 <span className="bg-weak-50 py-1.5 px-3 h-7 w-full text-soft-400 text-xs font-medium flex items-center">
-                    STEP 3 PRIVACY
+                    {t("step3.title")}
                 </span>
                 <div className="p-4 flex flex-col gap-3">
-                    {form.getValues("usage") === "business" && (
+                    {getUsageValue() === "business" && (
                         <div className="flex flex-col items-start gap-2">
-                            <p className="text-sub-600 font-medium text-sm">Business</p>
-                            <span className="text-sub-600 font-normal text-xs">For purposes such as signing contracts and issuing.</span>
+                            <p className="text-sub-600 font-medium text-sm">{t("step3.business.title")}</p>
+                            <span className="text-sub-600 font-normal text-xs">{t("step3.business.description")}</span>
                         </div>
                     )}
-                    {form.getValues("usage") === "private" && (
+                    {getUsageValue() === "private" && (
                         <div className="flex flex-col items-start gap-2">
-                            <p className="text-sub-600 font-medium text-sm">Private</p>
-                            <span className="text-sub-600 font-normal text-xs">For purposes such as hobbies and interests.</span>
+                            <p className="text-sub-600 font-medium text-sm">{t("step3.private.title")}</p>
+                            <span className="text-sub-600 font-normal text-xs">{t("step3.private.description")}</span>
                         </div>
                     )}
-                    {!form.getValues("usage") && (
+                    {!getUsageValue() && (
                         <div className="flex flex-col items-start gap-2">
-                            <p className="text-sub-600 font-medium text-sm">No usage type selected</p>
+                            <p className="text-sub-600 font-medium text-sm">{t("step3.noUsage")}</p>
                         </div>
                     )}
 
-                    {form.getValues("privacy") === "public" && (
+                    {getPrivacyValue() === "public" && (
                         <div className="flex flex-col items-start gap-2.5">
-                            <p className="text-sub-600 font-medium text-sm">Public</p>
-                            <span className="text-sub-600 font-normal text-xs">Any worker can apply for the job.</span>
+                            <p className="text-sub-600 font-medium text-sm">{t("step3.public.title")}</p>
+                            <span className="text-sub-600 font-normal text-xs">{t("step3.public.description")}</span>
                         </div>
                     )}
-                    {form.getValues("privacy") === "private" && (
+                    {getPrivacyValue() === "private" && (
                         <div className="flex flex-col items-start gap-2.5">
-                            <p className="text-sub-600 font-medium text-sm">Private</p>
-                            <span className="text-sub-600 font-normal text-xs">Only those who have been invited can take part in the work.</span>
+                            <p className="text-sub-600 font-medium text-sm">{t("step3.private.title")}</p>
+                            <span className="text-sub-600 font-normal text-xs">{t("step3.private.description")}</span>
                         </div>
                     )}
-                    {!form.getValues("privacy") && (
+                    {!getPrivacyValue() && (
                         <div className="flex flex-col items-start gap-2.5">
-                            <p className="text-sub-600 font-medium text-sm">No privacy type selected</p>
+                            <p className="text-sub-600 font-medium text-sm">{t("step3.noPrivacy")}</p>
                         </div>
                     )}
                 </div>
             </div>
-
             <div className="flex flex-col gap-0">
                 <span className="bg-weak-50 py-1.5 px-3 h-7 w-full text-soft-400 text-xs font-medium flex items-center">
-                    STEP 4 ORDER AMOUNT & DATE
+                    {t("step4.title")}
                 </span>
                 <div className="p-4 flex flex-col gap-2">
                     <div className="flex items-center justify-between">
-                        <p className="font-normal text-sm text-sub-600">Deadline</p>
+                        <p className="font-normal text-sm text-sub-600">{t("step4.deadline")}</p>
                         <span className="text-strong-950 text-sm font-medium">{formattedDeadline}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                        <p className="font-normal text-sm text-sub-600">Order Amount</p>
+                        <p className="font-normal text-sm text-sub-600">{t("step4.orderAmount")}</p>
                         <span className="text-strong-950 text-sm font-medium">{formattedAmount}</span>
                     </div>
                     {form.getValues("budgetsActive") && (
                         <div className="flex items-center justify-between">
-                            <p className="font-normal text-sm text-sub-600">Budget to be confirmed</p>
-                            <span className="text-strong-950 text-sm font-medium">Yes</span>
+                            <p className="font-normal text-sm text-sub-600">{t("step4.budgetConfirm")}</p>
+                            <span className="text-strong-950 text-sm font-medium">{t("step4.yes")}</span>
                         </div>
                     )}
                 </div>

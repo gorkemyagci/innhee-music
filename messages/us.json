@@ -814,6 +814,133 @@
       "orderCreated": "Order Created",
       "milestone": "Milestone {number}",
       "milestoneAmount": "Milestone Amount"
+    },
+    "editJob": "Edit Job",
+    "createJob": "Create Job",
+    "subtitle": "Define details, set the budget and outline preferences",
+    "basicInfo": {
+      "title": "Basic Information",
+      "subject": {
+        "label": "Subject",
+        "placeholder": "Project subject"
+      },
+      "detail": {
+        "label": "Detail",
+        "placeholder": "Please describe your needs"
+      },
+      "amount": {
+        "label": "Amount",
+        "placeholder": "0.00"
+      },
+      "deadline": {
+        "label": "Deadline"
+      },
+      "budgetConfirm": "Budget to be confirmed",
+      "next": "Next",
+      "createSuccess": "Job posting created successfully",
+      "createError": "Failed to create job posting"
+    },
+    "selectCategory": {
+      "skillLevels": {
+        "title": "Skill Levels",
+        "max": "(max. 4)"
+      },
+      "tools": {
+        "title": "Tools"
+      },
+      "files": {
+        "title": "Add Download File",
+        "limit": "(Up to 3 audio files)",
+        "format": "MP3 format and 25 mb size limitations",
+        "upload": "Upload",
+        "uploading": "Uploading...",
+        "uploaded": "Uploaded"
+      }
+    },
+    "usage": {
+      "usageSection": {
+        "title": "USAGE",
+        "business": {
+          "title": "Business",
+          "description": "For purposes such as signing contracts and issuing."
+        },
+        "private": {
+          "title": "Private",
+          "description": "For purposes such as hobbies and interests."
+        }
+      },
+      "privacySection": {
+        "title": "PRIVACY",
+        "public": {
+          "title": "Public",
+          "description": "Any worker can apply for the job."
+        },
+        "private": {
+          "title": "Private",
+          "description": "Only those who have been invited can take part in the work."
+        }
+      }
+    },
+    "sidebar": {
+      "navigation": "Navigation",
+      "transferSequence": "Transfer Sequence",
+      "troubleTransfer": "Having trouble with transfer?",
+      "contact": "Contact",
+      "menu": {
+        "basic-information": "Basic Information",
+        "select-category": "Select Category",
+        "usage": "Usage",
+        "preview": "Preview"
+      }
+    },
+    "preview": {
+      "updateSuccess": "Job posting updated successfully",
+      "updateError": "Failed to update job posting",
+      "notSet": "Not set",
+      "notProvided": "Not provided",
+      "step1": {
+        "title": "STEP 1 DESCRIPTION",
+        "subject": "Subject",
+        "detail": "Detail"
+      },
+      "step2": {
+        "title": "STEP 2 TAGS",
+        "experienceLevels": "Experience Levels",
+        "noSkillLevels": "No skill levels selected",
+        "candidateSources": "Candidate Sources",
+        "noCandidateSources": "No candidate sources selected",
+        "file": "File",
+        "noFile": "No file uploaded"
+      },
+      "step3": {
+        "title": "STEP 3 PRIVACY",
+        "business": {
+          "title": "Business",
+          "description": "For purposes such as signing contracts and issuing."
+        },
+        "private": {
+          "title": "Private",
+          "description": "For purposes such as hobbies and interests."
+        },
+        "public": {
+          "title": "Public",
+          "description": "Any worker can apply for the job."
+        },
+        "noUsage": "No usage type selected",
+        "noPrivacy": "No privacy type selected"
+      },
+      "step4": {
+        "title": "STEP 4 ORDER AMOUNT & DATE",
+        "deadline": "Deadline",
+        "orderAmount": "Order Amount",
+        "budgetConfirm": "Budget to be confirmed",
+        "yes": "Yes"
+      }
+    },
+    "cardLayout": {
+      "draft": "Draft",
+      "post": "Post",
+      "next": "Next"
     }
   },
   "filter": {
@@ -1104,5 +1231,12 @@
       "title": "Work files",
       "download": "Download"
     }
+  },
+  "transactionMethodDetails": {
+    "thanksOrder": "Thanks for the order!",
+    "whatNext": "What would you like to do next?",
+    "invite": "Invite",
+    "inviteDescription": "workers or contact customer service for assistance.",
+    "liveSupport": "Live Support"
   }
 }

@@ -20,11 +20,15 @@ const AuthNavbar = () => {
                     <span className="text-sub-600 font-normal text-sm">
                         {t("noAccount")}
                     </span>
-                    <Link href={pageUrls.SIGN_IN} prefetch>
+                    <div
+                        onClick={() => {
+                            typeof window !== "undefined" && window.location.replace(pageUrls.SIGN_IN)
+                        }}
+                    >
                         <span className="text-main-900 font-medium text-sm underline">
                             {t("signUp")}
                         </span>
-                    </Link>
+                    </div>
                 </div>
             ) : (
                 <div className="flex items-center gap-2">
