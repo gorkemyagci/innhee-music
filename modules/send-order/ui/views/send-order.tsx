@@ -110,10 +110,18 @@ const SendOrder = () => {
                 reconnectionDelay: 1000
             });
 
-            socketRef.current.on("connect", () => {});
-            socketRef.current.on("connect_error", (error) => {});
-            socketRef.current.on("disconnect", (reason) => {});
-            socketRef.current.on("error", (error) => {});
+            socketRef.current.on("connect", () => {
+                console.log("connected");
+            });
+            socketRef.current.on("connect_error", (error) => {
+                console.log("connect_error", error);
+            });
+            socketRef.current.on("disconnect", (reason) => {
+                console.log("disconnect", reason);
+            });
+            socketRef.current.on("error", (error) => {
+                console.log("error", error);
+            });
         }
 
         return () => {

@@ -24,6 +24,8 @@ const Sidebar = ({ data, isOwner }: { data: any, isOwner: boolean }) => {
     const create = trpc.chat.createRoom.useMutation({
         onSuccess: (response) => {
             const roomId = response.id;
+            console.log(roomId);
+            
             router.push(`/chat?chatId=${roomId}`);
         },
         onError: (error) => {
