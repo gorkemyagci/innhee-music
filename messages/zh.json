@@ -7,7 +7,16 @@
       "bonus": "奖金"
     },
     "search": {
-      "placeholder": "发现更多"
+      "placeholder": "搜索...",
+      "suggested": "建议：",
+      "sort": {
+        "placeholder": "排序方式",
+        "options": {
+          "rating": "评分",
+          "orderVolume": "订单量",
+          "activity": "活跃度"
+        }
+      }
     },
     "buttons": {
       "freeStart": "免费开始"
@@ -334,6 +343,7 @@
   },
   "chat": {
     "title": "聊天",
+    "noUsers": "暂无聊天用户",
     "timeAgo": {
       "minutes": "{count} 分钟前",
       "hours": "{count} 小时前",
@@ -400,7 +410,11 @@
         "me": "我",
         "files": "{count} 个文件"
       },
-      "loading": "正在加载消息..."
+      "loading": "正在加载消息...",
+      "noChatUsers": {
+        "title": "暂无聊天用户",
+        "description": "选择一个聊天开始对话，或等待新的消息"
+      }
     },
     "offerModal": {
       "title": "创建报价",
@@ -437,6 +451,10 @@
           "amountGreaterThanZero": "金额必须大于0",
           "deliveryDaysRequired": "交付天数是必需的",
           "deliveryDaysGreaterThanZero": "交付天数必须大于0"
+        },
+        "toast": {
+          "createSuccess": "合同创建成功！",
+          "createError": "创建合同失败，请重试。"
         }
       }
     },
@@ -533,7 +551,10 @@
     },
     "about": {
       "title": "关于"
-    }
+    },
+    "follow": "关注",
+    "touch": "联系",
+    "recentReviews": "最近评价"
   },
   "modals": {
     "editSkills": {
@@ -665,6 +686,10 @@
         "overdue": "已逾期"
       },
       "startedOn": "开始于 {date}"
+    },
+    "buttons": {
+      "cancel": "取消",
+      "apply": "应用"
     }
   },
   "projects": {
@@ -713,10 +738,13 @@
       "deadline": "截止日期",
       "proposals": "提案",
       "message": "消息",
-      "apply": "申请"
+      "apply": "申请",
+      "applied": "已申请"
     },
     "list": {
-      "title": "列表"
+      "title": "列表",
+      "noApplicants": "暂无申请人",
+      "invite": "邀请"
     },
     "jobLink": {
       "title": "工作链接",
@@ -845,6 +873,180 @@
         "mtvMusic": "MTV音乐奖",
         "eurovisionAwards": "欧洲歌唱大赛"
       }
+    },
+    "noPortfolioItems": "未找到带附件的作品集项目。"
+  },
+  "notFound": {
+    "title": "页面未找到",
+    "message": "您访问的页面不存在或已被移动。",
+    "backToHome": "返回仪表板"
+  },
+  "sendOrder": {
+    "title": "发送报价",
+    "jobDetails": {
+      "title": "工作详情",
+      "send": {
+        "label": "发送给",
+        "placeholder": "搜索..."
+      },
+      "orderTitle": {
+        "label": "选择订单",
+        "placeholder": "订单标题"
+      },
+      "contractTitle": {
+        "label": "合同标题",
+        "placeholder": "输入合同标题..."
+      },
+      "description": {
+        "label": "描述",
+        "placeholder": "在此输入描述文本...",
+        "maxChars": "最多1000个字符"
+      },
+      "skillLevels": {
+        "label": "技能等级",
+        "max": "(最多4个)",
+        "add": "添加技能等级"
+      }
+    },
+    "contractTerms": {
+      "title": "合同条款",
+      "paymentTypes": {
+        "oneTime": {
+          "title": "一次性付款",
+          "description": "一次性支付全部金额。",
+          "learnMore": "了解更多"
+        },
+        "installment": {
+          "title": "分期付款",
+          "description": "分多次支付全部金额。",
+          "learnMore": "了解更多"
+        }
+      },
+      "amount": {
+        "label": "金额",
+        "placeholder": "0.00"
+      },
+      "deadline": {
+        "label": "截止日期"
+      },
+      "milestone": {
+        "title": "第{index}个里程碑描述",
+        "add": "添加里程碑"
+      }
+    },
+    "attachments": {
+      "title": "附件",
+      "add": "添加文件",
+      "fileSize": {
+        "bytes": "字节",
+        "kb": "KB",
+        "mb": "MB",
+        "gb": "GB"
+      }
+    },
+    "faq": {
+      "title": "常见问题",
+      "items": {
+        "fixedPrice": {
+          "question": "固定价格合同如何运作？",
+          "answer": "Fermentum egestas at nunc tristique. Feugiat sodales viverra odio nisi non sem mauris. Nisi at purus habitant dictum etiam mi adipiscing. Congue at arcu aenean vitae aliquam eu tortor viverra id. Habitant sagittis faucibus pharetra odio fames rhoncus pellentesque sem est. Nunc ac eget tellus ultrices."
+        },
+        "initiationFee": {
+          "question": "什么是合同启动费？",
+          "answer": "Fermentum egestas at nunc tristique. Feugiat sodales viverra odio nisi non sem mauris. Nisi at purus habitant dictum etiam mi adipiscing. Congue at arcu aenean vitae aliquam eu tortor viverra id. Habitant sagittis faucibus pharetra odio fames rhoncus pellentesque sem est. Nunc ac eget tellus ultrices."
+        }
+      }
+    },
+    "submit": {
+      "terms": "我同意",
+      "and": "和",
+      "termsLink": "条款和条件",
+      "privacyLink": "隐私政策",
+      "buttons": {
+        "cancel": "取消",
+        "continue": "继续"
+      }
+    },
+    "toast": {
+      "createSuccess": "合同创建成功！",
+      "createError": "创建合同失败，请重试。"
+    }
+  },
+  "orders": {
+    "items": {
+      "title1": "专业简历、求职信和领英写作服务",
+      "title2": "专业简历、求职信和领英写作服务",
+      "title3": "专业简历、求职信和领英写作服务",
+      "title4": "专业简历、求职信和领英写作服务",
+      "skills": {
+        "mixing": "混音",
+        "singing": "演唱",
+        "jazz": "爵士",
+        "hiphop": "嘻哈",
+        "kpop": "K-pop"
+      },
+      "priceType": {
+        "fixed": "固定价格"
+      },
+      "status": {
+        "applyNow": "立即申请",
+        "inProgress": "进行中"
+      },
+      "description1": "我们正在寻找一位才华横溢的网站设计师和前端开发人员加入我们的团队。在这个角色中，您将负责创建视觉吸引人且用户友好的网站，以满足我们客户的需求。",
+      "description2": "我们正在寻找一位才华横溢的网站设计师和前端开发人员加入我们的团队。在这个角色中，您将负责创建视觉吸引人且用户友好的网站，以满足我们客户的需求。",
+      "description3": "我们正在寻找一位才华横溢的网站设计师和前端开发人员加入我们的团队。在这个角色中，您将负责创建视觉吸引人且用户友好的网站，以满足我们客户的需求。",
+      "description4": "我们正在寻找一位才华横溢的网站设计师和前端开发人员加入我们的团队。在这个角色中，您将负责创建视觉吸引人且用户友好的网站，以满足我们客户的需求。"
+    }
+  },
+  "review": {
+    "clientName": "Cleve Music",
+    "rating": "4.9(125)",
+    "company": "Google",
+    "role": "工作者",
+    "contractTitle": "合同标题文本...",
+    "reviewText": "与Ralph合作进行网站用户体验审计是一次改变游戏规则的经历。Ralph不仅发现了痛点，还提供了创新的解决方案，使我能够自信地做出关键的业务决策。",
+    "price": "$1000.00"
+  },
+  "orderDetails": {
+    "userHead": {
+      "rating": "4.9(125)",
+      "special": "特别"
+    },
+    "paymentInfo": {
+      "totalAmount": "总金额",
+      "settled": "已结算",
+      "inEscrow": "托管中",
+      "refunded": "已退款"
+    },
+    "milestone": {
+      "title": "里程碑",
+      "description": "每月仅需 $4.99！",
+      "learnMore": "了解更多"
+    },
+    "timeline": {
+      "title": "时间线",
+      "addNew": "添加新里程碑"
+    },
+    "milestoneItem": {
+      "confirmPayment": "确认付款"
+    },
+    "uploadWork": {
+      "title": "上传作品",
+      "dropHere": "将文件拖放到此处",
+      "chooseFile": "选择文件或拖放到此处。",
+      "fileTypes": "支持 JPEG、PNG、PDF 和 MP4 格式，最大 50 MB。",
+      "browseFile": "浏览文件",
+      "download": "下载"
+    },
+    "details": {
+      "title": "详情",
+      "contract": "合同",
+      "contractId": "合同编号",
+      "deadline": "截止日期"
+    },
+    "fileWork": {
+      "title": "工作文件",
+      "download": "下载"
     }
   }
 }

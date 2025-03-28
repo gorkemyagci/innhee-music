@@ -13,6 +13,7 @@ export type ProjectItemType = {
   privacy: string;
   usage: string;
   budgetsActive: boolean;
+  proposals: number;
   createdAt: string;
   updatedAt: string;
   deadline: string;

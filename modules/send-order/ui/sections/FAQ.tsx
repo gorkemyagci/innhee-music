@@ -2,18 +2,20 @@
 import { Icons } from "@/components/icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const FAQ = () => {
+    const t = useTranslations("sendOrder.faq");
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     
     const items = [
         {
-            question: "How do fixed-price contracts work?",
-            answer: "Fermentum egestas at nunc tristique. Feugiat sodales viverra odio nisi non sem mauris. Nisi at purus habitant dictum etiam mi adipiscing. Congue at arcu aenean vitae aliquam eu tortor viverra id. Habitant sagittis faucibus pharetra odio fames rhoncus pellentesque sem est. Nunc ac eget tellus ultrices."
+            question: t("items.fixedPrice.question"),
+            answer: t("items.fixedPrice.answer")
         },
         {
-            question: "What is a Contract Initiation Fee?",
-            answer: "Fermentum egestas at nunc tristique. Feugiat sodales viverra odio nisi non sem mauris. Nisi at purus habitant dictum etiam mi adipiscing. Congue at arcu aenean vitae aliquam eu tortor viverra id. Habitant sagittis faucibus pharetra odio fames rhoncus pellentesque sem est. Nunc ac eget tellus ultrices."
+            question: t("items.initiationFee.question"),
+            answer: t("items.initiationFee.answer")
         }
     ];
 

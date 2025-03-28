@@ -14,5 +14,6 @@ export const pageUrls = {
     CHAT: "/chat",
     BEATS_MARKET: "/beats-market",
     REFERRAL: "/referral",
-    FIND_SERVICES: "/find-jobs?tab=projects"
+    FIND_SERVICES: "/find-jobs?tab=projects",
+    SEND_OFFER: "/send-offer"
 }

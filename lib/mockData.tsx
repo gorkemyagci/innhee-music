@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 export const useMockData = () => {
     const t = useTranslations("faq");
     const tJobPosting = useTranslations("jobPosting");
+    const tOrders = useTranslations("orders.items");
 
     const faqsItems = [
         {
@@ -223,67 +224,91 @@ export const useMockData = () => {
 ];
 
     const buyerOrders = [
-    {
-        id: 1,
-        title: "Write professional resume, cover letter, and linkedin writing services",
-        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
-        price: 1400,
-        priceType: "Fixed Price",
-        status: "Apply Now",
-        description: "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually appealing and user-friendly websites that meet our clients' needs.",
-        timeline: {
-            daysAgo: 3,
-            deadlineDate: true,
-            sentProposal: 1,
-            businessContract: true
+        {
+            id: 1,
+            title: tOrders("title1"),
+            skills: [
+                tOrders("skills.mixing"),
+                tOrders("skills.singing"),
+                tOrders("skills.jazz"),
+                tOrders("skills.hiphop"),
+                tOrders("skills.kpop")
+            ],
+            price: 1400,
+            priceType: tOrders("priceType.fixed"),
+            status: tOrders("status.applyNow"),
+            description: tOrders("description1"),
+            timeline: {
+                daysAgo: 3,
+                deadlineDate: true,
+                sentProposal: 1,
+                businessContract: true
+            }
+        },
+        {
+            id: 2,
+            title: tOrders("title2"),
+            skills: [
+                tOrders("skills.mixing"),
+                tOrders("skills.singing"),
+                tOrders("skills.jazz"),
+                tOrders("skills.hiphop"),
+                tOrders("skills.kpop")
+            ],
+            price: 1400,
+            priceType: tOrders("priceType.fixed"),
+            status: tOrders("status.applyNow"),
+            description: tOrders("description2"),
+            timeline: {
+                daysAgo: 3,
+                deadlineDate: true,
+                sentProposal: 1,
+                businessContract: true
+            }
+        },
+        {
+            id: 3,
+            title: tOrders("title3"),
+            skills: [
+                tOrders("skills.mixing"),
+                tOrders("skills.singing"),
+                tOrders("skills.jazz"),
+                tOrders("skills.hiphop"),
+                tOrders("skills.kpop")
+            ],
+            price: 1400,
+            priceType: tOrders("priceType.fixed"),
+            status: tOrders("status.inProgress"),
+            description: tOrders("description3"),
+            timeline: {
+                daysAgo: 3,
+                deadlineDate: true,
+                sentProposal: 1,
+                businessContract: true
+            }
+        },
+        {
+            id: 4,
+            title: tOrders("title4"),
+            skills: [
+                tOrders("skills.mixing"),
+                tOrders("skills.singing"),
+                tOrders("skills.jazz"),
+                tOrders("skills.hiphop"),
+                tOrders("skills.kpop")
+            ],
+            price: 1400,
+            priceType: tOrders("priceType.fixed"),
+            status: tOrders("status.inProgress"),
+            description: tOrders("description4"),
+            timeline: {
+                daysAgo: 3,
+                deadlineDate: true,
+                sentProposal: 1,
+                businessContract: true
+            }
         }
-    },
-    {
-        id: 2,
-        title: "Write professional resume, cover letter, and linkedin writing services",
-        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
-        price: 1400,
-        priceType: "Fixed Price",
-        status: "Apply Now",
-        description: "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually appealing and user-friendly websites that meet our clients' needs.",
-        timeline: {
-            daysAgo: 3,
-            deadlineDate: true,
-            sentProposal: 1,
-            businessContract: true
-        }
-    },
-    {
-        id: 3,
-        title: "Write professional resume, cover letter, and linkedin writing services",
-        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
-        price: 1400,
-        priceType: "Fixed Price",
-        status: "In progress",
-        description: "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually appealing and user-friendly websites that meet our clients' needs.",
-        timeline: {
-            daysAgo: 3,
-            deadlineDate: true,
-            sentProposal: 1,
-            businessContract: true
-        }
-    },
-    {
-        id: 4,
-        title: "Write professional resume, cover letter, and linkedin writing services",
-        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
-        price: 1400,
-        priceType: "Fixed Price",
-        status: "In progress",
-        description: "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually appealing and user-friendly websites that meet our clients' needs.",
-        timeline: {
-            daysAgo: 3,
-            deadlineDate: true,
-            sentProposal: 1,
-            businessContract: true
-        }
-    }
-];
+    ];
 
     return {
         faqsItems,

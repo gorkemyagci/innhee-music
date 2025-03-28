@@ -91,9 +91,9 @@ const ProjectItem = ({ key, item }: ProjectItemProps) => {
                                 <span className="text-sub-600 font-medium text-[10px] md:text-xs whitespace-nowrap">{skill.name}</span>
                             </div>
                         ))}
-                        {isMobile && item?.skillLevels?.length > 3 && (
+                        {isMobile && item?.skillLevels && item.skillLevels.length > 3 && (
                             <div className="bg-white border border-soft-200 rounded-md py-0.5 px-2 h-5 flex items-center justify-center">
-                                <span className="text-sub-600 font-medium text-[10px] whitespace-nowrap">+{item?.skillLevels?.length - 3}</span>
+                                <span className="text-sub-600 font-medium text-[10px] whitespace-nowrap">+{item.skillLevels.length - 3}</span>
                             </div>
                         )}
                     </div>

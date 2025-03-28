@@ -14,12 +14,12 @@ interface TagsProps {
 const Tags = ({ tags }: TagsProps = {}) => {
     const t = useTranslations("sidebar.tags");
     const displayTags = tags && tags.length > 0 ? tags : [];
-
+    const saveTags = (tags: any) => {};
     return (
         <div className="p-4 flex flex-col gap-3 items-start">
             <div className="flex w-full items-center justify-between">
                 <span className="text-main-900 font-medium text-xs">{t("title")}</span>
-                <EditTags>
+                <EditTags onSave={saveTags}> 
                     <Icons.pencil className="size-5 cursor-pointer" />
                 </EditTags>
             </div>

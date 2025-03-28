@@ -1,7 +1,10 @@
+"use client";
+
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { useMockData } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface MilestoneItemProps {
     item: {
@@ -16,6 +19,7 @@ interface MilestoneItemProps {
 
 const MilestoneItem = ({ item, index }: MilestoneItemProps) => {
     const { timelineData } = useMockData();
+    const t = useTranslations("orderDetails.milestoneItem");
     
     return (
         <div key={index} className="flex relative items-center w-full justify-between">
@@ -45,7 +49,7 @@ const MilestoneItem = ({ item, index }: MilestoneItemProps) => {
                 <span className="text-sub-600 font-normal text-xs">{item.date}</span>
             )}
             {index > 1 && timelineData[index - 1].status === "completed" && (
-                <Button variant="outline" className="text-strong-950 font-normal text-sm py-1 px-2 rounded-md h-7">Confirm Payment</Button>
+                <Button variant="outline" className="text-strong-950 font-normal text-sm py-1 px-2 rounded-md h-7">{t("confirmPayment")}</Button>
             )}
         </div>
     )

@@ -16,10 +16,18 @@ import {
 } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { enUS } from "date-fns/locale/en-US";
+import { zhCN } from "date-fns/locale/zh-CN";
+
+const locales = {
+  en: enUS,
+  zh: zhCN,
+};
 
 const DatePicker = () => {
     const t = useTranslations("calendar");
+    const locale = useLocale();
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [visibleDays, setVisibleDays] = useState<Date[]>([]);
@@ -131,7 +139,7 @@ const DatePicker = () => {
                                 exit={{ y: direction < 0 ? 20 : -20, opacity: 0 }}
                                 transition={{ duration: 0.2 }}
                             >
-                                {format(currentMonth, 'MMMM yyyy')}
+                                {format(currentMonth, 'MMMM yyyy', { locale: locales[locale as keyof typeof locales] })}
                             </motion.h2>
                         </AnimatePresence>
                     </div>

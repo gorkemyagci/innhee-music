@@ -21,6 +21,7 @@ interface MessageItemProps {
 
 const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
   const t = useTranslations("chat.main");
+  const tMessages = useTranslations("chat.messages");
   const [showContractDetails, setShowContractDetails] = useState(false);
   const socketRef = useRef<Socket | null>(null);
 
@@ -123,12 +124,12 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
       <div className="flex flex-col w-full items-end my-4">
         {message.content.includes("Accepted an offer") ? (
           <div className="flex flex-col items-start w-1/2 gap-3">
-            <span className="text-xs text-sub-600 font-normal">{t("system.acceptedOffer")}</span>
+            <span className="text-xs text-sub-600 font-normal">{tMessages("system.acceptedOffer")}</span>
             <button
               className="text-primary-base w-full text-xs h-[52px] flex items-center justify-start rounded-[12px] bg-weak-50 p-4 font-medium"
               onClick={handleViewContract}
             >
-              {t("system.viewContract")}
+              {tMessages("system.viewContract")}
             </button>
           </div>
         ) : (
@@ -157,7 +158,7 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
     return (
       <div
         className={cn(
-          "flex",
+          "flex mb-6",
           isOwn ? "justify-end" : "justify-start"
         )}
       >
@@ -170,10 +171,10 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
           <div className="flex flex-col gap-2.5">
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center gap-0.5 text-xs">
-                <span className="font-medium text-sub-600">James</span>
-                <span className="font-normal text-soft-400">10:32 PM</span>
+                <span className="font-medium text-sub-600">{sender.name}</span>
+                <span className="font-normal text-soft-400">{formatTime(message.timestamp)}</span>
               </div>
-              <span className="text-sub-600 font-normal text-xs flex items-center gap-1">{t("offer.title")} <Icons.information_line /></span>
+              <span className="text-sub-600 font-normal text-xs flex items-center gap-1">{tMessages("offer.title")} <Icons.information_line /></span>
             </div>
             <div
               className={cn(
@@ -193,12 +194,12 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
                 <Separator className="bg-soft-200" />
                 <div className="flex flex-col items-start gap-1">
                   <span className="text-strong-950 text-xs font-medium">
-                    {t("offer.yourOfferIncludes")}
+                    {tMessages("offer.yourOfferIncludes")}
                   </span>
                   <div className="flex items-center gap-1">
                     <Icons.time_line />
                     <span className="text-sub-600 text-xs font-normal">
-                      {message.offer?.deliveryDays} {t("offer.deliveryTime")}
+                      {message.offer?.deliveryDays} {tMessages("offer.deliveryTime")}
                     </span>
                   </div>
                 </div>
@@ -209,7 +210,7 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
                     className="text-blue-600 text-xs font-medium hover:underline"
                     onClick={handleViewContract}
                   >
-                    {t("system.viewContract")}
+                    {tMessages("system.viewContract")}
                   </button>
                 </div>
               ) : !isOwn && (
@@ -219,13 +220,13 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
                     onClick={() => handleContractAction(message.offer?.id || "", "REJECTED")}
                     className="h-9 flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm"
                   >
-                    {t("offer.cancel")}
+                    {tMessages("offer.cancel")}
                   </Button>
                   <Button
                     onClick={() => handleContractAction(message.offer?.id || "", "ACCEPTED")}
                     className="h-9 flex-1 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
                     <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                    {t("offer.accept")}
+                    {tMessages("offer.accept")}
                   </Button>
                 </div>
               )}
@@ -266,10 +267,10 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
           <div className="flex flex-col gap-2.5">
             <div className="flex flex-col items-start gap-0.5">
               <div className="flex items-center gap-0.5 text-xs">
-                <span className="font-medium text-sub-600">James</span>
-                <span className="font-normal text-soft-400">10:32 PM</span>
+                <span className="font-medium text-sub-600">{sender.name}</span>
+                <span className="font-normal text-soft-400">{formatTime(message.timestamp)}</span>
               </div>
-              <span className="text-sub-600 font-normal text-xs">{t("milestone.activated")}</span>
+              <span className="text-sub-600 font-normal text-xs">{tMessages("milestone.activated")}</span>
             </div>
             <div
               className={cn(
@@ -285,7 +286,7 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
                   className="text-primary-base text-sm cursor-pointer font-medium hover:underline"
                   onClick={handleViewContract}
                 >
-                  {t("milestone.viewContract")}
+                  {tMessages("milestone.viewContract")}
                 </button>
               </div>
             </div>
@@ -333,7 +334,7 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
       >
         <div className="flex items-center justify-between mb-1 flex-shrink-0">
           <span className="text-xs font-medium text-sub-600">
-            {isOwn ? t("regular.me") : sender.name}
+            {isOwn ? tMessages("regular.me") : sender.name}
           </span>
           <span className="text-xs text-sub-600 ml-2">{formatTime(message.timestamp)}</span>
         </div>
@@ -378,7 +379,7 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
                         rel="noopener noreferrer"
                         className="text-xs text-primary-base hover:underline font-medium text-center"
                       >
-                        {t("attachments.downloadFile")}
+                        {tMessages("attachments.downloadFile")}
                       </a>
                     </div>
                   )}
@@ -394,7 +395,7 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
 
         {message.fileCount && (
           <div className="mt-2 text-xs text-sub-600">
-            <span>{t("regular.files", { count: message.fileCount })}</span>
+            <span>{tMessages("regular.files", { count: message.fileCount })}</span>
           </div>
         )}
       </div>

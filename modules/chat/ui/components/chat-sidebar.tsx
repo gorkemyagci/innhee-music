@@ -44,8 +44,8 @@ const ChatSidebar = ({ selectedChat, onSelectChat }: ChatSidebarProps) => {
               </div>
             </div>
           ))
-        ) : (
-          chatRooms?.map((room: ChatRoom) => {
+        ) : chatRooms && chatRooms.length > 0 ? (
+          chatRooms.map((room: ChatRoom) => {
             const otherUser = getOtherUser(room);
             if (!otherUser) return null;
             return (
@@ -80,6 +80,10 @@ const ChatSidebar = ({ selectedChat, onSelectChat }: ChatSidebarProps) => {
               </div>
             );
           })
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-sub-600 text-sm">{t("noUsers")}</p>
+          </div>
         )}
       </div>
     </div>

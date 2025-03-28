@@ -6,9 +6,8 @@ import UserAvatar from "@/components/user-avatar";
 import { X } from "lucide-react";
 import { useState } from "react";
 import Sidebar from "./sidebar";
-import { UserType } from "@/lib/types";
 
-const SidebarLayout = ({ data }: { data: any }) => {
+const SidebarLayout = ({ data, isOwner }: { data: any, isOwner: boolean }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     return (
         <>
@@ -31,16 +30,13 @@ const SidebarLayout = ({ data }: { data: any }) => {
                 </div>
             </div>
 
-            {/* Desktop sidebar */}
             <div className="hidden md:block sticky top-5">
-                <Sidebar data={data} />
+                <Sidebar data={data} isOwner={isOwner} />
             </div>
 
-            {/* Mobile sidebar with animation */}
             <AnimatePresence>
                 {sidebarOpen && (
                     <>
-                        {/* Backdrop */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 0.5 }}
@@ -48,8 +44,6 @@ const SidebarLayout = ({ data }: { data: any }) => {
                             className="fixed inset-0 bg-black z-40 md:hidden"
                             onClick={() => setSidebarOpen(false)}
                         />
-
-                        {/* Sidebar */}
                         <motion.div
                             initial={{ x: "-100%" }}
                             animate={{ x: 0 }}
@@ -68,7 +62,7 @@ const SidebarLayout = ({ data }: { data: any }) => {
                                         <X className="h-5 w-5" />
                                     </Button>
                                 </div>
-                                <Sidebar data={data} />
+                                <Sidebar data={data} isOwner={isOwner} />
                             </div>
                         </motion.div>
                     </>

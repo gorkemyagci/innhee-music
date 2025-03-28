@@ -6,6 +6,8 @@ interface VerifyPageProps {
     searchParams: Promise<{ email?: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 const Verify = async ({ searchParams }: VerifyPageProps) => {
     const t = await getTranslations("auth.verify");
     const email = (await searchParams).email || "your email";

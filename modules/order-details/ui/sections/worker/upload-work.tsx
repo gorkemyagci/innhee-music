@@ -3,6 +3,7 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface FileWithProgress {
     id: string;
@@ -17,6 +18,7 @@ interface FileWithProgress {
 const UploadWork = () => {
     const [files, setFiles] = useState<FileWithProgress[]>([]);
     const [isDragging, setIsDragging] = useState(false);
+    const t = useTranslations("orderDetails.uploadWork");
 
     const createFileWithProgress = (file: File): FileWithProgress => ({
         id: Math.random().toString(36).substring(7),
@@ -108,7 +110,7 @@ const UploadWork = () => {
     return (
         <div className="border border-soft-200 rounded-2xl">
             <div className="px-4 py-3 h-12 flex items-center justify-start border-b border-soft-200">
-                <span className="text-strong-950 font-medium">Upload work</span>
+                <span className="text-strong-950 font-medium">{t("title")}</span>
             </div>
             <div className="p-4">
                 <div
@@ -123,9 +125,9 @@ const UploadWork = () => {
                     <Icons.upload_cloud className={cn("size-6", isDragging && "text-primary-base")} />
                     <div className="flex flex-col items-center gap-1">
                         <p className={cn("text-sm font-medium", isDragging ? "text-primary-base" : "text-strong-950")}>
-                            {isDragging ? "Drop your file here" : "Choose a file or drag & drop it here."}
+                            {isDragging ? t("dropHere") : t("chooseFile")}
                         </p>
-                        <p className="text-xs font-normal text-soft-400">JPEG, PNG, PDF, and MP4 formats, up to 50 MB.</p>
+                        <p className="text-xs font-normal text-soft-400">{t("fileTypes")}</p>
                     </div>
                     <label htmlFor="file-upload" className="mt-2">
                         <input
@@ -141,7 +143,7 @@ const UploadWork = () => {
                             className="h-8 rounded-lg py-1.5 px-4 text-sub-600 shadow-none font-medium text-sm cursor-pointer"
                             onClick={() => document.getElementById('file-upload')?.click()}
                         >
-                            Browse File
+                            {t("browseFile")}
                         </Button>
                     </label>
                 </div>
@@ -189,7 +191,7 @@ const UploadWork = () => {
                                 className="h-8 px-4 py-2 rounded-lg text-sub-600 hover:text-sub-600 hover:bg-transparent"
                                 onClick={() => handleDownload(file)}
                             >
-                                Download
+                                {t("download")}
                             </Button>
                         )}
                     </div>

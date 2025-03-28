@@ -1,6 +1,6 @@
 import { Icons } from "@/components/icons";
 import UserAvatar from "@/components/user-avatar";
-import { UserType } from "@/lib/types";
+import { UserType } from "@/lib/types/index";
 
 interface ProfileProps {
     user: UserType

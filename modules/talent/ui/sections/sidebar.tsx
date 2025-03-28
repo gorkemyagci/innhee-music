@@ -12,7 +12,9 @@ import { useAuthStore } from "@/store/auth-store";
 import { trpc } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-const Sidebar = ({ data }: { data: any }) => {
+import Link from "next/link";
+import { pageUrls } from "@/lib/constants/page-urls";
+const Sidebar = ({ data, isOwner }: { data: any, isOwner: boolean }) => {
     const t = useTranslations("talent.sidebar");
     const { user: currentAuthUser, initializeFromToken } = useAuthStore();
     const router = useRouter();
@@ -36,7 +38,9 @@ const Sidebar = ({ data }: { data: any }) => {
     return <div className="w-full md:w-[352px] shrink-0 min-h-[calc(100vh-120px)] shadow-sm bg-white border border-soft-200 rounded-[20px] pb-6">
         <div className="p-4 relative flex flex-col items-center gap-5">
             <div className="flex flex-col items-center gap-2">
-                <Icons.heart className="absolute top-4 right-4 size-5 cursor-pointer" />
+                {!isOwner && (
+                    <Icons.heart className="absolute top-4 right-4 size-5 cursor-pointer" />
+                )}
                 <div className="flex flex-col items-center gap-1">
                     <UserAvatar
                         imageUrl="/assets/images/avatar2.png"
@@ -60,11 +64,13 @@ const Sidebar = ({ data }: { data: any }) => {
                     </div>
                 </div>
             </div>
-            {currentAuthUser?.id !== data?.id && (
+            {!isOwner && (
                 <div className="flex items-center gap-5">
-                    <Button variant="outline" className="w-[69px] h-8 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
-                        {t("hire")} <Icons.chevron_short_right className="fill-sub-600 size-3" />
-                    </Button>
+                    <Link href={`${pageUrls.SEND_OFFER}?receiverId=${data?.id}`} prefetch>
+                        <Button variant="outline" className="w-[69px] h-8 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
+                            {t("hire")} <Icons.chevron_short_right className="fill-sub-600 size-3" />
+                        </Button>
+                    </Link>
                     <Button
                         type="button"
                         onClick={createRoom}
@@ -110,7 +116,7 @@ const Sidebar = ({ data }: { data: any }) => {
         {data?.about && (
             <>
                 <Separator className="bg-soft-200" />
-                <About edit={false} aboutText={data?.about} />
+                <About edit={isOwner} aboutText={data?.about} />
             </>
         )}
     </div>

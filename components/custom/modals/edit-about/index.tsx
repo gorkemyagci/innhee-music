@@ -58,6 +58,7 @@ const EditAbout = ({ children, initialText = "", onSave }: EditAboutProps) => {
         onSuccess: () => {
             toast.success("About information updated successfully");
             utils.auth.getMe.invalidate();
+            utils.talent.getWorkerById.invalidate();
             if (onSave) onSave(text);
             setIsOpen(false);
         },

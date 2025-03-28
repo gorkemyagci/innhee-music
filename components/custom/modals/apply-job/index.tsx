@@ -52,6 +52,7 @@ const ApplyJob = ({ children, jobId }: ApplyJobProps) => {
         onSuccess: () => {
             toast.success("Job application created successfully");
             utils.jobPosting.getJobPosts.invalidate();
+            utils.jobPosting.getJobPostById.invalidate();
             setOpen(false);
             form.reset();
             setText("");

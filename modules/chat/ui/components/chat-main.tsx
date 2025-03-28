@@ -14,13 +14,14 @@ import ContractDetails from "@/modules/chat/ui/components/contract-details";
 import { useTranslations } from "next-intl";
 import { parseCookies } from "nookies";
 import { io, Socket } from "socket.io-client";
-import { ExtendedChatMainProps, UploadingFile, UploadedAttachment } from "@/lib/types";
+import { ExtendedChatMainProps, UploadingFile, UploadedAttachment, ChatRoom } from "@/lib/types";
 import { useQueryState } from "nuqs";
 import { trpc } from "@/trpc/client";
 import IsTyping from "./is-typing";
 import AttachmentItem from "./attachment-item";
 import { toast } from "sonner";
 import EmojiPicker from 'emoji-picker-react';
+import { useRouter } from "next/navigation";
 
 const SOCKET_URL = "wss://inhee-chat-production.up.railway.app/chat";
 
@@ -33,6 +34,7 @@ const ChatMain = ({
     isLoading = false,
 }: ExtendedChatMainProps) => {
     const t = useTranslations("chat.main");
+    const router = useRouter();
     const [messageText, setMessageText] = useState("");
     const [attachments, setAttachments] = useState<File[]>([]);
     const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
@@ -346,6 +348,13 @@ const ChatMain = ({
         };
     }, []);
 
+    const handleBack = () => {
+        setChatRoomId(null);
+    };
+
+    const { data: chatRooms } = trpc.chat.chatRooms.useQuery();
+    const selectedChat = chatRooms?.find((room: ChatRoom) => room.id === chatRoomId);
+
     if (!selectedUser) {
         return (
             <div className="flex-1 flex items-center justify-center bg-soft-50">
@@ -360,7 +369,7 @@ const ChatMain = ({
                 <div className="flex items-center">
                     {onBack && (
                         <button
-                            onClick={onBack}
+                            onClick={handleBack}
                             className="mr-2 p-1 rounded-full md:hidden"
                         >
                             <ChevronLeft className="w-5 h-5 text-sub-600" />
@@ -564,6 +573,7 @@ const ChatMain = ({
                     <ContractDetails
                         selectedUser={selectedUser}
                         contracts={contractsData || []}
+                        people={selectedChat?.users || []}
                     />
                     <div className="flex items-center justify-between p-4 border-t border-soft-200">
                         <span className="text-xs font-medium text-sub-600">{t("input.fields.totalAmount")}</span>

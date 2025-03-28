@@ -14,23 +14,25 @@ import { UseFormReturn } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { DatePickerForm } from "@/components/custom/form-elements/date-picker";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 interface ContractTermsProps {
     form: UseFormReturn<any>;
 }
 
 const ContractTerms = ({ form }: ContractTermsProps) => {
+    const t = useTranslations("sendOrder.contractTerms");
     const [amountInput, setAmountInput] = useState<string>("");
     const options = [
         {
-            title: "One-time payment",
-            description: "Pay full amount with a single payment.",
+            title: t("paymentTypes.oneTime.title"),
+            description: t("paymentTypes.oneTime.description"),
             link: "#",
             value: "one-time"
         },
         {
-            title: "Installment payment",
-            description: "Pay full amount with multiple payments.",
+            title: t("paymentTypes.installment.title"),
+            description: t("paymentTypes.installment.description"),
             link: "#",
             value: "installment"
         },
@@ -61,30 +63,48 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                 [field]: value
             };
             form.setValue("milestones", updatedMilestones);
+            
+            // Calculate total amount from all milestones
+            const totalAmount = updatedMilestones.reduce((sum: number, milestone: { amount: number }) => sum + (milestone.amount || 0), 0);
+            form.setValue("amount", totalAmount);
         }
     };
 
-    const addMilestone = () => {
+    const handleAddMilestone = () => {
         const currentMilestones = form.getValues("milestones") || [];
-        form.setValue("milestones", [...currentMilestones, {
+        const newMilestone = {
             title: "",
             amount: 0,
-            deadline: "",
+            deadline: new Date(),
             currency: "CNY"
-        }]);
+        };
+        const updatedMilestones = [...currentMilestones, newMilestone];
+        form.setValue("milestones", updatedMilestones);
+        form.setValue("deadline", newMilestone.deadline);
+        const totalAmount = updatedMilestones.reduce((sum: number, milestone: { amount: number }) => sum + (milestone.amount || 0), 0);
+        form.setValue("amount", totalAmount);
     };
 
-    const removeMilestone = (index: number) => {
+    const handleRemoveMilestone = (index: number) => {
         const currentMilestones = form.getValues("milestones") || [];
-        if (currentMilestones.length <= 1) return;
+        const newMilestones = currentMilestones.filter((_: any, i: number) => i !== index);
+        form.setValue("milestones", newMilestones);
         
-        const updatedMilestones = currentMilestones.filter((_: any, i: number) => i !== index);
-        form.setValue("milestones", updatedMilestones);
+        if (newMilestones.length > 0) {
+            const lastMilestone = newMilestones[newMilestones.length - 1];
+            form.setValue("deadline", lastMilestone.deadline);
+            
+            const totalAmount = newMilestones.reduce((sum: number, milestone: { amount: number }) => sum + (milestone.amount || 0), 0);
+            form.setValue("amount", totalAmount);
+        } else {
+            form.setValue("deadline", undefined);
+            form.setValue("amount", 0);
+        }
     };
 
     return <div className="w-full flex flex-col gap-5 items-start">
-        <h4 className="text-strong-950 font-medium text-[32px]">Contract Terms</h4>
-        <div className="flex gap-6 w-full">
+        <h4 className="text-strong-950 font-medium text-[24px] lg:text-[32px]">{t("title")}</h4>
+        <div className="flex flex-col sm:flex-row gap-6 w-full">
             {options.map((option, index) => (
                 <div
                     key={index}
@@ -100,21 +120,21 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                             <span className="text-sub-600 font-normal text-xs">{option.description}</span>
                         </div>
                     </div>
-                    <Link href="#" prefetch className="text-strong-950 font-medium text-xs border-b border-strong-950">Learn More</Link>
+                    <Link href="#" prefetch className="text-strong-950 font-medium text-xs border-b border-strong-950">{option.value === "one-time" ? t("paymentTypes.oneTime.learnMore") : t("paymentTypes.installment.learnMore")}</Link>
                 </div>
             ))}
         </div>
         <div className="w-full flex flex-col items-start gap-4">
             {form.watch("paymentType") === "installment" ? (
                 form.watch("milestones")?.map((milestone: any, index: number) => (
-                    <div key={index} className={cn("flex w-full items-center transition-all duration-200 gap-5", index === 0 && form.watch("milestones")?.length > 1 ? "pr-10" : "")}>
+                    <div key={index} className={cn("flex w-full flex-col sm:flex-row items-start sm:items-center transition-all duration-200 gap-5", index === 0 && form.watch("milestones")?.length > 1 ? "pr-10" : "")}>
                         <FormField
                             control={form.control}
                             name={`milestones.${index}.title`}
                             render={({ field }) => (
                                 <FormItem className="space-y-1 w-full">
                                     <FormLabel className="text-sub-600 text-sm font-medium">
-                                        {index + 1} Milestone description
+                                        {t("milestone.title", { index: index + 1 })}
                                     </FormLabel>
                                     <FormControl>
                                         <Input
@@ -133,7 +153,7 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                             render={({ field }) => (
                                 <FormItem className="space-y-1 w-full">
                                     <FormLabel className="text-sub-600 text-sm font-medium">
-                                        Amount
+                                        {t("amount.label")}
                                     </FormLabel>
                                     <FormControl>
                                         <div className="flex w-full">
@@ -141,7 +161,7 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sub-600">¥</span>
                                                 <Input
                                                     type="number"
-                                                    placeholder="0.00"
+                                                    placeholder={t("amount.placeholder")}
                                                     className="w-full pl-8 h-10 border-r-0 rounded-r-none border-soft-200 focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none shadow-b"
                                                     value={field.value}
                                                     onChange={(e) => {
@@ -180,12 +200,12 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                         <DatePickerForm
                             form={form}
                             name={`milestones.${index}.deadline`}
-                            label="Deadline"
+                            label={t("deadline.label")}
                             className="shadow-sm border border-soft-200 h-10 py-0 w-full rounded-[10px] flex items-center justify-center"
                             icon={<Icons.calendar_line className="size-5" />}
                             customLabel={
                                 <div className="flex items-center gap-1">
-                                    <span className="text-sub-600 font-medium text-sm">Deadline</span>
+                                    <span className="text-sub-600 font-medium text-sm">{t("deadline.label")}</span>
                                     <Icons.info />
                                 </div>
                             }
@@ -194,20 +214,20 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                         {index > 0 && (
                             <Icons.delete_bin_line 
                                 className="size-5 cursor-pointer shrink-0" 
-                                onClick={() => removeMilestone(index)} 
+                                onClick={() => handleRemoveMilestone(index)} 
                             />
                         )}
                     </div>
                 ))
             ) : (
-                <div className="w-full flex gap-5">
+                <div className="w-full flex flex-col sm:flex-row gap-5">
                     <FormField
                         control={form.control}
                         name="amount"
                         render={({ field }) => (
                             <FormItem className="space-y-1 w-full">
                                 <FormLabel className="text-sub-600 text-sm font-medium">
-                                    Amount
+                                    {t("amount.label")}
                                 </FormLabel>
                                 <FormControl>
                                     <div className="flex w-full">
@@ -215,7 +235,7 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sub-600">¥</span>
                                             <Input
                                                 type="number"
-                                                placeholder="0.00"
+                                                placeholder={t("amount.placeholder")}
                                                 className="w-full pl-8 h-10 border-r-0 rounded-r-none border-soft-200 focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none shadow-b"
                                                 value={field.value}
                                                 onChange={(e) => {
@@ -254,12 +274,12 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                     <DatePickerForm
                         form={form}
                         name="deadline"
-                        label="Deadline"
+                        label={t("deadline.label")}
                         className="shadow-sm border border-soft-200 h-10 py-0 w-full rounded-[10px] flex items-center justify-center"
                         icon={<Icons.calendar_line className="size-5" />}
                         customLabel={
                             <div className="flex items-center gap-1">
-                                <span className="text-sub-600 font-medium text-sm">Deadline</span>
+                                <span className="text-sub-600 font-medium text-sm">{t("deadline.label")}</span>
                                 <Icons.info />
                             </div>
                         }
@@ -270,10 +290,10 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
         </div>
         {form.watch("paymentType") === "installment" && (
             <div
-                onClick={addMilestone}
+                onClick={handleAddMilestone}
                 className="flex cursor-pointer items-center gap-1 border border-soft-200 py-1 px-2 rounded-lg"
             >
-                <span className="text-sub-600 font-medium text-sm">Add milestone</span>
+                <span className="text-sub-600 font-medium text-sm">{t("milestone.add")}</span>
             </div>
         )}
     </div>

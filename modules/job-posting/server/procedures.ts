@@ -219,11 +219,18 @@ export const jobPostsProcedures = createTRPCRouter({
       });
     }
   }),
-  getJobPostById: baseProcedure.input(z.string()).query(async ({ input }) => {
+  getJobPostById: baseProcedure.input(z.object({ 
+    id: z.string(), 
+    userId: z.string().optional() 
+  })).query(async ({ input }) => {
     try {
       const token = await getTokenFromCookie();
-      const id = input;
-      const response = await fetch(`${SERVICE_URL}/job-post/${id}`, {
+      const {id, userId} = input;
+      const url = userId 
+        ? `${SERVICE_URL}/job-post/${id}?userId=${userId}`
+        : `${SERVICE_URL}/job-post/${id}`;
+      
+      const response = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

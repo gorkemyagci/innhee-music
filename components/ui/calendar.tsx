@@ -7,6 +7,14 @@ import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations, useLocale } from "next-intl";
+import { enUS } from "date-fns/locale/en-US";
+import { zhCN } from "date-fns/locale/zh-CN";
+
+const locales = {
+  en: enUS,
+  zh: zhCN,
+};
 
 export type CalendarProps = {
   selected?: Date;
@@ -21,6 +29,8 @@ function Calendar({
   onApply,
   onCancel,
 }: CalendarProps) {
+  const t = useTranslations("calendar");
+  const locale = useLocale();
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(selected);
   const [direction, setDirection] = React.useState(0);
 
@@ -101,7 +111,7 @@ function Calendar({
                     transition={{ duration: 0.2 }}
                     className="text-sm font-medium text-sub-600"
                   >
-                    {format(displayMonth, "MMMM yyyy")}
+                    {format(displayMonth, "MMMM yyyy", { locale: locales[locale as keyof typeof locales] })}
                   </motion.span>
                 </AnimatePresence>
                 <button
@@ -126,14 +136,14 @@ function Calendar({
           variant="outline" 
           className="h-9 flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm"
         >
-          Cancel
+          {t("buttons.cancel")}
         </Button>
         <Button
           onClick={handleApply}
           className="h-9 flex-1 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]"
         >
           <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-          Apply
+          {t("buttons.apply")}
         </Button>
       </div>
     </div>

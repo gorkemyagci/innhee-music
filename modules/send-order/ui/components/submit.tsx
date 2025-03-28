@@ -4,12 +4,14 @@ import { FormField, FormItem } from "@/components/ui/form";
 import SubmitButton from "@/modules/auth/ui/components/submit-button";
 import Link from "next/link";
 import { UseFormReturn } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 interface SubmitProps {
     form: UseFormReturn<any>;
 }
 
 const Submit = ({ form }: SubmitProps) => {
+    const t = useTranslations("sendOrder.submit");
     return <div className="w-full flex flex-col items-start gap-5">
         <FormField
             control={form.control}
@@ -21,16 +23,24 @@ const Submit = ({ form }: SubmitProps) => {
                         htmlFor="terms"
                         className="text-[10px] md:text-sm font-normal cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
-                        I agree to the <Link href="#" className="border-b border-strong-950 text-main-900 font-medium">Terms & Conditions</Link> and <Link href="#" className="border-b border-strong-950 text-main-900 font-medium">Privacy Policy</Link>.
+                        <span>{t("terms")}</span>
+                        <Link href="#" className="border-b border-strong-950 text-main-900 font-medium">{t("termsLink")}</Link>
+                        <span> {t("and")} </span>
+                        <Link href="#" className="border-b border-strong-950 text-main-900 font-medium">{t("privacyLink")}</Link>
                     </label>
                 </FormItem>
             )}
         />
-        <div className="flex gap-3 w-full">
-            <Button variant="outline" className="h-10 flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
-                Cancel
+        <div className="flex flex-col sm:flex-row gap-3 w-full">
+            <Button variant="outline" className="h-10 w-full sm:flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm">
+                {t("buttons.cancel")}
             </Button>
-            <SubmitButton text="Contiune" buttonType="submit" className="w-auto flex-1" />
+            <SubmitButton 
+                text={t("buttons.continue")} 
+                buttonType="submit" 
+                className="w-full sm:flex-1"
+                loading={form.formState.isSubmitting}
+            />
         </div>
     </div>
 }

@@ -7,7 +7,16 @@
       "bonus": "Bonus"
     },
     "search": {
-      "placeholder": "Discover more"
+      "placeholder": "Search...",
+      "suggested": "Suggested:",
+      "sort": {
+        "placeholder": "Sort by",
+        "options": {
+          "rating": "Rating",
+          "orderVolume": "Order Volume",
+          "activity": "Activity"
+        }
+      }
     },
     "buttons": {
       "freeStart": "Free Start"
@@ -335,6 +344,7 @@
   },
   "chat": {
     "title": "Chat",
+    "noUsers": "No chat users",
     "timeAgo": {
       "minutes": "{count} minutes ago",
       "hours": "{count} hours ago",
@@ -401,7 +411,11 @@
         "me": "Me",
         "files": "{count} files"
       },
-      "loading": "Loading messages..."
+      "loading": "Loading messages...",
+      "noChatUsers": {
+        "title": "No Chat Users",
+        "description": "Select a chat to start messaging or wait for new messages"
+      }
     },
     "offerModal": {
       "title": "Create an Offer",
@@ -438,6 +452,10 @@
           "amountGreaterThanZero": "Amount must be greater than 0",
           "deliveryDaysRequired": "Delivery days is required",
           "deliveryDaysGreaterThanZero": "Delivery days must be greater than 0"
+        },
+        "toast": {
+          "createSuccess": "Contract created successfully!",
+          "createError": "Failed to create contract. Please try again."
         }
       }
     },
@@ -534,7 +552,10 @@
     },
     "about": {
       "title": "About"
-    }
+    },
+    "follow": "Follow",
+    "touch": "Touch",
+    "recentReviews": "Recent reviews"
   },
   "modals": {
     "editSkills": {
@@ -661,6 +682,10 @@
         "overdue": "Overdue"
       },
       "startedOn": "STARTED ON {date}"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "apply": "Apply"
     }
   },
   "projects": {
@@ -709,10 +734,13 @@
       "deadline": "Deadline",
       "proposals": "Proposals",
       "message": "Message",
-      "apply": "Apply"
+      "apply": "Apply",
+      "applied": "Applied"
     },
     "list": {
-      "title": "List"
+      "title": "List",
+      "noApplicants": "No applicants yet",
+      "invite": "Invite"
     },
     "jobLink": {
       "title": "Job Link",
@@ -896,6 +924,185 @@
         "mtvMusic": "MTV Music",
         "eurovisionAwards": "Eurovision Awards"
       }
+    },
+    "noPortfolioItems": "No portfolio items with attachments found."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "The page you are looking for doesn't exist or has been moved.",
+    "backToHome": "Return to Dashboard"
+  },
+  "sendOrder": {
+    "title": "Send an offer",
+    "jobDetails": {
+      "title": "Job details",
+      "send": {
+        "label": "Send",
+        "placeholder": "Search.."
+      },
+      "orderTitle": {
+        "label": "Select Order",
+        "placeholder": "Order title"
+      },
+      "contractTitle": {
+        "label": "Contract title",
+        "placeholder": "Enter the contract title..."
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Description text here...",
+        "maxChars": "Maximum 1000 characters"
+      },
+      "skillLevels": {
+        "label": "Skill Levels",
+        "max": "(max. 4)",
+        "add": "Add skill level"
+      }
+    },
+    "contractTerms": {
+      "title": "Contract Terms",
+      "paymentTypes": {
+        "oneTime": {
+          "title": "One-time payment",
+          "description": "Pay full amount with a single payment.",
+          "learnMore": "Learn More"
+        },
+        "installment": {
+          "title": "Installment payment",
+          "description": "Pay full amount with multiple payments.",
+          "learnMore": "Learn More"
+        }
+      },
+      "amount": {
+        "label": "Amount",
+        "placeholder": "0.00"
+      },
+      "deadline": {
+        "label": "Deadline"
+      },
+      "milestone": {
+        "title": "{index} Milestone description",
+        "add": "Add milestone"
+      }
+    },
+    "attachments": {
+      "title": "Attachments",
+      "add": "Attach file",
+      "fileSize": {
+        "bytes": "Bytes",
+        "kb": "KB",
+        "mb": "MB",
+        "gb": "GB"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": {
+        "fixedPrice": {
+          "question": "How do fixed-price contracts work?",
+          "answer": "Fermentum egestas at nunc tristique. Feugiat sodales viverra odio nisi non sem mauris. Nisi at purus habitant dictum etiam mi adipiscing. Congue at arcu aenean vitae aliquam eu tortor viverra id. Habitant sagittis faucibus pharetra odio fames rhoncus pellentesque sem est. Nunc ac eget tellus ultrices."
+        },
+        "initiationFee": {
+          "question": "What is a Contract Initiation Fee?",
+          "answer": "Fermentum egestas at nunc tristique. Feugiat sodales viverra odio nisi non sem mauris. Nisi at purus habitant dictum etiam mi adipiscing. Congue at arcu aenean vitae aliquam eu tortor viverra id. Habitant sagittis faucibus pharetra odio fames rhoncus pellentesque sem est. Nunc ac eget tellus ultrices."
+        }
+      }
+    },
+    "submit": {
+      "terms": "I agree to the",
+      "and": "and",
+      "termsLink": "Terms & Conditions",
+      "privacyLink": "Privacy Policy",
+      "buttons": {
+        "cancel": "Cancel",
+        "continue": "Continue"
+      }
+    },
+    "toast": {
+      "createSuccess": "Contract created successfully!",
+      "createError": "Failed to create contract. Please try again."
+    }
+  },
+  "Sidebar": {
+    "follow": "关注",
+    "touch": "联系",
+    "recentReviews": "最近评价"
+  },
+  "orders": {
+    "items": {
+      "title1": "Write professional resume, cover letter, and linkedin writing services",
+      "title2": "Write professional resume, cover letter, and linkedin writing services",
+      "title3": "Write professional resume, cover letter, and linkedin writing services",
+      "title4": "Write professional resume, cover letter, and linkedin writing services",
+      "skills": {
+        "mixing": "Mixing",
+        "singing": "Singing",
+        "jazz": "Jazz",
+        "hiphop": "Hip hop",
+        "kpop": "K pop"
+      },
+      "priceType": {
+        "fixed": "Fixed Price"
+      },
+      "status": {
+        "applyNow": "Apply Now",
+        "inProgress": "In progress"
+      },
+      "description1": "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually appealing and user-friendly websites that meet our clients' needs.",
+      "description2": "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually appealing and user-friendly websites that meet our clients' needs.",
+      "description3": "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually appealing and user-friendly websites that meet our clients' needs.",
+      "description4": "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually appealing and user-friendly websites that meet our clients' needs."
+    }
+  },
+  "review": {
+    "clientName": "Cleve Music",
+    "rating": "4.9(125)",
+    "company": "Google",
+    "role": "WORKER",
+    "contractTitle": "Contract title text here...",
+    "reviewText": "Working with Ralph on a UX audit for our website was a game-changer. Ralph didn't just identify pain points-he offered innovative solutions that empowered me to make key business decisions with confidence.",
+    "price": "$1000.00"
+  },
+  "orderDetails": {
+    "userHead": {
+      "rating": "4.9(125)",
+      "special": "Special"
+    },
+    "paymentInfo": {
+      "totalAmount": "Total Amount",
+      "settled": "Settled",
+      "inEscrow": "In Escrow",
+      "refunded": "Refunded"
+    },
+    "milestone": {
+      "title": "Milestone",
+      "description": "For only $4.99 per month!",
+      "learnMore": "Learn More"
+    },
+    "timeline": {
+      "title": "Timeline",
+      "addNew": "Add a new milestone"
+    },
+    "milestoneItem": {
+      "confirmPayment": "Confirm Payment"
+    },
+    "uploadWork": {
+      "title": "Upload work",
+      "dropHere": "Drop your file here",
+      "chooseFile": "Choose a file or drag & drop it here.",
+      "fileTypes": "JPEG, PNG, PDF, and MP4 formats, up to 50 MB.",
+      "browseFile": "Browse File",
+      "download": "Download"
+    },
+    "details": {
+      "title": "Details",
+      "contract": "Contract",
+      "contractId": "Contract ID",
+      "deadline": "Deadline"
+    },
+    "fileWork": {
+      "title": "Work files",
+      "download": "Download"
     }
   }
 }
