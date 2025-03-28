@@ -8,7 +8,6 @@ import JobDetails from "../sections/job-details";
 import ContractTerms from "../sections/contract-terms";
 import Attachments from "../sections/attachments";
 import FAQ from "../sections/FAQ";
-import Submit from "../components/submit";
 import { useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
 import { trpc } from "@/trpc/client";
