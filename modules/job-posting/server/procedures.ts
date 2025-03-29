@@ -42,7 +42,7 @@ export const jobPostsProcedures = createTRPCRouter({
           privacy,
           skillLevelIds,
           candidateSourceIds,
-          status
+          status,
         } = input;
         const response = await fetch(`${SERVICE_URL}/job-post`, {
           method: "POST",
@@ -61,7 +61,7 @@ export const jobPostsProcedures = createTRPCRouter({
             privacy,
             skillLevelIds,
             candidateSourceIds,
-            status
+            status,
           }),
         });
         const data = await response.json();
@@ -222,48 +222,52 @@ export const jobPostsProcedures = createTRPCRouter({
       });
     }
   }),
-  getJobPostById: baseProcedure.input(z.object({ 
-    id: z.string(), 
-    userId: z.string().optional() 
-  })).query(async ({ input }) => {
-    try {
-      const token = await getTokenFromCookie();
-      const {id, userId} = input;
-      const url = userId 
-        ? `${SERVICE_URL}/job-post/${id}?userId=${userId}`
-        : `${SERVICE_URL}/job-post/${id}`;
-      
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message:
-          error instanceof Error
-            ? error.message
-            : "Failed to get job post by id",
-      });
-    }
-  }),
+  getJobPostById: baseProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        userId: z.string().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      try {
+        const token = await getTokenFromCookie();
+        const { id, userId } = input;
+        const url = userId
+          ? `${SERVICE_URL}/job-post/${id}?userId=${userId}`
+          : `${SERVICE_URL}/job-post/${id}`;
+
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            error instanceof Error
+              ? error.message
+              : "Failed to get job post by id",
+        });
+      }
+    }),
   addAttachmentsToJobPost: protectedProcedure
     .input(
       z.object({
         jobPostId: z.string(),
-        attachments: z.array(z.any())
+        attachments: z.array(z.any()),
       })
     )
     .mutation(async ({ input, ctx }) => {
       try {
         const { jobPostId, attachments } = input;
         const token = ctx.token;
-        
+
         if (!token) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
@@ -272,23 +276,27 @@ export const jobPostsProcedures = createTRPCRouter({
         }
 
         const formData = new FormData();
-        
+
         attachments.forEach((attachment, index) => {
-          formData.append('attachments', attachment);
+          formData.append("attachments", attachment);
         });
-        
-        const response = await fetch(`${SERVICE_URL}/job-post/${jobPostId}/attachments`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        });
+
+        const response = await fetch(
+          `${SERVICE_URL}/job-post/${jobPostId}/attachments`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          }
+        );
         if (!response.ok) {
           const errorData = await response.json();
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: errorData.message || "Failed to add attachments to job post",
+            message:
+              errorData.message || "Failed to add attachments to job post",
           });
         }
         const data = await response.json();
@@ -346,7 +354,9 @@ export const jobPostsProcedures = createTRPCRouter({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message:
-            error instanceof Error ? error.message : "Failed to update job post",
+            error instanceof Error
+              ? error.message
+              : "Failed to update job post",
         });
       }
     }),
@@ -361,14 +371,17 @@ export const jobPostsProcedures = createTRPCRouter({
       try {
         const token = await getTokenFromCookie();
         const { jobPostId, attachmentId } = input;
-        
-        const response = await fetch(`${SERVICE_URL}/job-post/${jobPostId}/attachments/${attachmentId}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+
+        const response = await fetch(
+          `${SERVICE_URL}/job-post/${jobPostId}/attachments/${attachmentId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -384,7 +397,9 @@ export const jobPostsProcedures = createTRPCRouter({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message:
-            error instanceof Error ? error.message : "Failed to delete attachment",
+            error instanceof Error
+              ? error.message
+              : "Failed to delete attachment",
         });
       }
     }),

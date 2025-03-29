@@ -238,7 +238,7 @@ const SendOrder = () => {
             </Form>
         </div>
         <div className="w-full lg:w-[300px] lg:sticky lg:top-6">
-            <Sidebar />
+            <Sidebar receiver={receiver} />
         </div>
     </div>
 }

@@ -1,4 +1,4 @@
-import { Message, Offer, User } from "@/modules/chat/types";
+import { User } from "@/modules/chat/types";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
 
@@ -168,4 +168,56 @@ export interface UploadedAttachment {
   filename: string;
   path: string;
   size: number;
+}
+
+export interface Milestone {
+  id: string;
+  title: string;
+  amount: number;
+  amountCurrency: string;
+  deadline: string;
+  description: string;
+  status: "PENDING" | "COMPLETED" | "REJECTED";
+  completed: boolean;
+  paid: boolean;
+  contractId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Offer {
+  id: string;
+  title: string;
+  description: string;
+  amount: number;
+  currency: string;
+  amountCurrency: string;
+  deliveryDays: number;
+  deadline: string;
+  chatRoomId: string;
+  createdAt: string;
+  milestones?: Milestone[];
+}
+
+export interface Message {
+  id: string;
+  content: string;
+  type: "text" | "system" | "offer" | "milestone";
+  senderId: string;
+  receiverId: string;
+  timestamp: Date;
+  additionalInfo?: string;
+  attachments?: Attachment[];
+  fileCount?: number;
+  offer?: Offer;
+  milestone?: Milestone;
+}
+
+export interface Attachment {
+  id: string;
+  name: string;
+  path: string;
+  url: string;
+  size: number;
+  filename: string;
 }

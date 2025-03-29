@@ -7,6 +7,7 @@ import { employerProcedure } from '@/modules/buyer/server/procedures';
 import { dashboardProcedure } from '@/modules/dashboard/server/procedures';
 import { jobDetailProcedure } from '@/modules/job-detail/server/procedures';
 import { chatProcedure } from '@/modules/chat/server/procedures';
+import { contractProcedures } from '@/modules/send-order/server/procedures';
 
 export const appRouter = createTRPCRouter({
   auth: authProcedures,
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   dashboard: dashboardProcedure,
   jobDetail: jobDetailProcedure,
   chat: chatProcedure,
+  contract: contractProcedures,
 });
 
 export type AppRouter = typeof appRouter;

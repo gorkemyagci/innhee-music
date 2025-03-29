@@ -7,25 +7,19 @@ import About from "@/modules/dashboard/ui/sections/sidebar/about";
 import Skills from "@/modules/dashboard/ui/sections/sidebar/skills";
 import Awards from "./awards";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
-import { useAuthStore } from "@/store/auth-store";
 import { trpc } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import { pageUrls } from "@/lib/constants/page-urls";
+
+
 const Sidebar = ({ data, isOwner }: { data: any, isOwner: boolean }) => {
     const t = useTranslations("talent.sidebar");
-    const { user: currentAuthUser, initializeFromToken } = useAuthStore();
     const router = useRouter();
-    useEffect(() => {
-        initializeFromToken();
-    }, [initializeFromToken]);
     const create = trpc.chat.createRoom.useMutation({
         onSuccess: (response) => {
             const roomId = response.id;
-            console.log(roomId);
-            
             router.push(`/chat?chatId=${roomId}`);
         },
         onError: (error) => {

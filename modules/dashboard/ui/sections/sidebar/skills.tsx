@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 
 const Skills = ({ edit = true, skills }: { edit?: boolean, skills?: any[] }) => {
     const t = useTranslations("sidebar.skills");
-
     return (
         <div className="p-4 flex flex-col items-start gap-3">
             <div className="flex items-center w-full justify-between">
@@ -14,12 +13,14 @@ const Skills = ({ edit = true, skills }: { edit?: boolean, skills?: any[] }) => 
                 </EditSkills>
             </div>
             <div className="flex flex-col items-start gap-2">
-                {skills?.map((item, index) => (
+                {skills?.length && skills?.length > 0 ? skills?.map((item, index) => (
                     <div key={index} className="flex flex-col items-start gap-1">
                         <p className="text-strong-950 font-medium text-xs">{item?.name}</p>
                         <span className="text-sub-600 font-normal text-xs">{t("averagePrice")}</span>
                     </div>
-                ))}
+                )) : (
+                    <p className="text-sub-600 font-normal text-xs">{t("noSkills")}</p>
+                )}
             </div>
         </div>
     )

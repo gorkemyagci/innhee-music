@@ -9,7 +9,6 @@ interface AboutProps {
 
 export const About = ({ aboutText, edit = true }: AboutProps) => {
     const t = useTranslations("sidebar");
-
     return (
         <div className="p-4 flex flex-col items-start gap-4">
             <div className="flex w-full items-center justify-between">

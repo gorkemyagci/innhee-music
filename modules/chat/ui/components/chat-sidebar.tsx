@@ -7,18 +7,30 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@/trpc/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChatRoom } from "@/lib/types";
+import { parseCookies } from "nookies";
+import { jwtDecode } from "jwt-decode";
 
 interface ChatSidebarProps {
   selectedChat: string | null;
   onSelectChat: (chatId: string) => void;
 }
 
+interface JwtPayload {
+  id: string;
+  email: string;
+  iat: number;
+  exp: number;
+}
+
 const ChatSidebar = ({ selectedChat, onSelectChat }: ChatSidebarProps) => {
   const t = useTranslations("chat");
   const { data: chatRooms, isPending } = trpc.chat.chatRooms.useQuery();
+  const cookies = parseCookies();
+  const currentUserId = cookies.token ? (jwtDecode(cookies.token) as JwtPayload).id : null;
 
   const getOtherUser = (room: ChatRoom) => {
-    return room.users[0]?.user;
+    const otherUserData = room.users.find(userData => userData.user.id !== currentUserId);
+    return otherUserData?.user;
   };
 
   const getLastMessageTime = (room: ChatRoom) => {

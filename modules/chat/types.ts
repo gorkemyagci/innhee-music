@@ -29,13 +29,22 @@ export interface Offer {
   deliveryDays: number;
   status?: "PENDING" | "ACCEPTED" | "REJECTED" | "COMPLETED";
   skillLevels?: any[];
+  milestones?: Milestone[];
+  deadline?: string;
 }
 
 export interface Milestone {
   id: string;
   title: string;
   amount: number;
-  currency: string;
+  amountCurrency: string;
+  deadline: string;
+  status: "PENDING" | "COMPLETED";
+  completed: boolean;
+  paid: boolean;
+  contractId: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Message {

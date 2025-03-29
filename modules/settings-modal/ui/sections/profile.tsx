@@ -20,8 +20,9 @@ interface DecodedToken extends JwtPayload {
 }
 
 const Profile = () => {
-    const [nickname, setNickname] = useState("Arthur Taylor");
-    const [webLink, setWebLink] = useState("apexfinancial.com");
+    const { token, user } = useAuthStore();
+    const [nickname, setNickname] = useState("Anonymous");
+    const [webLink, setWebLink] = useState("");
     const [isEditingNickname, setIsEditingNickname] = useState(false);
     const [isEditingWebLink, setIsEditingWebLink] = useState(false);
     const [tempNickname, setTempNickname] = useState(nickname);
@@ -37,14 +38,13 @@ const Profile = () => {
     useEffect(() => {
         useAuthStore.getState().initializeFromToken();
     }, []);
-
-    const { token, user } = useAuthStore();
-
+    const utils = trpc.useUtils();
     useEffect(() => {
         if (token) {
             try {
                 const tokenValue = token.startsWith('Bearer ') ? token.substring(7) : token;
                 const decoded = jwtDecode<DecodedToken>(tokenValue);
+                console.log(decoded);
                 setDecodedToken(decoded);
                 if (decoded && decoded.nickname) {
                     setNickname(decoded.nickname);
@@ -57,6 +57,7 @@ const Profile = () => {
     const update = trpc.user.update.useMutation({
         onSuccess: (data) => {
             toast.success("Profile updated successfully");
+            utils.auth.getMe.invalidate();
         },
         onError: (error) => {
             toast.error("Failed to update profile");

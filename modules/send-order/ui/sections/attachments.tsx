@@ -8,6 +8,7 @@ interface Attachment {
     name: string;
     size: number;
     type: string;
+    file: File;
 }
 
 interface AttachmentsProps {
@@ -25,7 +26,8 @@ const Attachments = ({ form }: AttachmentsProps) => {
             const newAttachments = Array.from(files).map(file => ({
                 name: file.name,
                 size: file.size,
-                type: file.type
+                type: file.type,
+                file: file
             }));
             form.setValue("attachments", [...attachments, ...newAttachments]);
         }
@@ -67,6 +69,7 @@ const Attachments = ({ form }: AttachmentsProps) => {
             className="hidden"
             onChange={handleFileSelect}
             multiple
+            accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx"
         />
         <div
             className="flex cursor-pointer items-center gap-1 border border-soft-200 py-1 px-2 rounded-lg"

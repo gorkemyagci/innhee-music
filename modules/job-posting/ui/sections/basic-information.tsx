@@ -65,6 +65,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
             }
         },
         onError: (error) => {
+            console.log(error);
             toast.error(error.message || t("createError"));
         }
     })

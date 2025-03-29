@@ -1,6 +1,6 @@
 "use client";
 
-import { Attachment, Message, User } from "../../types";
+import { Attachment, Message, User, Offer, Milestone } from "../../types";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useState, useRef } from "react";
@@ -17,36 +17,14 @@ interface MessageItemProps {
   message: Message;
   isOwn: boolean;
   sender: User;
+  isConsecutive?: boolean;
 }
 
-const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
+const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps) => {
   const t = useTranslations("chat.main");
   const tMessages = useTranslations("chat.messages");
   const [showContractDetails, setShowContractDetails] = useState(false);
   const socketRef = useRef<Socket | null>(null);
-
-  const modalVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.8
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.3,
-        ease: "easeOut"
-      }
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.8,
-      transition: {
-        duration: 0.2,
-        ease: "easeIn"
-      }
-    }
-  };
 
   const formatTime = (date: Date) => {
     return format(date, "h:mm a");
@@ -176,11 +154,7 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
               </div>
               <span className="text-sub-600 font-normal text-xs flex items-center gap-1">{tMessages("offer.title")} <Icons.information_line /></span>
             </div>
-            <div
-              className={cn(
-                "lg:w-[360px] w-full rounded-2xl border border-soft-200"
-              )}
-            >
+            <div className="lg:w-[360px] w-full rounded-2xl border border-soft-200">
               <div className="p-4 bg-weak-50 rounded-t-2xl flex items-center justify-between">
                 <span className="font-medium text-sm text-strong-950">
                   {message.offer?.title}
@@ -192,6 +166,43 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
               <div className="flex flex-col items-start gap-3 p-4">
                 <span className="text-strong-950 font-normal text-xs">{message.offer?.description}</span>
                 <Separator className="bg-soft-200" />
+                
+                {message.offer?.milestones && message.offer.milestones.length > 0 && (
+                  <div className="w-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-strong-950 text-xs font-medium">Milestones</span>
+                      <span className="text-sub-600 text-xs font-normal">Total: {message.offer?.currency}{message.offer?.amount}</span>
+                    </div>
+                    <div className="flex flex-col gap-2 w-full">
+                      {message.offer?.milestones?.map((milestone: Milestone, index: number) => (
+                        <div
+                          key={milestone.id}
+                          className="w-full rounded-lg border border-soft-200 p-3 bg-white"
+                        >
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-strong-950 font-medium text-xs">{milestone.title}</span>
+                            <span className="text-sub-600 font-medium text-xs">{milestone?.amountCurrency}{milestone.amount}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sub-600 text-[10px] font-normal flex items-center gap-1">
+                              <Icons.calendar className="w-3 h-3" />
+                              {format(new Date(milestone.deadline), "MMM dd, yyyy")}
+                            </span>
+                            <span className={cn(
+                              "text-[10px] font-medium px-2 py-0.5 rounded-full",
+                              milestone.status === "PENDING" ? "bg-yellow-50 text-yellow-600" :
+                              milestone.status === "COMPLETED" ? "bg-green-50 text-green-600" :
+                              "bg-red-50 text-red-600"
+                            )}>
+                              {milestone.status}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex flex-col items-start gap-1">
                   <span className="text-strong-950 text-xs font-medium">
                     {tMessages("offer.yourOfferIncludes")}
@@ -237,12 +248,12 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
           isOpen={showContractDetails}
           onClose={() => setShowContractDetails(false)}
           contractData={{
-            contractId: "126895",
-            contractName: "Contract name here...",
-            startDate: "10 March, 2025",
-            deadline: "15 March, 2025",
-            amount: 240.00,
-            offerAmount: message.offer?.amount
+            contractId: message.offer?.id || "",
+            contractName: message.offer?.title || "",
+            startDate: format(new Date(), "dd MMMM, yyyy"),
+            deadline: message.offer?.deadline ? format(new Date(message.offer.deadline), "dd MMMM, yyyy") : "",
+            amount: message.offer?.amount || 0,
+            milestones: message.offer?.milestones
           }}
         />
       </div>
@@ -313,11 +324,15 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
     <div
       className={cn(
         "flex",
-        isOwn ? "justify-end" : "justify-start"
+        isOwn ? "justify-end" : "justify-start",
+        !isConsecutive ? "mb-4" : "mb-1"
       )}
     >
       {!isOwn && (
-        <div className="w-10 h-10 rounded-full p-1 overflow-hidden mr-2 flex-shrink-0 mt-1">
+        <div className={cn(
+          "w-10 h-10 rounded-full p-1 overflow-hidden mr-2 flex-shrink-0 mt-1",
+          isConsecutive && "invisible"
+        )}>
           <UserAvatar
             imageUrl={sender.avatar}
             name={sender.name}
@@ -332,7 +347,10 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
           "rounded-lg p-3 overflow-hidden flex flex-col"
         )}
       >
-        <div className="flex items-center justify-between mb-1 flex-shrink-0">
+        <div className={cn(
+          "flex items-center justify-between mb-1 flex-shrink-0",
+          isConsecutive && "hidden"
+        )}>
           <span className="text-xs font-medium text-sub-600">
             {isOwn ? tMessages("regular.me") : sender.name}
           </span>
@@ -400,7 +418,10 @@ const MessageItem = ({ message, isOwn, sender }: MessageItemProps) => {
         )}
       </div>
       {isOwn && (
-        <div className="w-10 h-10 rounded-full p-1 overflow-hidden ml-2 flex-shrink-0 mt-1">
+        <div className={cn(
+          "w-10 h-10 rounded-full p-1 overflow-hidden ml-2 flex-shrink-0 mt-1",
+          isConsecutive && "invisible"
+        )}>
           <img
             src={sender.avatar || "/assets/images/avatar-4.png"}
             alt={sender.name}

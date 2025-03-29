@@ -544,7 +544,8 @@
     },
     "skills": {
       "title": "Skills",
-      "averagePrice": "Average price - $350 per song"
+      "averagePrice": "Average price - $350 per song",
+      "noSkills": "No skills added"
     },
     "tags": {
       "title": "Tags",

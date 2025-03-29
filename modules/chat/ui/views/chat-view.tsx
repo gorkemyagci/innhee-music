@@ -24,6 +24,7 @@ const ChatView = () => {
     { roomId: chatId || "" },
     { enabled: !!chatId }
   );
+  console.log(contractsData);
   const { user: currentAuthUser, initializeFromToken } = useAuthStore();
   const selectedChat = chatId ? chatRooms.find((room: ChatRoom) => room.id === chatId) : undefined;
 

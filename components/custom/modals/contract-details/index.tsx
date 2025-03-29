@@ -4,6 +4,7 @@ import React from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import { Milestone } from "@/modules/chat/types";
 
 interface ContractDetailsModalProps {
     isOpen: boolean;
@@ -16,6 +17,7 @@ interface ContractDetailsModalProps {
         amount: number;
         offerAmount?: number;
         milestoneAmount?: number;
+        milestones?: Milestone[];
     };
 }
 

@@ -420,7 +420,7 @@ const ChatMain = ({
                     </div>
                 ) : (
                     <div className="max-w-3xl mx-auto">
-                        {messages.map((message) => (
+                        {messages.map((message, index) => (
                             <MessageItem
                                 key={message.id}
                                 message={message}
@@ -429,6 +429,13 @@ const ChatMain = ({
                                     message.senderId === currentUser.id
                                         ? currentUser
                                         : selectedUser
+                                }
+                                isConsecutive={
+                                    index > 0 &&
+                                    messages[index - 1].senderId === message.senderId &&
+                                    message.type !== "system" &&
+                                    message.type !== "offer" &&
+                                    message.type !== "milestone"
                                 }
                             />
                         ))}

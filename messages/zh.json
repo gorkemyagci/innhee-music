@@ -543,7 +543,8 @@
     },
     "skills": {
       "title": "技能",
-      "averagePrice": "平均价格 - 每首歌350美元"
+      "averagePrice": "平均价格 - 每首歌 350 美元",
+      "noSkills": "未添加技能"
     },
     "tags": {
       "title": "标签",
@@ -653,7 +654,10 @@
     },
     "installWechat": {
       "title": "微信二维码",
-      "scanText": "使用已安装的微信应用扫描。"
+      "scanText": "使用已安装的微信应用扫描。",
+      "buttons": {
+        "close": "关闭"
+      }
     }
   },
   "calendar": {

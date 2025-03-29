@@ -14,8 +14,8 @@ const Profile = ({ user }: ProfileProps) => {
                 name={user?.nickname || ""}
                 className="w-12 h-12"
             />
-            <div className="flex flex-col">
-                <p className="text-sub-600 font-medium text-xs">{user?.nickname || "Anonymous"}</p>
+            <div className="flex flex-col items-center gap-1">
+                <p className="text-sub-600 font-medium text-xs max-w-[120px] truncate text-center">{user?.nickname || "Anonymous"}</p>
                 <div className="flex items-center gap-0.5">
                     <Icons.star />
                     <span className="text-sub-600 font-normal text-xs">4.9(125)</span>

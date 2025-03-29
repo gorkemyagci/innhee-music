@@ -119,7 +119,14 @@ export const getMockMessages = (selectedChatId: string): Message[] => [
       id: "milestone1",
       title: "Milestone 3: \"8\"",
       amount: 70,
-      currency: "USD",
+      amountCurrency: "USD",
+      deadline: "2024-12-31T23:59:59Z",
+      status: "PENDING",
+      completed: false,
+      paid: false,
+      contractId: "contract1",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     },
   },
   {

@@ -97,6 +97,11 @@ const Workers = ({ workers, isPending }: WorkersProps) => {
                     </div>
                 </div>
             ))}
+            {workers?.length === 0 && (
+                <div className="col-span-full flex items-center justify-start">
+                    <p className="text-sub-600 font-normal text-sm">No workers found</p>
+                </div>
+            )}
         </div>
     )
 }
