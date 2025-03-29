@@ -75,25 +75,11 @@ const ChatMain = ({
 
             const socket = socketRef.current;
 
-            const handleConnect = () => {
-                console.log("Socket connected");
-            };
-
-            const handleConnectError = (error: any) => {
-                console.error("Socket connection error:", error);
-            };
-
-            const handleDisconnect = (reason: string) => {
-                console.log("Socket disconnected:", reason);
-            };
-
-            const handleError = (error: any) => {
-                console.error("Socket error:", error);
-            };
-
-            const handleMessageSent = (data: any) => {
-                console.log("Message sent:", data);
-            };
+            const handleConnect = () => {};
+            const handleConnectError = (error: any) => {};
+            const handleDisconnect = (reason: string) => {};
+            const handleError = (error: any) => {};
+            const handleMessageSent = (data: any) => {};
 
             const handleUserTyping = (data: any) => {
                 if (data.userId !== currentUser?.id) {
@@ -102,7 +88,6 @@ const ChatMain = ({
             };
 
             const handleContractUpdated = (data: any) => {
-                console.log("Contract updated:", data);
                 const systemMessage = {
                     id: `msg-${Date.now()}`,
                     content: `Your contract has been ${data.status.toLowerCase()} by ${data.sender.nickname}`,
@@ -116,17 +101,10 @@ const ChatMain = ({
             };
 
             const handleNewMessage = (message: Message) => {
-                console.log("New message received:", message);
-                
-                // Prevent adding duplicate messages
                 setMessages((prev: Message[]) => {
-                    // Check if message already exists
                     if (prev.some(m => m.id === message.id)) {
-                        console.log("Duplicate message detected, skipping:", message.id);
                         return prev;
                     }
-
-                    // Add new message
                     const newMessage = {
                         ...message,
                         timestamp: new Date(message.createdAt || new Date()),
@@ -201,10 +179,7 @@ const ChatMain = ({
     };
 
     const handleApplyContract = (contractId: string, status: "ACCEPTED" | "REJECTED") => {
-        console.log("Sending contract status update:", { contractId, status });
-        
         if (!socketRef.current?.connected) {
-            console.error("Socket not connected");
             toast.error("Connection lost. Please try again.");
             return;
         }
@@ -214,7 +189,6 @@ const ChatMain = ({
             status,
             chatRoomId
         }, (response: any) => {
-            console.log("Contract status update response:", response);
             if (response?.success) {
                 toast.success(`Contract ${status.toLowerCase()} successfully`);
                 utils.chat.getRoomContracts.invalidate();

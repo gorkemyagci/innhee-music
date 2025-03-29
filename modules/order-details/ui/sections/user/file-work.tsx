@@ -6,35 +6,22 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
-interface FileData {
+interface Attachment {
     id: string;
-    name: string;
-    size: number;
-    uploadDate: string;
+    filename: string;
+    path: string;
+    url: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
-const staticFiles: FileData[] = [
-    {
-        id: "1",
-        name: "Project_Design_Final.pdf",
-        size: 2500000,
-        uploadDate: "15 Mar, 2024 14:30"
-    },
-    {
-        id: "2",
-        name: "Logo_Assets.zip",
-        size: 15000000,
-        uploadDate: "15 Mar, 2024 14:30"
-    },
-    {
-        id: "3",
-        name: "Documentation.pdf",
-        size: 1200000,
-        uploadDate: "15 Mar, 2024 14:30"
-    }
-];
+interface FileWorkProps {
+    data: {
+        attachments?: Attachment[];
+    };
+}
 
-const FileWork = () => {
+const FileWork = ({ data }: FileWorkProps) => {
     const [isOpen, setIsOpen] = useState(true);
     const t = useTranslations("orderDetails.fileWork");
 
@@ -46,7 +33,21 @@ const FileWork = () => {
         return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
     };
 
-    const handleDownload = (file: FileData) => {};
+    const handleDownload = (file: Attachment) => {
+        window.open(file.url, '_blank');
+    };
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
+    };
 
     return (
         <div className="border border-soft-200 rounded-2xl">
@@ -72,32 +73,35 @@ const FileWork = () => {
                         className="w-full relative rounded-b-2xl overflow-hidden"
                     >
                         <div className="p-4">
-                            {staticFiles.map((file) => (
-                                <div key={file.id} className="border relative justify-between items-center flex border-soft-200 rounded-lg p-4 pl-[14px] mt-4 first:mt-0">
-                                    <div className="flex items-start w-full gap-1 justify-between">
-                                        <div className="w-full">
-                                            <div className="flex flex-col w-full items-start gap-1">
-                                                <span className="text-sm font-medium text-sub-600 w-3/4 truncate">{file.name}</span>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-xs text-sub-600 font-normal">
-                                                        {formatFileSize(file.size)}
-                                                    </span>
-                                                    <span className="text-xs text-sub-600 font-normal">
-                                                        {file.uploadDate}
-                                                    </span>
+                            {data.attachments && data.attachments.length > 0 ? (
+                                data.attachments.map((file) => (
+                                    <div key={file.id} className="border relative justify-between items-center flex border-soft-200 rounded-lg p-4 pl-[14px] mt-4 first:mt-0">
+                                        <div className="flex items-start w-full gap-1 justify-between">
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex flex-col w-full items-start gap-1">
+                                                    <span className="text-sm font-medium text-sub-600 truncate max-w-[200px]">{file.filename}</span>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-xs text-sub-600 font-normal">
+                                                            {formatDate(file.createdAt)}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <Button
+                                                variant="outline"
+                                                className="h-8 px-4 py-2 rounded-lg text-sub-600 hover:text-sub-600 hover:bg-transparent ml-4"
+                                                onClick={() => handleDownload(file)}
+                                            >
+                                                {t("download")}
+                                            </Button>
                                         </div>
-                                        <Button
-                                            variant="outline"
-                                            className="h-8 px-4 py-2 rounded-lg text-sub-600 hover:text-sub-600 hover:bg-transparent"
-                                            onClick={() => handleDownload(file)}
-                                        >
-                                            {t("download")}
-                                        </Button>
                                     </div>
+                                ))
+                            ) : (
+                                <div className="text-center py-4 text-sub-600">
+                                    No files available
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </motion.div>
                 )}

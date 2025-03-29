@@ -1209,7 +1209,8 @@
     },
     "timeline": {
       "title": "Timeline",
-      "addNew": "Add a new milestone"
+      "addNew": "Add a new milestone",
+      "noMilestones": "No milestones found"
     },
     "milestoneItem": {
       "confirmPayment": "Confirm Payment"

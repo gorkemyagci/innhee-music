@@ -144,7 +144,7 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive, contracts, handleA
             <div className="flex flex-col items-start w-full gap-2">
               <span className="text-sub-600 font-normal text-xs">Accepted an offer</span>
               <div className="bg-weak-50 w-full max-w-[80%] lg:max-w-[50%] rounded-[12px] p-4">
-                <Link href={`/order-details?orderId=${contracts?.find((item: any) => item.id === message?.offer?.id)?.id}`} prefetch className="text-primary-base cursor-pointer text-sm font-medium">
+                <Link href={`/order-details/${contracts?.find((item: any) => item.id === message?.offer?.id)?.id}`} prefetch className="text-primary-base cursor-pointer text-sm font-medium">
                   View Contract
                 </Link>
               </div>

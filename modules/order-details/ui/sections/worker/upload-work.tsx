@@ -1,9 +1,10 @@
 "use client"
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+import { getTokenFromCookie } from "@/app/server/action";
 
 interface FileWithProgress {
     id: string;
@@ -13,12 +14,35 @@ interface FileWithProgress {
     progress: number;
     uploading: boolean;
     file?: File;
+    url?: string;
 }
 
-const UploadWork = () => {
+const SERVICE_URL = process.env.NEXT_PUBLIC_API_URL || "https://music-upwork-project-production.up.railway.app";
+
+interface UploadWorkProps {
+    contractId: string;
+    data: any;
+}
+
+const UploadWork = ({ contractId, data }: UploadWorkProps) => {
     const [files, setFiles] = useState<FileWithProgress[]>([]);
     const [isDragging, setIsDragging] = useState(false);
     const t = useTranslations("orderDetails.uploadWork");
+
+    useEffect(() => {
+        if (data?.attachments?.length > 0) {
+            const existingFiles = data.attachments.map((attachment: any) => ({
+                id: attachment.id,
+                name: attachment.filename,
+                size: 0,
+                type: attachment.filename.split('.').pop() || '',
+                progress: 100,
+                uploading: false,
+                url: attachment.url
+            }));
+            setFiles(existingFiles);
+        }
+    }, [data]);
 
     const createFileWithProgress = (file: File): FileWithProgress => ({
         id: Math.random().toString(36).substring(7),
@@ -30,23 +54,23 @@ const UploadWork = () => {
         file: file
     });
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const selectedFile = e.target.files[0];
             const fileWithProgress = createFileWithProgress(selectedFile);
             setFiles(prev => [...prev, fileWithProgress]);
-            simulateUpload(fileWithProgress.id);
+            await uploadFile(fileWithProgress);
         }
     };
 
-    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         setIsDragging(false);
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             const selectedFile = e.dataTransfer.files[0];
             const fileWithProgress = createFileWithProgress(selectedFile);
             setFiles(prev => [...prev, fileWithProgress]);
-            simulateUpload(fileWithProgress.id);
+            await uploadFile(fileWithProgress);
         }
     };
 
@@ -60,27 +84,43 @@ const UploadWork = () => {
         setIsDragging(false);
     };
 
-    const simulateUpload = (fileId: string) => {
-        const interval = setInterval(() => {
-            setFiles(prev => {
-                const newFiles = [...prev];
-                const fileIndex = newFiles.findIndex(f => f.id === fileId);
-                if (fileIndex === -1) {
-                    clearInterval(interval);
-                    return prev;
-                }
+    const uploadFile = async (fileWithProgress: FileWithProgress) => {
+        try {
+            const token = await getTokenFromCookie();
+            const formData = new FormData();
+            formData.append("attachments", fileWithProgress.file!);
 
-                const file = newFiles[fileIndex];
-                if (file.progress >= 100) {
-                    clearInterval(interval);
-                    newFiles[fileIndex] = { ...file, uploading: false };
-                    return newFiles;
+            const response = await fetch(
+                `${SERVICE_URL}/contract/${contractId}/submit`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: formData,
                 }
+            );
 
-                newFiles[fileIndex] = { ...file, progress: file.progress + 10 };
-                return newFiles;
-            });
-        }, 300);
+            if (!response.ok) {
+                throw new Error("Failed to upload file");
+            }
+
+            setFiles(prev =>
+                prev.map(file =>
+                    file.id === fileWithProgress.id
+                        ? { ...file, progress: 100, uploading: false }
+                        : file
+                )
+            );
+        } catch (error) {
+            setFiles(prev =>
+                prev.map(file =>
+                    file.id === fileWithProgress.id
+                        ? { ...file, uploading: false }
+                        : file
+                )
+            );
+        }
     };
 
     const removeFile = (fileId: string) => {
@@ -96,15 +136,18 @@ const UploadWork = () => {
     };
 
     const handleDownload = (file: FileWithProgress) => {
-        if (!file.file) return;
-        const url = URL.createObjectURL(file.file);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = file.name;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        if (file.url) {
+            window.open(file.url, '_blank');
+        } else if (file.file) {
+            const url = URL.createObjectURL(file.file);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
     };
 
     return (
@@ -153,7 +196,7 @@ const UploadWork = () => {
                         <div className="flex items-start w-full gap-1 justify-between mb-3">
                             <div className="w-full">
                                 <div className="flex flex-col w-full items-start gap-1">
-                                    <span className="text-sm font-medium text-sub-600 w-3/4 truncate">{file.name}</span>
+                                    <span className="text-sm font-medium text-sub-600 max-w-[200px] truncate">{file.name}</span>
                                     <div className="flex items-center gap-2">
                                         <span className="text-xs text-sub-600 font-normal">
                                             {formatFileSize(file.size)}

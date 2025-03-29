@@ -14,12 +14,11 @@ const OrderDetails = ({
     const { data, isPending } = trpc.contract.getContractDetails.useQuery({
         contractId: orderId as string
     });
-    console.log(data);
     if (isPending) {
         return <OrderDetailsWorkerSkeleton />;
     }
     return <>
-        {data?.sender.id === userId ? <OrderDetailsUser orderId={orderId} /> : <OrderDetailsWorker orderId={orderId} />}
+        {data?.sender.id !== userId ? <OrderDetailsUser orderId={orderId} /> : <OrderDetailsWorker orderId={orderId} />}
     </>
 }
 
