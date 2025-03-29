@@ -24,7 +24,6 @@ const ChatView = () => {
     { roomId: chatId || "" },
     { enabled: !!chatId }
   );
-  console.log(contractsData);
   const { user: currentAuthUser, initializeFromToken } = useAuthStore();
   const selectedChat = chatId ? chatRooms.find((room: ChatRoom) => room.id === chatId) : undefined;
 
@@ -143,6 +142,7 @@ const ChatView = () => {
         ) : (
           <ChatMain
             messages={messages}
+            contracts={contractsData || []}
             setMessages={setMessages}
             selectedUser={getOtherUser(selectedChat)}
             currentUser={getCurrentUser(selectedChat)}
@@ -160,6 +160,7 @@ const ChatView = () => {
         {selectedChat && (
           <ChatMain
             messages={messages}
+            contracts={contractsData || []}
             setMessages={setMessages}
             selectedUser={getOtherUser(selectedChat)}
             currentUser={getCurrentUser(selectedChat)}

@@ -44,7 +44,6 @@ const Profile = () => {
             try {
                 const tokenValue = token.startsWith('Bearer ') ? token.substring(7) : token;
                 const decoded = jwtDecode<DecodedToken>(tokenValue);
-                console.log(decoded);
                 setDecodedToken(decoded);
                 if (decoded && decoded.nickname) {
                     setNickname(decoded.nickname);

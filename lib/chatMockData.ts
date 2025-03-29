@@ -115,19 +115,21 @@ export const getMockMessages = (selectedChatId: string): Message[] => [
     content: "Milestone 3: \"8\"",
     timestamp: new Date(2023, 1, 27, 10, 32),
     type: "milestone",
-    milestone: {
-      id: "milestone1",
-      title: "Milestone 3: \"8\"",
-      amount: 70,
-      amountCurrency: "USD",
-      deadline: "2024-12-31T23:59:59Z",
-      status: "PENDING",
+    milestones: [
+      {
+        id: "milestone1",
+        title: "Milestone 3: \"8\"",
+        amount: 70,
+        amountCurrency: "USD",
+        deadline: "2024-12-31T23:59:59Z",
+        status: "PENDING",
       completed: false,
-      paid: false,
-      contractId: "contract1",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
+        paid: false,
+        contractId: "contract1",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ],
   },
   {
     id: "msg7",

@@ -12,19 +12,26 @@ import ContractDetailsModal from "@/components/custom/modals/contract-details/in
 import { useTranslations } from "next-intl";
 import { Socket } from "socket.io-client";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 interface MessageItemProps {
   message: Message;
   isOwn: boolean;
   sender: User;
   isConsecutive?: boolean;
+  contracts?: any[];
+  handleApplyContract: (contractId: string, status: "ACCEPTED" | "REJECTED") => void;
 }
 
-const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps) => {
+const MessageItem = ({ message, isOwn, sender, isConsecutive, contracts, handleApplyContract }: MessageItemProps) => {
   const t = useTranslations("chat.main");
   const tMessages = useTranslations("chat.messages");
   const [showContractDetails, setShowContractDetails] = useState(false);
-  const socketRef = useRef<Socket | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [expandedContracts, setExpandedContracts] = useState<{ [key: string]: boolean }>({});
+
+
 
   const formatTime = (date: Date) => {
     return format(date, "h:mm a");
@@ -34,19 +41,11 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps
     setShowContractDetails(true);
   };
 
-  const handleContractAction = (contractId: string, status: "ACCEPTED" | "REJECTED") => {
-    if (!socketRef.current?.connected) return;
-    
-    socketRef.current.emit("updateContractStatus", {
-      contractId,
-      status
-    }, (response: any) => {
-      if (response?.success) {
-        toast.success(`Contract ${status.toLowerCase()} successfully`);
-      } else {
-        toast.error(`Failed to ${status.toLowerCase()} contract`);
-      }
-    });
+  const toggleExpand = (contractId: string) => {
+    setExpandedContracts(prev => ({
+      ...prev,
+      [contractId]: !prev[contractId]
+    }));
   };
 
   const renderTextWithLinks = (text: string) => {
@@ -100,7 +99,7 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps
   if (message.type === "system") {
     return (
       <div className="flex flex-col w-full items-end my-4">
-        {message.content.includes("Accepted an offer") ? (
+        {contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "ACCEPTED" ? (
           <div className="flex flex-col items-start w-1/2 gap-3">
             <span className="text-xs text-sub-600 font-normal">{tMessages("system.acceptedOffer")}</span>
             <button
@@ -111,7 +110,7 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps
             </button>
           </div>
         ) : (
-          message.content !== "Activated the milestone" && (
+          contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "PENDING" && (
             <div className="bg-soft-100 text-sub-600 text-xs px-3 py-1 rounded-full mb-2">
               {message.content}
             </div>
@@ -136,11 +135,26 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps
     return (
       <div
         className={cn(
-          "flex mb-6",
-          isOwn ? "justify-end" : "justify-start"
+          "flex flex-col-reverse gap-4 mb-6",
+          isOwn ? "items-end" : "items-start"
         )}
       >
-        <div className="max-w-[80%] flex flex-row gap-2.5">
+        {contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "ACCEPTED" && (
+          <div className="flex ml-12 justify-end w-full">
+            <div className="flex flex-col items-start w-full gap-2">
+              <span className="text-sub-600 font-normal text-xs">Accepted an offer</span>
+              <div className="bg-weak-50 w-full max-w-[80%] lg:max-w-[50%] rounded-[12px] p-4">
+                <Link href={`/order-details?orderId=${contracts?.find((item: any) => item.id === message?.offer?.id)?.id}`} prefetch className="text-primary-base cursor-pointer text-sm font-medium">
+                  View Contract
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+        <div className={cn(
+          "max-w-[80%] flex flex-row gap-2.5",
+          isOwn ? "flex-row-reverse" : "flex-row"
+        )}>
           <UserAvatar
             imageUrl={sender.avatar}
             name={sender.name}
@@ -166,42 +180,78 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps
               <div className="flex flex-col items-start gap-3 p-4">
                 <span className="text-strong-950 font-normal text-xs">{message.offer?.description}</span>
                 <Separator className="bg-soft-200" />
-                
-                {message.offer?.milestones && message.offer.milestones.length > 0 && (
-                  <div className="w-full">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-strong-950 text-xs font-medium">Milestones</span>
-                      <span className="text-sub-600 text-xs font-normal">Total: {message.offer?.currency}{message.offer?.amount}</span>
-                    </div>
-                    <div className="flex flex-col gap-2 w-full">
-                      {message.offer?.milestones?.map((milestone: Milestone, index: number) => (
-                        <div
-                          key={milestone.id}
-                          className="w-full rounded-lg border border-soft-200 p-3 bg-white"
-                        >
-                          <div className="flex items-center justify-between mb-1.5">
-                            <span className="text-strong-950 font-medium text-xs">{milestone.title}</span>
-                            <span className="text-sub-600 font-medium text-xs">{milestone?.amountCurrency}{milestone.amount}</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sub-600 text-[10px] font-normal flex items-center gap-1">
-                              <Icons.calendar className="w-3 h-3" />
-                              {format(new Date(milestone.deadline), "MMM dd, yyyy")}
-                            </span>
-                            <span className={cn(
-                              "text-[10px] font-medium px-2 py-0.5 rounded-full",
-                              milestone.status === "PENDING" ? "bg-yellow-50 text-yellow-600" :
-                              milestone.status === "COMPLETED" ? "bg-green-50 text-green-600" :
-                              "bg-red-50 text-red-600"
-                            )}>
-                              {milestone.status}
-                            </span>
-                          </div>
+
+                {contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "PENDING" && contracts?.map((item) => (
+                  item.id === message.offer?.id && item.milestones && item.milestones.length > 0 && (
+                    <div key={item.id} className="w-full">
+                      <motion.button
+                        onClick={() => toggleExpand(item.id)}
+                        className="w-full flex items-center justify-between py-1"
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <div className="flex items-center cursor-pointer gap-2">
+                          <motion.div
+                            animate={{ rotate: expandedContracts[item.id] ? 90 : 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <Icons.chevron_right className="w-4 h-4 text-sub-600" />
+                          </motion.div>
+                          <span className="text-strong-950 text-xs font-medium">Milestones ({item.milestones.length})</span>
                         </div>
-                      ))}
+                        <span className="text-sub-600 text-xs font-normal">Total: {message.offer?.currency}{message.offer?.amount}</span>
+                      </motion.button>
+
+                      <AnimatePresence>
+                        {expandedContracts[item.id] && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden pt-2"
+                          >
+                            <div className="flex flex-col gap-1.5 px-1">
+                              {item.milestones?.map((milestone: any, index: number) => (
+                                <motion.div
+                                  key={milestone.id}
+                                  initial={{ x: -20, opacity: 0 }}
+                                  animate={{ x: 0, opacity: 1 }}
+                                  transition={{ delay: index * 0.1 }}
+                                  className="w-full rounded-lg border border-soft-200 p-2 bg-white"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex flex-col">
+                                      <span className="text-strong-950 font-medium text-xs">{milestone.title}</span>
+                                      <div className="flex items-center gap-1">
+                                        <Icons.calendar className="w-3 h-3 text-sub-600" />
+                                        <span className="text-sub-600 text-[10px] font-normal">
+                                          {format(new Date(milestone.deadline), "MMM dd, yyyy")}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="flex flex-col items-end gap-1">
+                                      <span className="text-sub-600 font-medium text-xs">
+                                        {milestone.amountCurrency}{milestone.amount}
+                                      </span>
+                                      <span className={cn(
+                                        "text-[10px] font-medium px-2 py-0.5 rounded-full",
+                                        milestone.status === "PENDING" ? "bg-yellow-50 text-yellow-600" :
+                                          milestone.status === "COMPLETED" ? "bg-green-50 text-green-600" :
+                                            "bg-red-50 text-red-600"
+                                      )}>
+                                        {milestone.status}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
-                  </div>
-                )}
+                  )
+                ))}
 
                 <div className="flex flex-col items-start gap-1">
                   <span className="text-strong-950 text-xs font-medium">
@@ -215,29 +265,26 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps
                   </div>
                 </div>
               </div>
-              {!isOwn && message.content.includes("Accepted") ? (
-                <div className="mt-3">
-                  <button
-                    className="text-blue-600 text-xs font-medium hover:underline"
-                    onClick={handleViewContract}
-                  >
-                    {tMessages("system.viewContract")}
-                  </button>
-                </div>
+              {!isOwn && contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "ACCEPTED" ? (
+                <></>
               ) : !isOwn && (
                 <div className="p-4 flex gap-3 items-center border-t border-soft-200">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => handleContractAction(message.offer?.id || "", "REJECTED")}
+                  <Button
+                    variant="outline"
+                    disabled={contracts?.find((item: any) => item.id === message?.offer?.id)?.status !== "PENDING"}
+                    onClick={() => handleApplyContract(message?.offer?.id || "", "REJECTED")}
                     className="h-9 flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm"
                   >
                     {tMessages("offer.cancel")}
                   </Button>
                   <Button
-                    onClick={() => handleContractAction(message.offer?.id || "", "ACCEPTED")}
+                    onClick={() => {
+                      handleApplyContract(message?.offer?.id || "", "ACCEPTED")
+                    }}
+                    disabled={contracts?.find((item: any) => item.id === message?.offer?.id)?.status !== "PENDING"}
                     className="h-9 flex-1 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
                     <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                    {tMessages("offer.accept")}
+                    {contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "ACCEPTED" ? "Accepted" : tMessages("offer.accept")}
                   </Button>
                 </div>
               )}
@@ -253,7 +300,7 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps
             startDate: format(new Date(), "dd MMMM, yyyy"),
             deadline: message.offer?.deadline ? format(new Date(message.offer.deadline), "dd MMMM, yyyy") : "",
             amount: message.offer?.amount || 0,
-            milestones: message.offer?.milestones
+            milestones: message?.milestones
           }}
         />
       </div>
@@ -288,7 +335,7 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps
                 "w-full rounded-lg p-4 bg-weak-50"
               )}
             >
-              <h4 className="font-normal text-strong-950 text-sm mb-1">{message.milestone?.title}</h4>
+              <h4 className="font-normal text-strong-950 text-sm mb-1">{message.milestones?.[0]?.title}</h4>
               <div className="flex justify-between items-center">
                 <span className="font-normal text-strong-950 text-sm">{t("milestone.amount")} $70.00</span>
               </div>
@@ -313,7 +360,7 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps
             startDate: "10 March, 2025",
             deadline: "15 March, 2025",
             amount: 240.00,
-            milestoneAmount: message.milestone?.amount
+            milestoneAmount: message.milestones?.[0]?.amount
           }}
         />
       </div>
@@ -356,17 +403,17 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps
           </span>
           <span className="text-xs text-sub-600 ml-2">{formatTime(message.timestamp)}</span>
         </div>
-        <div className="whitespace-pre-wrap break-words overflow-hidden overflow-wrap-break-word hyphens-auto text-sub-600 font-normal text-xs max-h-[300px] overflow-y-auto custom-scroll flex-grow">
-          {renderTextWithLinks(message.content)}
+        <div className="whitespace-pre-wrap break-words overflow-hidden overflow-wrap-break-word hyphens-auto text-sub-600 font-normal text-xs max-h-[300px] overflow-y-auto custom-scroll">
+          {message.content && String(message.content).trim() !== "0" && renderTextWithLinks(String(message.content))}
         </div>
 
-        {message.additionalInfo && (
+        {message.additionalInfo && String(message.additionalInfo).trim() !== "0" && (
           <div className="text-xs text-sub-600 mt-1 whitespace-pre-wrap break-words overflow-hidden overflow-wrap-break-word hyphens-auto">
             {renderTextWithLinks(message.additionalInfo)}
           </div>
         )}
 
-        {message.attachments && message.attachments.length > 0 && (
+        {Array.isArray(message.attachments) && message.attachments.length > 0 && (
           <div className="mt-2 flex flex-wrap items-start gap-5">
             {message.attachments.map((attachment) => {
               const isImage = attachment.path.match(/\.(jpg|jpeg|png|gif|webp)(?:_\d+)?$/i);
@@ -411,7 +458,7 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive }: MessageItemProps
           </div>
         )}
 
-        {message.fileCount && (
+        {typeof message.fileCount === 'number' && message.fileCount > 0 && (
           <div className="mt-2 text-xs text-sub-600">
             <span>{tMessages("regular.files", { count: message.fileCount })}</span>
           </div>

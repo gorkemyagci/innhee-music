@@ -74,6 +74,7 @@ export interface ExtendedChatMainProps {
     };
     onBack?: () => void;
     isLoading?: boolean;
+    contracts?: any[];
 }
 
 export interface ChatRoom {

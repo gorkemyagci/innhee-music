@@ -3,7 +3,6 @@ import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/user-avatar";
 
 const Sidebar = ({ receiver }: { receiver: any }) => {
-    console.log(receiver);
     return <div className="w-full lg:max-w-[320px] border border-soft-200 rounded-[20px] p-5 flex flex-col gap-6 items-center">
         <div className="flex flex-col items-center gap-2 p-4">
             <div className="flex flex-col items-center gap-1">

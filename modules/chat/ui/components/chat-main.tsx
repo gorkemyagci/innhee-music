@@ -32,6 +32,7 @@ const ChatMain = ({
     currentUser,
     onBack,
     isLoading = false,
+    contracts = []
 }: ExtendedChatMainProps) => {
     const t = useTranslations("chat.main");
     const router = useRouter();
@@ -72,27 +73,99 @@ const ChatMain = ({
                 reconnectionDelay: 1000
             });
 
-            socketRef.current.on("connect", () => { });
-            socketRef.current.on("connect_error", (error) => { });
-            socketRef.current.on("disconnect", (reason) => { });
-            socketRef.current.on("error", (error) => { });
-            socketRef.current.on("message_sent", (data) => { });
-            socketRef.current.on("message", (message: Message) => {
-                setMessages((prev: Message[]) => [...prev, message]);
-            });
+            const socket = socketRef.current;
 
-            socketRef.current.on("userTyping", (data) => {
+            const handleConnect = () => {
+                console.log("Socket connected");
+            };
+
+            const handleConnectError = (error: any) => {
+                console.error("Socket connection error:", error);
+            };
+
+            const handleDisconnect = (reason: string) => {
+                console.log("Socket disconnected:", reason);
+            };
+
+            const handleError = (error: any) => {
+                console.error("Socket error:", error);
+            };
+
+            const handleMessageSent = (data: any) => {
+                console.log("Message sent:", data);
+            };
+
+            const handleUserTyping = (data: any) => {
                 if (data.userId !== currentUser?.id) {
                     setIsTyping(data.isTyping);
                 }
-            });
+            };
+
+            const handleContractUpdated = (data: any) => {
+                console.log("Contract updated:", data);
+                const systemMessage = {
+                    id: `msg-${Date.now()}`,
+                    content: `Your contract has been ${data.status.toLowerCase()} by ${data.sender.nickname}`,
+                    type: "system",
+                    senderId: data.senderId,
+                    receiverId: data.receiverId,
+                    timestamp: new Date(),
+                    chatRoomId: data.chatRoomId
+                } as Message;
+                setMessages(prev => [...prev, systemMessage]);
+            };
+
+            const handleNewMessage = (message: Message) => {
+                console.log("New message received:", message);
+                
+                // Prevent adding duplicate messages
+                setMessages((prev: Message[]) => {
+                    // Check if message already exists
+                    if (prev.some(m => m.id === message.id)) {
+                        console.log("Duplicate message detected, skipping:", message.id);
+                        return prev;
+                    }
+
+                    // Add new message
+                    const newMessage = {
+                        ...message,
+                        timestamp: new Date(message.createdAt || new Date()),
+                        attachments: message.attachments || [],
+                        fileCount: message.attachments?.length || 0
+                    };
+
+                    return [...prev, newMessage];
+                });
+            };
+
+            socket.on("connect", handleConnect);
+            socket.on("connect_error", handleConnectError);
+            socket.on("disconnect", handleDisconnect);
+            socket.on("error", handleError);
+            socket.on("message_sent", handleMessageSent);
+            socket.on("userTyping", handleUserTyping);
+            socket.on("contractUpdated", handleContractUpdated);
+            socket.on("newMessage", handleNewMessage);
+
+            // Remove other message event listeners to prevent duplicates
+            socket.off("message");
+            socket.off("message_sent");
+
+            return () => {
+                socket.off("connect", handleConnect);
+                socket.off("connect_error", handleConnectError);
+                socket.off("disconnect", handleDisconnect);
+                socket.off("error", handleError);
+                socket.off("message_sent", handleMessageSent);
+                socket.off("userTyping", handleUserTyping);
+                socket.off("contractUpdated", handleContractUpdated);
+                socket.off("newMessage", handleNewMessage);
+                socket.disconnect();
+                socketRef.current = null;
+            };
         }
 
         return () => {
-            if (socketRef.current) {
-                socketRef.current.disconnect();
-                socketRef.current = null;
-            }
             if (typingTimeoutRef.current) {
                 clearTimeout(typingTimeoutRef.current);
             }
@@ -125,6 +198,31 @@ const ChatMain = ({
             e.preventDefault();
             handleSendMessage();
         }
+    };
+
+    const handleApplyContract = (contractId: string, status: "ACCEPTED" | "REJECTED") => {
+        console.log("Sending contract status update:", { contractId, status });
+        
+        if (!socketRef.current?.connected) {
+            console.error("Socket not connected");
+            toast.error("Connection lost. Please try again.");
+            return;
+        }
+
+        socketRef.current.emit("updateContractStatus", {
+            contractId,
+            status,
+            chatRoomId
+        }, (response: any) => {
+            console.log("Contract status update response:", response);
+            if (response?.success) {
+                toast.success(`Contract ${status.toLowerCase()} successfully`);
+                utils.chat.getRoomContracts.invalidate();
+                utils.chat.getRoomMessages.invalidate();
+            } else {
+                toast.error(response?.message || `Failed to ${status.toLowerCase()} contract`);
+            }
+        });
     };
 
     const getFilePreview = (file: File): Promise<string> => {
@@ -424,7 +522,9 @@ const ChatMain = ({
                             <MessageItem
                                 key={message.id}
                                 message={message}
+                                contracts={contractsData || []}
                                 isOwn={message.senderId === currentUser.id}
+                                handleApplyContract={handleApplyContract}
                                 sender={
                                     message.senderId === currentUser.id
                                         ? currentUser
@@ -440,7 +540,7 @@ const ChatMain = ({
                             />
                         ))}
                         {isTyping && (
-                            <IsTyping selectedUserNickname={messages[messages.length - 1].senderId === currentUser.id ? selectedUser.nickname || "Unknown" : currentUser.nickname || "Unknown"} />
+                            <IsTyping selectedUserNickname={selectedUser.name} />
                         )}
                         <div ref={messagesEndRef} />
                     </div>

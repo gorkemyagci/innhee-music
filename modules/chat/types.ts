@@ -57,6 +57,8 @@ export interface Message {
   attachments?: Attachment[];
   additionalInfo?: string;
   offer?: Offer;
-  milestone?: Milestone;
+  milestones?: Milestone[];
   fileCount?: number;
+  chatRoomId?: string;
+  createdAt?: string;
 } 

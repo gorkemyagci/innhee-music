@@ -60,4 +60,6 @@ export interface Message {
   fileCount?: number;
   offer?: Offer;
   milestone?: Milestone;
+  createdAt?: string;
+  chatRoomId?: string;
 } 
