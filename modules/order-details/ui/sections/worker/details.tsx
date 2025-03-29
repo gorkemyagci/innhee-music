@@ -6,11 +6,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
+import moment from "moment";
 
-const Details = () => {
+const Details = ({ data }: { data: any }) => {
     const [isOpen, setIsOpen] = useState(true);
     const t = useTranslations("orderDetails.details");
-
     return (
         <div className="flex-1 border border-soft-200 rounded-2xl">
             <motion.div
@@ -38,7 +38,7 @@ const Details = () => {
                             <div className="py-3 w-full flex items-center justify-between">
                                 <span className="text-sub-600 font-medium text-sm">{t("contract")}</span>
                                 <Link href="#" prefetch className="text-primary-base font-medium text-sm border-b border-primary-base">
-                                    Contract name
+                                    {data.description}
                                 </Link>
                             </div>
                             <Separator className="bg-soft-200" />
@@ -46,13 +46,13 @@ const Details = () => {
                                 <span className="text-sub-600 font-medium text-sm">{t("contractId")}</span>
                                 <div className="flex items-center gap-0">
                                     <span className="text-sub-600 font-medium text-sm">#</span>
-                                    <span className="text-strong-950 font-medium text-sm">126895</span>
+                                    <span className="text-strong-950 font-medium text-sm">{data.id}</span>
                                 </div>
                             </div>
                             <Separator className="bg-soft-200" />
                             <div className="py-3 w-full flex items-center justify-between">
-                                <span className="text-sub-600 font-medium text-sm">{t("contractId")}</span>
-                                <span className="text-strong-950 font-medium text-sm">10 March, 2025</span>
+                                <span className="text-sub-600 font-medium text-sm">Start Date</span>
+                                <span className="text-strong-950 font-medium text-sm">{moment(data?.startDate).format("DD MMM, YYYY")}</span>
                             </div>
                             <Separator className="bg-soft-200" />
                             <div className="py-3 w-full flex items-center justify-between">

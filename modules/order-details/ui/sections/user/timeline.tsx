@@ -1,17 +1,14 @@
 "use client";
 import { Icons } from "@/components/icons";
-import { useMockData } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import MilestoneItem from "../../components/milestone-item";
 import { useTranslations } from "next-intl";
 
-const Timeline = () => {
+const Timeline = ({ milestones }: { milestones: any }) => {
     const [isOpen, setIsOpen] = useState(true);
-    const { timelineData } = useMockData();
     const t = useTranslations("orderDetails.timeline");
-    
     return (
         <div className="flex-1 border border-soft-200 rounded-2xl relative">
             <motion.div 
@@ -36,9 +33,13 @@ const Timeline = () => {
                         className="w-full relative rounded-b-2xl overflow-hidden"
                     >
                         <div className="p-4 flex flex-col gap-4">
-                            {timelineData.map((item, index) => (
+                            {milestones.length > 0 ? milestones.map((item: any, index: number) => (
                                 <MilestoneItem key={index} item={item as any} index={index} />
-                            ))}
+                            )) : (
+                                <div className="flex flex-col gap-2">
+                                    <span className="text-sub-600 font-medium text-sm">{t("noMilestones")}</span>
+                                </div>
+                            )}
                             <div className="flex relative flex-row cursor-pointer items-center gap-3">
                                 <div className="flex items-center border-2 border-sub-600 justify-center w-5 h-5 rounded-full bg-white">
                                     <Icons.plus className="size-2.5 stroke-sub-600"/>
