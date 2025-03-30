@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth-store";
 import { PasswordInput } from "@/components/custom/form-elements/password-input";
 import { useTranslations } from "next-intl";
-
+import { useRouter } from "next/navigation";
 const signinSchema = z.object({
     account: z.string().email(),
     code: z.string().min(6).optional(),
@@ -41,6 +41,7 @@ interface SignInFormProps {
 
 const SignInForm = ({ activeTab }: SignInFormProps) => {
     const t = useTranslations("auth.signIn.form");
+    const router = useRouter();
     const form = useForm<SignIn>({
         mode: "onSubmit",
         reValidateMode: "onChange",
@@ -60,7 +61,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
             useAuthStore.getState().setToken(access_token, keep_logged);
-            typeof window !== "undefined" && window.location.replace(pageUrls.DASHBOARD);
+            router.push(pageUrls.DASHBOARD);
         },
         onError: (error) => {
             toast.error(error.message || t("errors.generalError"));
