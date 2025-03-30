@@ -1,5 +1,3 @@
-import { Icons } from "@/components/icons";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 

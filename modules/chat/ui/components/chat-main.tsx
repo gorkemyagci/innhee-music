@@ -42,11 +42,17 @@ const ChatMain = ({
     const [isContractDetailsOpen, setIsContractDetailsOpen] = useState(false);
     const [uploadingFiles, setUploadingFiles] = useState<Record<string, UploadingFile>>({});
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const [isConnected, setIsConnected] = useState(false);
+    const [messageQueue, setMessageQueue] = useState<any[]>([]);
+    const [reconnectAttempts, setReconnectAttempts] = useState(0);
+    const maxReconnectAttempts = 5;
     const emojiPickerRef = useRef<HTMLDivElement>(null);
     const socketRef = useRef<Socket | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const cookies = parseCookies();
     const [chatRoomId, setChatRoomId] = useQueryState("chatId");
     const [isTyping, setIsTyping] = useState(false);
@@ -59,91 +65,177 @@ const ChatMain = ({
         { enabled: !!chatRoomId }
     );
 
-    useEffect(() => {
-        if (!socketRef.current) {
-            socketRef.current = io(SOCKET_URL, {
-                extraHeaders: {
-                    Authorization: `Bearer ${cookies.token}`
-                },
-                auth: {
-                    Authorization: `Bearer ${cookies.token}`
-                },
-                reconnection: true,
-                reconnectionAttempts: 5,
-                reconnectionDelay: 1000
-            });
-
-            const socket = socketRef.current;
-
-            const handleConnect = () => {};
-            const handleConnectError = (error: any) => {};
-            const handleDisconnect = (reason: string) => {};
-            const handleError = (error: any) => {};
-            const handleMessageSent = (data: any) => {};
-
-            const handleUserTyping = (data: any) => {
-                if (data.userId !== currentUser?.id) {
-                    setIsTyping(data.isTyping);
-                }
-            };
-
-            const handleContractUpdated = (data: any) => {
-                const systemMessage = {
-                    id: `msg-${Date.now()}`,
-                    content: `Your contract has been ${data.status.toLowerCase()} by ${data.sender.nickname}`,
-                    type: "system",
-                    senderId: data.senderId,
-                    receiverId: data.receiverId,
-                    timestamp: new Date(),
-                    chatRoomId: data.chatRoomId
-                } as Message;
-                setMessages(prev => [...prev, systemMessage]);
-            };
-
-            const handleNewMessage = (message: Message) => {
-                setMessages((prev: Message[]) => {
-                    if (prev.some(m => m.id === message.id)) {
-                        return prev;
-                    }
-                    const newMessage = {
-                        ...message,
-                        timestamp: new Date(message.createdAt || new Date()),
-                        attachments: message.attachments || [],
-                        fileCount: message.attachments?.length || 0
-                    };
-
-                    return [...prev, newMessage];
-                });
-            };
-
-            socket.on("connect", handleConnect);
-            socket.on("connect_error", handleConnectError);
-            socket.on("disconnect", handleDisconnect);
-            socket.on("error", handleError);
-            socket.on("message_sent", handleMessageSent);
-            socket.on("userTyping", handleUserTyping);
-            socket.on("contractUpdated", handleContractUpdated);
-            socket.on("newMessage", handleNewMessage);
-
-            // Remove other message event listeners to prevent duplicates
-            socket.off("message");
-            socket.off("message_sent");
-
-            return () => {
-                socket.off("connect", handleConnect);
-                socket.off("connect_error", handleConnectError);
-                socket.off("disconnect", handleDisconnect);
-                socket.off("error", handleError);
-                socket.off("message_sent", handleMessageSent);
-                socket.off("userTyping", handleUserTyping);
-                socket.off("contractUpdated", handleContractUpdated);
-                socket.off("newMessage", handleNewMessage);
-                socket.disconnect();
-                socketRef.current = null;
-            };
+    const initializeSocket = () => {
+        if (socketRef.current?.connected) {
+            return;
         }
 
+        socketRef.current = io(SOCKET_URL, {
+            extraHeaders: {
+                Authorization: `Bearer ${cookies.token}`
+            },
+            auth: {
+                Authorization: `Bearer ${cookies.token}`
+            },
+            reconnection: true,
+            reconnectionAttempts: maxReconnectAttempts,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax: 5000,
+            timeout: 20000,
+            forceNew: true
+        });
+
+        const socket = socketRef.current;
+
+        const handleConnect = () => {
+            setIsConnected(true);
+            setReconnectAttempts(0);
+            processMessageQueue();
+            startHeartbeat();
+        };
+
+        const handleConnectError = (error: any) => {
+            setIsConnected(false);
+            handleReconnect();
+        };
+
+        const handleDisconnect = (reason: string) => {
+            setIsConnected(false);
+            stopHeartbeat();
+            if (reason === 'io server disconnect') {
+                handleReconnect();
+            }
+        };
+
+        const handleError = (error: any) => {
+            setIsConnected(false);
+            handleReconnect();
+        };
+
+        const handleMessageSent = (data: any) => {
+            if (data?.success) {
+                setMessageQueue(prev => prev.filter(msg => msg.id !== data.messageId));
+            }
+        };
+
+        const handleUserTyping = (data: any) => {
+            if (data.userId !== currentUser?.id) {
+                setIsTyping(data.isTyping);
+            }
+        };
+
+        const handleContractUpdated = (data: any) => {
+            const systemMessage = {
+                id: `msg-${Date.now()}`,
+                content: `Your contract has been ${data.status.toLowerCase()} by ${data.sender.nickname}`,
+                type: "system",
+                senderId: data.senderId,
+                receiverId: data.receiverId,
+                timestamp: new Date(),
+                chatRoomId: data.chatRoomId
+            } as Message;
+            setMessages(prev => [...prev, systemMessage]);
+        };
+
+        const handleNewMessage = (message: Message) => {
+            setMessages((prev: Message[]) => {
+                if (prev.some(m => m.id === message.id)) {
+                    return prev;
+                }
+                const newMessage = {
+                    ...message,
+                    timestamp: new Date(message.createdAt || new Date()),
+                    attachments: message.attachments || [],
+                    fileCount: message.attachments?.length || 0
+                };
+
+                return [...prev, newMessage];
+            });
+        };
+
+        socket.on("connect", handleConnect);
+        socket.on("connect_error", handleConnectError);
+        socket.on("disconnect", handleDisconnect);
+        socket.on("error", handleError);
+        socket.on("message_sent", handleMessageSent);
+        socket.on("userTyping", handleUserTyping);
+        socket.on("contractUpdated", handleContractUpdated);
+        socket.on("newMessage", handleNewMessage);
+
         return () => {
+            socket.off("connect", handleConnect);
+            socket.off("connect_error", handleConnectError);
+            socket.off("disconnect", handleDisconnect);
+            socket.off("error", handleError);
+            socket.off("message_sent", handleMessageSent);
+            socket.off("userTyping", handleUserTyping);
+            socket.off("contractUpdated", handleContractUpdated);
+            socket.off("newMessage", handleNewMessage);
+            stopHeartbeat();
+            if (socket.connected) {
+                socket.disconnect();
+            }
+            socketRef.current = null;
+        };
+    };
+
+    const handleReconnect = () => {
+        if (reconnectAttempts >= maxReconnectAttempts) {
+            return;
+        }
+
+        const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
+        setReconnectAttempts(prev => prev + 1);
+
+        if (reconnectTimeoutRef.current) {
+            clearTimeout(reconnectTimeoutRef.current);
+        }
+
+        reconnectTimeoutRef.current = setTimeout(() => {
+            initializeSocket();
+        }, delay);
+    };
+
+    const startHeartbeat = () => {
+        if (heartbeatIntervalRef.current) {
+            clearInterval(heartbeatIntervalRef.current);
+        }
+
+        heartbeatIntervalRef.current = setInterval(() => {
+            if (socketRef.current?.connected) {
+                socketRef.current.emit('ping');
+            }
+        }, 30000);
+    };
+
+    const stopHeartbeat = () => {
+        if (heartbeatIntervalRef.current) {
+            clearInterval(heartbeatIntervalRef.current);
+            heartbeatIntervalRef.current = null;
+        }
+    };
+
+    const processMessageQueue = () => {
+        if (!socketRef.current?.connected || messageQueue.length === 0) {
+            return;
+        }
+
+        messageQueue.forEach(message => {
+            socketRef.current?.emit("sendMessage", message.data, (response: any) => {
+                if (response?.success) {
+                    setMessageQueue(prev => prev.filter(msg => msg.id !== message.id));
+                }
+            });
+        });
+    };
+
+    useEffect(() => {
+        const cleanup = initializeSocket();
+        return () => {
+            if (cleanup) cleanup();
+            if (reconnectTimeoutRef.current) {
+                clearTimeout(reconnectTimeoutRef.current);
+            }
             if (typingTimeoutRef.current) {
                 clearTimeout(typingTimeoutRef.current);
             }
@@ -180,7 +272,6 @@ const ChatMain = ({
 
     const handleApplyContract = (contractId: string, status: "ACCEPTED" | "REJECTED") => {
         if (!socketRef.current?.connected) {
-            toast.error("Connection lost. Please try again.");
             return;
         }
 
@@ -323,11 +414,6 @@ const ChatMain = ({
                 }
             }
 
-            if (!socketRef.current?.connected) {
-                toast.error("Connection lost. Please try again.");
-                return;
-            }
-
             const messageData = {
                 chatRoomId: chatRoomId,
                 content: messageText,
@@ -355,16 +441,24 @@ const ChatMain = ({
             setMessages((prev: Message[]) => [...prev, optimisticMessage]);
             setMessageText("");
             setAttachments([]);
-            return new Promise((resolve, reject) => {
-                if (!socketRef.current?.connected) {
-                    reject(new Error("Socket connection lost"));
-                    return;
-                }
 
-                socketRef.current.emit("sendMessage", messageData, (response: any) => {
+            if (!socketRef.current?.connected) {
+                setMessageQueue(prev => [...prev, {
+                    id: optimisticMessage.id,
+                    data: messageData
+                }]);
+                return;
+            }
+
+            return new Promise((resolve, reject) => {
+                socketRef.current?.emit("sendMessage", messageData, (response: any) => {
                     if (!response?.success) {
                         setMessages((prev: Message[]) => prev.filter(msg => msg.id !== optimisticMessage.id));
-                        toast.error("Failed to send message. Please try again.");
+                        setMessageQueue(prev => [...prev, {
+                            id: optimisticMessage.id,
+                            data: messageData
+                        }]);
+                        toast.error("Failed to send message. Will retry when connection is restored.");
                         reject(new Error("Message sending failed"));
                     } else {
                         resolve(response);
