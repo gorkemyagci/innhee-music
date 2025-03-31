@@ -11,6 +11,7 @@ interface Step {
     title: string;
     icon: string;
     animation: string;
+    isGif?: boolean;
 }
 
 interface FooterFeature {
@@ -18,6 +19,7 @@ interface FooterFeature {
     description: string;
     icon: string;
     animation: string;
+    isGif?: boolean;
 }
 
 const Workflow = () => {
@@ -58,7 +60,8 @@ const Workflow = () => {
             title: t("footer.guarantee.title"),
             description: t("footer.guarantee.description"),
             icon: "/assets/svgs/cashback.svg",
-            animation: "/assets/animations/animations-10.json"
+            animation: "/assets/gifs/cashback.gif",
+            isGif: true
         }
     ];
 
@@ -126,12 +129,22 @@ const Workflow = () => {
                                     <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 border border-[#DADADA] bg-white rounded-full w-2 h-2"></div>
                                     <div className="relative w-5 h-5 sm:w-6 sm:h-6">
                                         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                            <DotLottieReact
-                                                src={step.animation}
-                                                loop
-                                                autoplay
-                                                className="w-full h-full scale-[1.55]"
-                                            />
+                                            {step.isGif ? (
+                                                <Image
+                                                    src={step.animation}
+                                                    alt={step.title}
+                                                    width={24}
+                                                    height={24}
+                                                    className="sm:w-6 sm:h-6 scale-[1.55]"
+                                                />
+                                            ) : (
+                                                <DotLottieReact
+                                                    src={step.animation}
+                                                    loop
+                                                    autoplay
+                                                    className="w-full h-full scale-[1.55]"
+                                                />
+                                            )}
                                         </div>
                                         <div className="absolute inset-0 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
                                             <Image
@@ -156,12 +169,22 @@ const Workflow = () => {
                             <div key={index} className="group flex w-full flex-col items-center gap-4 sm:gap-5">
                                 <div className="relative w-7 h-7 sm:w-9 sm:h-9">
                                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <DotLottieReact
-                                            src={feature.animation}
-                                            loop
-                                            autoplay
-                                            className="w-full h-full scale-[1.55]"
-                                        />
+                                        {feature.isGif ? (
+                                            <Image
+                                                src={feature.animation}
+                                                alt={feature.title}
+                                                width={36}
+                                                height={36}
+                                                className="sm:w-9 sm:h-9 scale-[1.55]"
+                                            />
+                                        ) : (
+                                            <DotLottieReact
+                                                src={feature.animation}
+                                                loop
+                                                autoplay
+                                                className="w-full h-full scale-[1.55]"
+                                            />
+                                        )}
                                     </div>
                                     <div className="absolute inset-0 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
                                         <Image
