@@ -19,8 +19,8 @@ const Discover = () => {
         {
             title: t("items.quickAndFree.title"),
             description: t("items.quickAndFree.description"),
-            icon: "https://s3-alpha-sig.figma.com/img/91b7/6492/b0a508fac28f0dd9b5fe6195750e8b77?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=gcBnhwJ7oiDMpvxDmQJb75-8Fjjp2fNrtH~gaRagbrOSoIJq-TPRHaKdDyHLKwdJO3vCrws8f--8LgiLB5Rv3yrkP~GFQsdzb5SuP98~NeZd07brInrv2Drd75D6LgX-5iNWxJGFk6vqPJGc8mU9u-Wct5eK4~jQ-ivg6-AZRUmkke7vLotvWrMONErWA0dMONh8rkMP-JH15YBMQkPV4e6lHxKSQ~ZnWR517FBqSZmZKBwt7lgCYRFd7oam~Zw5eeWjUgq~KHzr~vSgqxYNM4FV2~hx8fa0sawZBtS6-1DxtXzdSkCZKRnnVfbQofWZNsC406YXe2wL-1kMZkgPwQ__",
-            animation: "/assets/gifs/thunder.gif",
+            icon: "/assets/svgs/rocket.svg",
+            animation: "/assets/gifs/rocket.gif",
             isGif: true
         },
         {
@@ -61,17 +61,17 @@ const Discover = () => {
             <div className="flex flex-col gap-4 sm:gap-6 md:gap-8">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
                     {features.slice(0, 2).map((feature, index) => (
-                        <div key={index} className="group p-5 sm:p-6 md:p-8 border border-soft-200 rounded-[20px] bg-white flex flex-col gap-3 sm:gap-4 transition-all duration-300 hover:bg-gray-50">
+                        <div key={index} className="group p-5 sm:p-6 md:p-8 border border-soft-200 rounded-[20px] bg-white flex flex-col gap-3 sm:gap-4 transition-all duration-300 hover:shadow-lg hover:shadow-gray-100 hover:-translate-y-1 hover:border-gray-200">
                             <div className="flex items-center gap-2">
                                 <div className="relative w-[28px] h-[28px] sm:w-[32px] sm:h-[32px] md:w-[36px] md:h-[36px]">
-                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 duration-300">
                                         {feature.isGif ? (
                                             <Image
                                                 src={feature.animation}
                                                 alt={feature.title}
-                                                width={54}
-                                                height={54}
-                                                className={cn("sm:w-[50px] sm:h-[50px] md:w-[54px] md:h-[54px] shrink-0", feature.animation === "/assets/gifs/thunder.gif" && "-translate-y-[6px]")}
+                                                width={50}
+                                                height={50}
+                                                className={cn("sm:w-[50px] sm:h-[50px] md:w-[54px] md:h-[54px] shrink-0 object-contain scale-[1.55]", feature.animation === "/assets/gifs/rocket.gif" && "-translate-y-[6px]")}
                                             />
                                         ) : (
                                             <DotLottieReact
@@ -100,7 +100,7 @@ const Discover = () => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                     {features.slice(2).map((feature, index) => (
-                        <div key={index} className="group p-5 sm:p-6 md:p-8 border border-soft-200 rounded-[20px] bg-white flex flex-col gap-3 sm:gap-4 transition-all duration-300 hover:bg-gray-50">
+                        <div key={index} className="group p-5 sm:p-6 md:p-8 border border-soft-200 rounded-[20px] bg-white flex flex-col gap-3 sm:gap-4 transition-all duration-300 hover:shadow-lg hover:shadow-gray-100 hover:-translate-y-1 hover:border-gray-200">
                             <div className="flex items-center gap-2">
                                 <div className="relative w-[28px] h-[28px] sm:w-[32px] sm:h-[32px] md:w-[36px] md:h-[36px]">
                                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

@@ -39,7 +39,8 @@ const formSchema = z.object({
     attachments: z.array(z.object({
         name: z.string(),
         size: z.number(),
-        type: z.string()
+        type: z.string(),
+        file: z.any()
     })).optional(),
     milestones: z.array(z.object({
         title: z.string(),
@@ -159,11 +160,62 @@ const SendOrder = () => {
                     }))
                 })
             };
-            socketRef.current?.emit("createContract", contractData, (response: any) => {
+
+            socketRef.current?.emit("createContract", contractData, async (response: any) => {
                 if (response.success) {
-                    toast.success(tToast("createSuccess"));
-                    const chatRoomId = response.contract.chatRoomId;
-                    router.push(`/chat?roomId=${chatRoomId}`);
+                    if (data.attachments && data.attachments.length > 0) {
+                        try {                            
+                            const formData = new FormData();
+
+                            for (let i = 0; i < data.attachments.length; i++) {
+                                const attachment = data.attachments[i];
+                                if (attachment && attachment.file) {
+                                    try {
+                                        const blob = new Blob([attachment.file], { type: attachment.type });
+                                        formData.append('attachments', blob, attachment.name);
+                                        console.log(`Successfully added file ${i} to FormData:`, attachment.name);
+                                    } catch (error) {
+                                        console.error(`Error adding file ${i} to FormData:`, error);
+                                    }
+                                }
+                            }
+                            let hasFiles = false;
+                            for (const [key, value] of formData.entries()) {
+                                console.log(`FormData entry - ${key}:`, value);
+                                hasFiles = true;
+                            }
+
+                            if (!hasFiles) {
+                                throw new Error('No valid files to upload');
+                            }
+                            const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contract/${response.contract.id}/attachments`, {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': `Bearer ${cookies.token}`
+                                },
+                                body: formData
+                            });
+
+                            console.log('Upload response status:', uploadResponse.status);
+                            const responseData = await uploadResponse.json();
+                            console.log('Upload response data:', responseData);
+
+                            if (!uploadResponse.ok) {
+                                throw new Error(responseData.message || 'Failed to upload attachments');
+                            }
+
+                            toast.success(tToast("createSuccess"));
+                            const chatRoomId = response.contract.chatRoomId;
+                            router.push(`/chat?chatId=${chatRoomId}`);
+                        } catch (error) {
+                            console.error('Upload error:', error);
+                            toast.error(error instanceof Error ? error.message : tToast("uploadError"));
+                        }
+                    } else {
+                        toast.success(tToast("createSuccess"));
+                        const chatRoomId = response.contract.chatRoomId;
+                        router.push(`/chat?chatId=${chatRoomId}`);
+                    }
                     setIsLoading(false);
                 } else {
                     toast.error(response.message || tToast("createError"));

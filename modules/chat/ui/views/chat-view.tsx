@@ -27,6 +27,8 @@ const ChatView = () => {
   const { user: currentAuthUser, initializeFromToken } = useAuthStore();
   const selectedChat = chatId ? chatRooms.find((room: ChatRoom) => room.id === chatId) : undefined;
 
+  console.log(contractsData);
+  
   useEffect(() => {
     initializeFromToken();
   }, [initializeFromToken]);
