@@ -71,6 +71,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
     const verify = trpc.auth.verifyOtp.useMutation({
         onSuccess: async (data) => {
             toast.success(t("errors.verifySuccess"));
+            console.log(data);
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
             useAuthStore.getState().setToken(access_token, keep_logged);
