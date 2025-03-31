@@ -1,13 +1,13 @@
 {
   "header": {
     "navigation": {
-      "findWorker": "寻找工作者",
-      "findServices": "寻找服务",
-      "findProjects": "寻找项目",
-      "bonus": "奖金"
+      "findWorker": "工作者",
+      "findServices": "服务",
+      "findProjects": "招募",
+      "bonus": "首单优惠"
     },
     "search": {
-      "placeholder": "搜索...",
+      "placeholder": "探索更多",
       "suggested": "建议：",
       "sort": {
         "placeholder": "排序方式",
@@ -45,7 +45,7 @@
   },
   "landing": {
     "hero": {
-      "title": "从音乐爱好者到专业制作人。每一步都有专业指导。",
+      "title": "从音乐爱好者到专业制作人 每一步都有专业护航",
       "cta": {
         "freeStart": "免费开始"
       },
@@ -63,7 +63,7 @@
       }
     },
     "choose": {
-      "title": "选择",
+      "title": "选择音合",
       "cards": {
         "gathering": {
           "title": "歌手、乐队和配音演员等各类技能人才的聚集地。"
@@ -82,7 +82,7 @@
       }
     },
     "features": {
-      "title": "Innhee 特色",
+      "title": "值得信赖的专业服务",
       "items": {
         "quickAndFree": {
           "title": "快速且免费",
@@ -114,10 +114,10 @@
         "team": "团队项目"
       },
       "artist": {
-        "name": "Innhee",
+        "name": "音合",
         "rating": "4.9",
         "reviews": "125",
-        "role": "艺术家 / 调整"
+        "role": "Artist"
       },
       "steps": {
         "communication": "沟通细节",
@@ -171,7 +171,7 @@
     "copyright": "© 2025 Innhee.com. 保留所有权利。"
   },
   "HowDoesItWork": {
-    "title": "它是如何工作的？"
+    "title": "简单便捷"
   },
   "features": {
     "feature1": {

@@ -90,7 +90,9 @@ const ChatMain = ({
         const handleConnect = () => {
             setIsConnected(true);
             setReconnectAttempts(0);
-            processMessageQueue();
+            if (messageQueue.length > 0) {
+                processMessageQueue();
+            }
             startHeartbeat();
         };
 
@@ -114,7 +116,11 @@ const ChatMain = ({
 
         const handleMessageSent = (data: any) => {
             if (data?.success) {
-                setMessageQueue(prev => prev.filter(msg => msg.id !== data.messageId));
+                setMessageQueue(prev => {
+                    const messageExists = prev.some(msg => msg.id === data.messageId);
+                    if (!messageExists) return prev;
+                    return prev.filter(msg => msg.id !== data.messageId);
+                });
             }
         };
 
@@ -220,12 +226,23 @@ const ChatMain = ({
             return;
         }
 
-        messageQueue.forEach(message => {
-            socketRef.current?.emit("sendMessage", message.data, (response: any) => {
-                if (response?.success) {
-                    setMessageQueue(prev => prev.filter(msg => msg.id !== message.id));
+        const queueToProcess = [...messageQueue];
+        
+        setMessageQueue([]);
+
+        queueToProcess.forEach((message, index) => {
+            setTimeout(() => {
+                if (!socketRef.current?.connected) {
+                    setMessageQueue(prev => [...prev, message]);
+                    return;
                 }
-            });
+
+                socketRef.current?.emit("sendMessage", message.data, (response: any) => {
+                    if (!response?.success) {
+                        setMessageQueue(prev => [...prev, message]);
+                    }
+                });
+            }, index * 500);
         });
     };
 
@@ -445,7 +462,8 @@ const ChatMain = ({
             if (!socketRef.current?.connected) {
                 setMessageQueue(prev => [...prev, {
                     id: optimisticMessage.id,
-                    data: messageData
+                    data: messageData,
+                    timestamp: Date.now()
                 }]);
                 return;
             }
@@ -456,7 +474,8 @@ const ChatMain = ({
                         setMessages((prev: Message[]) => prev.filter(msg => msg.id !== optimisticMessage.id));
                         setMessageQueue(prev => [...prev, {
                             id: optimisticMessage.id,
-                            data: messageData
+                            data: messageData,
+                            timestamp: Date.now()
                         }]);
                         toast.error("Failed to send message. Will retry when connection is restored.");
                         reject(new Error("Message sending failed"));

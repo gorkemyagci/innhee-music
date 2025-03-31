@@ -1,10 +1,8 @@
 import { GridPatternDashed } from "@/components/grid-pattern-dashed";
 import { Icons } from "@/components/icons";
-import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { pageUrls } from "@/lib/constants/page-urls";
 import { Button } from "@/components/ui/button";
-import { TextAnimate } from "@/components/magicui/text-animate";
 import { cn } from "@/lib/utils";
 import { GridPattern } from "@/components/magicui/grid-pattern";
 import { getTranslations } from "next-intl/server";
@@ -57,7 +55,7 @@ const Hero = async () => {
                     <p className="text-white font-semibold text-2xl">{t("buyers.title")}</p>
                     <span className="text-disabled-300 text-base md:text-lg font-medium">{t("buyers.description")}</span>
                 </div>
-                <Button className="flex rounded-md min-w-28 md:min-w-32 h-9 md:h-11 z-10 text-black font-semibold text-sm items-center gap-2 bg-weak-100 hover:bg-weak-100">
+                <Button className="flex rounded-md min-w-[96px] px-2 h-9 md:h-11 z-10 text-black font-semibold text-sm items-center gap-2 bg-weak-100 hover:bg-weak-100">
                     {t("buyers.button")}
                     <Icons.arrow_right className="size-3 md:size-4" stroke="#0A0D14" />
                 </Button>
@@ -77,7 +75,7 @@ const Hero = async () => {
                     <p className="text-black font-semibold text-2xl">{t("workers.title")}</p>
                     <span className="text-[#666D80] text-base md:text-lg font-medium">{t("workers.description")}</span>
                 </div>
-                <Button className="flex rounded-md min-w-28 md:min-w-32 h-9 md:h-11 z-10 text-white font-semibold text-sm items-center gap-2 bg-surface-700 hover:bg-surface-700">
+                <Button className="flex rounded-md min-w-[100px] px-2 h-9 md:h-11 z-10 text-white font-semibold text-sm items-center gap-2 bg-surface-700 hover:bg-surface-700">
                     {t("workers.button")}
                     <Icons.arrow_right className="size-3 md:size-4" />
                 </Button>
