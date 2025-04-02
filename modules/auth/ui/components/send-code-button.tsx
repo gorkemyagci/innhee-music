@@ -1,23 +1,35 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface SendCodeButtonProps {
     onClick: () => void;
-    loading: boolean;
+    loading?: boolean;
+    disabled?: boolean;
+    countdown?: number;
 }
 
-const SendCodeButton = ({ onClick, loading }: SendCodeButtonProps) => {
+const SendCodeButton = ({ onClick, loading, disabled, countdown = 0 }: SendCodeButtonProps) => {
     const t = useTranslations("auth.signIn.form");
 
     return (
-        <span 
-            className={`text-sub-600 min-w-[102px] justify-center hover:text-main-900 flex items-center gap-2 p-2.5 shrink-0 text-sm cursor-pointer font-medium ${loading ? 'opacity-50' : ''}`} 
+        <Button
+            type="button"
+            variant="ghost"
+            className="h-full px-3 hover:bg-transparent min-w-[120px] justify-center"
             onClick={onClick}
+            disabled={loading || disabled}
         >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : t("code.sendCode")}
-        </span>
+            {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+            ) : countdown > 0 ? (
+                <span className="tabular-nums">{countdown}s</span>
+            ) : (
+                t("code.send")
+            )}
+        </Button>
     );
 };
 

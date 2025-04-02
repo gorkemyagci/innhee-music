@@ -251,7 +251,9 @@
           "placeholder": "Enter code",
           "sendCode": "Send Code",
           "resend": "Resend",
-          "verifying": "Verifying code..."
+          "verifying": "Verifying code...",
+          "send": "Send Code",
+          "waitForCode": "Please wait {seconds} seconds before requesting a new code"
         },
         "password": {
           "label": "Password",

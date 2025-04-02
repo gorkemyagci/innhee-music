@@ -21,6 +21,8 @@ import { useAuthStore } from "@/store/auth-store";
 import { PasswordInput } from "@/components/custom/form-elements/password-input";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
+
 const signinSchema = z.object({
     account: z.string().email(),
     code: z.string().min(6).optional(),
@@ -41,7 +43,64 @@ interface SignInFormProps {
 
 const SignInForm = ({ activeTab }: SignInFormProps) => {
     const t = useTranslations("auth.signIn.form");
-    const router = useRouter();
+    const [countdown, setCountdown] = useState<number>(0);
+    const countdownRef = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+        const savedCountdown = localStorage.getItem('verificationCountdown');
+        const savedTimestamp = localStorage.getItem('verificationTimestamp');
+        
+        if (savedCountdown && savedTimestamp) {
+            const elapsedSeconds = Math.floor((Date.now() - parseInt(savedTimestamp)) / 1000);
+            const remainingSeconds = Math.max(0, parseInt(savedCountdown) - elapsedSeconds);
+            
+            if (remainingSeconds > 0) {
+                setCountdown(remainingSeconds);
+                startCountdownTimer(remainingSeconds);
+            } else {
+                localStorage.removeItem('verificationCountdown');
+                localStorage.removeItem('verificationTimestamp');
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            if (countdownRef.current) {
+                clearInterval(countdownRef.current);
+            }
+        };
+    }, []);
+
+
+    const startCountdownTimer = (initialSeconds: number) => {
+        if (countdownRef.current) {
+            clearInterval(countdownRef.current);
+        }
+        
+        countdownRef.current = setInterval(() => {
+            setCountdown(prev => {
+                if (prev <= 1) {
+                    if (countdownRef.current) {
+                        clearInterval(countdownRef.current);
+                    }
+                    localStorage.removeItem('verificationCountdown');
+                    localStorage.removeItem('verificationTimestamp');
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+    };
+
+    const startCountdown = () => {
+        const initialSeconds = 90;
+        setCountdown(initialSeconds);
+        localStorage.setItem('verificationCountdown', initialSeconds.toString());
+        localStorage.setItem('verificationTimestamp', Date.now().toString());
+        startCountdownTimer(initialSeconds);
+    };
+
     const form = useForm<SignIn>({
         mode: "onSubmit",
         reValidateMode: "onChange",
@@ -88,6 +147,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
     const sendOtp = trpc.auth.send_otp.useMutation({
         onSuccess: async (data) => {
             toast.success(t("errors.verificationSent"));
+            startCountdown(); 
         },
         onError: (error) => {
             toast.error(error.message || t("errors.generalError"));
@@ -163,6 +223,10 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
             toast.error(t("errors.invalidAccount"));
             return;
         }
+        if (countdown > 0) {
+            toast.error(t("errors.waitForCode", { seconds: countdown }));
+            return;
+        }
         sendOtp.mutate({ account });
     }
 
@@ -208,7 +272,12 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                                         <div className="flex-1 px-1 relative">
                                             <InputElement form={form} name="code" placeholder={t("code.placeholder")} className="border-none shadow-none absolute top-1/2 -translate-y-1/2" /></div>
                                         <Separator orientation="vertical" className="h-full" />
-                                        <SendCodeButton onClick={handleSendOtp} loading={sendOtp.isPending} />
+                                        <SendCodeButton 
+                                            onClick={handleSendOtp} 
+                                            loading={sendOtp.isPending} 
+                                            disabled={countdown > 0}
+                                            countdown={countdown}
+                                        />
                                     </div>
                                 </FormControl>
                             </div>

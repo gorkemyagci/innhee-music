@@ -29,7 +29,7 @@ const ProjectItem = ({ key, item }: ProjectItemProps) => {
                 <div className="flex items-center gap-2">
                     <UserAvatar
                         imageUrl="/assets/images/avatar-3.png"
-                        name={item.employer?.nickname || t("unknown")}
+                        name={item?.employer?.nickname || t("unknown")}
                         className="h-10 w-10 md:h-12 md:w-12"
                     />
                     <div className="flex flex-col items-start gap-1">
