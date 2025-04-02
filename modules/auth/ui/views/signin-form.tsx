@@ -61,7 +61,9 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
             useAuthStore.getState().setToken(access_token, keep_logged);
-            router.push(pageUrls.DASHBOARD);
+            if (typeof window !== "undefined") {
+                window.location.href = pageUrls.DASHBOARD;
+            }
         },
         onError: (error) => {
             toast.error(error.message || t("errors.generalError"));
@@ -71,11 +73,12 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
     const verify = trpc.auth.verifyOtp.useMutation({
         onSuccess: async (data) => {
             toast.success(t("errors.verifySuccess"));
-            console.log(data);
             const access_token = data.access_token;
             const keep_logged = form.getValues("keep_logged");
             useAuthStore.getState().setToken(access_token, keep_logged);
-            router.push(pageUrls.DASHBOARD);
+            if (typeof window !== "undefined") {
+                window.location.href = pageUrls.DASHBOARD;
+            }
         },
         onError: (error) => {
             toast.error(error.message || t("errors.generalError"));
