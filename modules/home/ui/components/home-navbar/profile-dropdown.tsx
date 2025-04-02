@@ -33,7 +33,7 @@ const ProfileDropdown = ({ children }: { children: React.ReactNode }) => {
 
     const handleLogout = () => {
         useAuthStore.getState().logout();
-        typeof window !== "undefined" && window.location.replace(pageUrls.HOME);
+        typeof window !== "undefined" && window.location.replace("/");
     }
 
     return (
