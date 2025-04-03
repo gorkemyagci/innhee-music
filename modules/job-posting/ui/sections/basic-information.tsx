@@ -238,6 +238,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                                     <Icons.info />
                                                 </div>
                                             }
+                                            disablePastDates
                                         />
                                     </div>
                                     <FormField
