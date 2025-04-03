@@ -21,6 +21,7 @@ export type CalendarProps = {
   onApply?: (date: Date | undefined) => void;
   onCancel?: () => void;
   className?: string;
+  disabled?: ((date: Date) => boolean) | undefined;
 };
 
 function Calendar({
@@ -28,6 +29,7 @@ function Calendar({
   selected,
   onApply,
   onCancel,
+  disabled,
 }: CalendarProps) {
   const t = useTranslations("calendar");
   const locale = useLocale();
@@ -58,6 +60,10 @@ function Calendar({
         onSelect={handleSelect}
         showOutsideDays={true}
         className={cn("p-3", className)}
+        disabled={disabled || undefined}
+        modifiersStyles={{
+          disabled: { opacity: 0.5, cursor: 'not-allowed' }
+        }}
         classNames={{
           months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
           month: "space-y-4 w-full",

@@ -31,6 +31,7 @@ interface DatePickerProps {
   customLabel?: React.ReactNode;
   open?: boolean;
   formItemClassName?: string;
+  disablePastDates?: boolean;
 }
 
 export function DatePickerForm({
@@ -44,6 +45,7 @@ export function DatePickerForm({
   customLabel,
   open,
   formItemClassName,
+  disablePastDates = false,
   ...props
 }: DatePickerProps) {
   const [inputValue, setInputValue] = useState("");
@@ -183,6 +185,7 @@ export function DatePickerForm({
                       setTempSelectedDate(field.value);
                       setIsOpen(false);
                     }}
+                    disabled={disablePastDates ? (date) => date < new Date(new Date().setHours(0, 0, 0, 0)) : undefined}
                   />
                 </PopoverContent>
               </Popover>

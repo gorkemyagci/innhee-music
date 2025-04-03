@@ -208,6 +208,7 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                                 </div>
                             }
                             formItemClassName="w-full"
+                            disablePastDates
                         />
                         {index > 0 && (
                             <Icons.delete_bin_line 
@@ -282,6 +283,7 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                             </div>
                         }
                         formItemClassName="w-full"
+                        disablePastDates
                     />
                 </div>
             )}
