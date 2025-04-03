@@ -5,25 +5,26 @@ export interface SkillLevel {
 
 export interface ProjectItemType {
     id: string;
-    title: string;
-    description: string;
-    budget: string;
+    subject: string;
+    detail: string;
+    salary: number;
+    salaryCurrency: string;
     deadline: string;
-    proposals: number;
-    isApplied?: boolean;
+    usage: "BUSINESS" | "PRIVATE";
+    privacy: "PUBLIC" | "PRIVATE";
+    status: "ACTIVE" | "INACTIVE";
     employer: {
         id: string;
-        nickname: string | null;
+        nickname: string;
+        email: string;
     };
-    salaryCurrency?: string;
-    salary?: number;
-    subject?: string;
-    detail?: string;
-    skillLevels?: SkillLevel[];
-    attachments?: Array<{
-        filename: string;
-        url: string;
-    }>;
+    attachments?: any[];
+    skillLevels?: any[];
+    candidateSources?: any[];
+    proposals?: number;
+    budgetsActive?: boolean;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface Message {

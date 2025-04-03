@@ -32,6 +32,9 @@ const FilterSuspense = () => {
     const [tab, setTab] = useQueryState("tab", {
         defaultValue: "workers",
     });
+    const [priceRange, setPriceRange] = useQueryState("price");
+    const [deadline, setDeadline] = useQueryState("deadline");
+    const [projectType, setProjectType] = useQueryState("type");
     const [isFilterCleared, setIsFilterCleared] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -76,6 +79,9 @@ const FilterSuspense = () => {
 
     const clearAllFilters = () => {
         setIsFilterCleared(true);
+        setPriceRange(null);
+        setDeadline(null);
+        setProjectType(null);
         setTimeout(() => {
             setIsFilterCleared(false);
         }, 100);
@@ -90,6 +96,16 @@ const FilterSuspense = () => {
 
     const [selectedValue, setSelectedValue] = useState(defaultDeadline);
     const [selectedProjectType, setSelectedProjectType] = useState(defaultProjectType);
+
+    const handleDeadlineChange = (value: string) => {
+        setSelectedValue(value);
+        setDeadline(value || null);
+    };
+
+    const handleProjectTypeChange = (value: string) => {
+        setSelectedProjectType(value);
+        setProjectType(value || null);
+    };
 
     const deadlineOptions = [
         { value: "within_7_days", label: t("deadline.options.within_7_days") },
@@ -194,7 +210,7 @@ const FilterSuspense = () => {
                                                 label={t("projectType.title")}
                                                 options={projectTypeOptions}
                                                 value={selectedProjectType}
-                                                onChange={setSelectedProjectType}
+                                                onChange={handleProjectTypeChange}
                                                 defaultValue={defaultProjectType}
                                             />
                                             <Separator className="bg-soft-200" />
@@ -202,7 +218,7 @@ const FilterSuspense = () => {
                                                 label={t("deadline.title")}
                                                 options={deadlineOptions}
                                                 value={selectedValue}
-                                                onChange={setSelectedValue}
+                                                onChange={handleDeadlineChange}
                                                 defaultValue={defaultDeadline}
                                             />
                                             <Separator className="bg-soft-200 mb-5" />

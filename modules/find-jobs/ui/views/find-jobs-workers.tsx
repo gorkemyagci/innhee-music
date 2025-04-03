@@ -5,13 +5,36 @@ import { trpc } from "@/trpc/client";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+interface Worker {
+    id: string;
+    about: string | null;
+    position: string;
+    salary: number;
+    skills: string[];
+    user: {
+        id: string;
+        nickname: string;
+        email: string;
+    };
+}
+
 const FindJobsWorkers = () => {
     const [isLoaded, setIsLoaded] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
     const { data: workers, isPending } = trpc.dashboard.getAllWorkers.useQuery();
 
     useEffect(() => {
         setIsLoaded(true);
     }, []);
+
+    const filteredWorkers = workers?.filter((worker: Worker) => {
+        const searchLower = searchQuery.toLowerCase();
+        return (
+            worker.user?.nickname?.toLowerCase().includes(searchLower) ||
+            worker.position?.toLowerCase().includes(searchLower) ||
+            worker.about?.toLowerCase().includes(searchLower)
+        );
+    });
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -23,15 +46,19 @@ const FindJobsWorkers = () => {
         }
     };
 
+    const handleSearch = (query: string) => {
+        setSearchQuery(query);
+    };
+
     return (
         <div className="w-full flex flex-col gap-8">
-            <Search />
+            <Search onSearch={handleSearch} />
             <motion.div
                 initial="hidden"
                 animate={isLoaded ? "visible" : "hidden"}
                 variants={containerVariants}
             >
-                <Workers workers={workers} isPending={isPending} />
+                <Workers workers={filteredWorkers} isPending={isPending} />
             </motion.div>
         </div>
     );

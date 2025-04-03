@@ -12,7 +12,11 @@ interface SuggestedTag {
     selected: boolean;
 }
 
-const Search = () => {
+interface SearchProps {
+    onSearch: (query: string) => void;
+}
+
+const Search = ({ onSearch }: SearchProps) => {
     const [sort, setSort] = useState("");
     const t = useTranslations("header.search");
     const [suggestedTags, setSuggestedTags] = useState<SuggestedTag[]>([
@@ -33,7 +37,11 @@ const Search = () => {
             <div className="flex items-center flex-1 justify-between gap-2 w-full">
                 <div className="bg-white border border-[#E1E4EA] hover:border-weak-50 hover:bg-weak-50 transition-all duration-200 rounded-xl flex-1 h-10 flex items-center pl-3 pr-2.5 py-2.5">
                     <Icons.search />
-                    <Input className="bg-transparent shadow-none border-none placeholder:text-[#99A0AE] focus-visible:ring-0 focus-visible:ring-offset-0" placeholder={t("placeholder")} />
+                    <Input 
+                        className="bg-transparent shadow-none border-none placeholder:text-[#99A0AE] focus-visible:ring-0 focus-visible:ring-offset-0" 
+                        placeholder={t("placeholder")}
+                        onChange={(e) => onSearch(e.target.value)}
+                    />
                 </div>
                 <SortSelect value={sort} onChange={setSort} />
             </div>

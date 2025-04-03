@@ -3,7 +3,8 @@ import { ProjectItemType } from "@/lib/types";
 import Search from "../sections/search";
 import ProjectItem from "@/modules/dashboard/ui/components/project-item";
 import { trpc } from "@/trpc/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQueryState } from "nuqs";
 import {
     Pagination,
     PaginationContent,
@@ -46,30 +47,80 @@ const ProjectItemSkeleton = () => (
 );
 
 const FindProjects = () => {
-    const [isLoaded, setIsLoaded] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [priceRange] = useQueryState("price");
+    const [deadline] = useQueryState("deadline");
+    const [projectType] = useQueryState("type");
     const itemsPerPage = 5;
-
-    useEffect(() => {
-        setIsLoaded(true);
-    }, []);
-
-
     const { data, isLoading } = trpc.jobPosting.getJobPosts.useQuery();
-    const totalItems = data?.length || 0;
+
+    const projects = Array.isArray(data) ? data : [];
+    
+    const filteredData = projects.filter((item: ProjectItemType) => {
+        const searchLower = searchQuery.toLowerCase();
+        const matchesSearch = 
+            item.subject?.toLowerCase().includes(searchLower) ||
+            item.detail?.toLowerCase().includes(searchLower) ||
+            item.employer?.nickname?.toLowerCase().includes(searchLower);
+
+        const matchesType = !projectType || item.usage?.toUpperCase() === projectType.toUpperCase();
+
+        const matchesDeadline = !deadline || (() => {
+            if (!item.deadline) return true;
+            const itemDate = new Date(item.deadline);
+            const today = new Date();
+            const diffDays = Math.ceil((itemDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+            switch(deadline) {
+                case 'within_7_days':
+                    return diffDays <= 7;
+                case 'within_15_days':
+                    return diffDays <= 15;
+                case 'within_1_month':
+                    return diffDays <= 30;
+                case 'more_than_1_month':
+                    return diffDays > 30;
+                default:
+                    return true;
+            }
+        })();
+
+        const matchesPrice = !priceRange || (() => {
+            if (!item.salary) return true;
+            const [min, max] = priceRange.split('-');
+            const minPrice = min ? Number(min) : null;
+            const maxPrice = max ? Number(max) : null;
+            
+            if (maxPrice === 1000) {
+                return minPrice ? item.salary >= minPrice : true;
+            }
+        
+            return (!minPrice || item.salary >= minPrice) && (!maxPrice || item.salary <= maxPrice);
+        })();
+
+        return matchesSearch && matchesType && matchesDeadline && matchesPrice;
+    });
+
+    const totalItems = filteredData.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-    const currentItems = data?.slice(startIndex, endIndex) || [];
+    const currentItems = filteredData.slice(startIndex, endIndex);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const handleSearch = (query: string) => {
+        setSearchQuery(query);
+        setCurrentPage(1);
+    };
+
     return (
         <div className="w-full flex flex-col gap-8">
-            <Search />
+            <Search onSearch={handleSearch} />
             {isLoading && (
                 <div className="flex flex-col gap-0 w-full">
                     {[...Array(3)].map((_, index) => (
@@ -79,11 +130,9 @@ const FindProjects = () => {
             )}
 
             {!isLoading && (
-                <div
-                    className="flex flex-col gap-0 w-full"
-                >
+                <div className="flex flex-col gap-0 w-full">
                     {currentItems.length > 0 ? (
-                        currentItems.map((item: ProjectItemType, index: number) => (
+                        currentItems.map((item: ProjectItemType) => (
                             <ProjectItem key={item.id} item={item} />
                         ))
                     ) : (

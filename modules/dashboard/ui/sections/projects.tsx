@@ -62,6 +62,13 @@ const Projects = () => {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
 
+    const posts = Array.isArray(jobPosts) ? jobPosts : [];
+    const totalPages = Math.ceil(posts.length / itemsPerPage);
+    const paginatedPosts = posts.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
     useEffect(() => {
         const checkScroll = () => {
             if (categoriesRef.current) {
@@ -98,12 +105,6 @@ const Projects = () => {
             });
         }
     };
-
-    const totalPages = jobPosts ? Math.ceil(jobPosts.length / itemsPerPage) : 0;
-    const paginatedPosts = jobPosts?.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);

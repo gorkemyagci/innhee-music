@@ -1,16 +1,45 @@
 "use client"
 import { Slider } from "@/components/ui/slider";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useQueryState } from "nuqs";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useDebouncedCallback } from "use-debounce";
 
 const Price = () => {
-    const [priceRange, setPriceRange] = useState([300, 700]);
+    const [priceRange, setPriceRange] = useQueryState("price");
     const minPrice = 0;
     const maxPrice = 1000;
 
+    const [localPriceRange, setLocalPriceRange] = useState([300, 700]);
+    const [isDragging, setIsDragging] = useState(false);
+
+    useEffect(() => {
+        if (priceRange) {
+            const [min, max] = priceRange.split("-").map(Number);
+            setLocalPriceRange([min, max]);
+        }
+    }, [priceRange]);
+
     const handlePriceChange = (value: number[]) => {
-        setPriceRange(value);
+        if (value[1] === maxPrice) {
+            setLocalPriceRange([value[0], maxPrice]);
+        } else {
+            setLocalPriceRange(value);
+        }
+    };
+
+    const handleDragStart = () => {
+        setIsDragging(true);
+    };
+
+    const handleDragEnd = (value: number[]) => {
+        setIsDragging(false);
+        if (value[1] === maxPrice) {
+            setPriceRange(`${value[0]}-${maxPrice}`);
+        } else {
+            setPriceRange(`${value[0]}-${value[1]}`);
+        }
     };
 
     const formatPrice = (price: number) => {
@@ -26,33 +55,35 @@ const Price = () => {
                     <div 
                         className="absolute transform -translate-x-1/2"
                         style={{ 
-                            left: `${((priceRange[0] - minPrice) / (maxPrice - minPrice)) * 100}%` 
+                            left: `${((localPriceRange[0] - minPrice) / (maxPrice - minPrice)) * 100}%` 
                         }}
                     >
                         <div className="bg-strong-950 text-white px-3 py-1 rounded-md translate-x-1 text-xs font-normal relative">
-                        {formatPrice(priceRange[0])}
+                        {formatPrice(localPriceRange[0])}
                             <div className="absolute w-2 h-2 bg-strong-950 rotate-45 -bottom-1 left-1/2 transform -translate-x-1/2"></div>
                         </div>
                     </div>
                     <div 
                         className="absolute transform -translate-x-1/2"
                         style={{ 
-                            left: `${((priceRange[1] - minPrice) / (maxPrice - minPrice)) * 100}%` 
+                            left: `${((localPriceRange[1] - minPrice) / (maxPrice - minPrice)) * 100}%` 
                         }}
                     >
                         <div className="bg-strong-950 text-white px-3 py-1 -translate-x-1 rounded-md text-xs font-normal relative">
-                        {formatPrice(priceRange[1])}
+                        {localPriceRange[1] === maxPrice ? "+$1000" : formatPrice(localPriceRange[1])}
                             <div className="absolute w-2 h-2 bg-strong-950 rotate-45 -bottom-1 left-1/2 transform -translate-x-1/2"></div>
                         </div>
                     </div>
                 </div>
                 <div className="price-slider-container">
                     <Slider
-                        defaultValue={priceRange}
+                        value={localPriceRange}
                         min={minPrice}
                         max={maxPrice}
                         step={10}
                         onValueChange={handlePriceChange}
+                        onPointerDown={handleDragStart}
+                        onPointerUp={() => handleDragEnd(localPriceRange)}
                         className="w-full"
                     />
                 </div>
