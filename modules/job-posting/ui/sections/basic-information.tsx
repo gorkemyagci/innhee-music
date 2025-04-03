@@ -153,7 +153,7 @@ const BasicInformation = ({ form }: { form: UseFormReturn<jobPostingFormSchema> 
                                                         <Textarea
                                                             value={text}
                                                             placeholder={t("detail.placeholder")}
-                                                            className="w-full min-h-[120px] border-soft-200 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-sub-400 resize-none pr-3"
+                                                            className="w-full min-h-[120px] max-h-[300px] border-soft-200 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-sub-400 resize-none pr-3 overflow-y-auto break-words whitespace-pre-wrap"
                                                             onChange={(e) => {
                                                                 const newText = e.target.value;
                                                                 setText(newText);
