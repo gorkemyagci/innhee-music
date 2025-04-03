@@ -17,7 +17,6 @@ const Sidebar = () => {
     const { data: user, isLoading } = trpc.auth.getMe.useQuery();
     const isUserAvailable = !isLoading && user?.id;
     const t = useTranslations("sidebar");
-
     return (
         <>
             <div className="lg:hidden fixed bottom-4 right-[65px] z-50">
@@ -43,7 +42,7 @@ const Sidebar = () => {
                         <Separator className="bg-soft-200" />
                         <Tags tags={user.worker?.tags || []} />
                         <Separator className="bg-soft-200" />
-                        <About aboutText={user.worker?.about || t("noAboutText")} />
+                        <About aboutText={user.worker?.about || user.employer?.about || t("noAboutText")} />
                     </div>
                 ) : (
                     <SidebarSkeleton />

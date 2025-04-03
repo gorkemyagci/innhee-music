@@ -1,6 +1,5 @@
 import { User, Message } from "@/modules/chat/types";
 
-// Mock user data
 export const mockUsers: User[] = [
   {
     id: "user1",
@@ -30,7 +29,6 @@ export const mockUsers: User[] = [
   },
 ];
 
-// Current user data
 export const currentUserData: User = {
   id: "current-user",
   name: "James Brown",
@@ -39,7 +37,6 @@ export const currentUserData: User = {
   online: true,
 };
 
-// Mock messages data
 export const getMockMessages = (selectedChatId: string): Message[] => [
   {
     id: "msg1",
@@ -142,7 +139,6 @@ export const getMockMessages = (selectedChatId: string): Message[] => [
   },
 ];
 
-// Mock contract details
 export const contractDetailsData = {
   contractId: "126895",
   contractName: "Contract name here...",

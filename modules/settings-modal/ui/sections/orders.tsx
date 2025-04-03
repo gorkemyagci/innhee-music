@@ -476,7 +476,6 @@ const Orders = () => {
                         className="w-full"
                     >
                         {isMobile ? (
-                            // Mobile card view
                             <div className="flex flex-col gap-4 px-4">
                                 {filteredOrders.map((order, index) => (
                                     <motion.div
@@ -546,7 +545,6 @@ const Orders = () => {
                                 ))}
                             </div>
                         ) : (
-                            // Desktop table view
                             <Table>
                                 <TableHeader>
                                     <TableRow className="hover:bg-transparent border-none">

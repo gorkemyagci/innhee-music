@@ -60,8 +60,6 @@ const ProjectItem = ({ key, item }: ProjectItemProps) => {
                     <Icons.save className="size-4 md:size-5" />
                 </Button>
             </div>
-
-            {/* Main content */}
             <div className="w-full flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div className="flex flex-col items-start gap-3 md:gap-4 w-full">
                     <p className="text-strong-950 font-medium text-lg md:text-xl line-clamp-2 capitalize">{item.subject}</p>

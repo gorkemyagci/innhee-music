@@ -30,21 +30,21 @@ export const useMockData = () => {
     ];
 
     const slides = [
-    {
-        id: 1,
-        image: "/assets/images/slider-item.png",
+        {
+            id: 1,
+            image: "/assets/images/slider-item.png",
             title: t("slider.items.rnb.title"),
             description: t("slider.items.rnb.description")
-    },
-    {
-        id: 2,
-        image: "/assets/images/slider-item.png",
+        },
+        {
+            id: 2,
+            image: "/assets/images/slider-item.png",
             title: t("slider.items.tomorrow.title"),
             description: t("slider.items.tomorrow.description")
-    },
-    {
-        id: 3,
-        image: "/assets/images/slider-item.png",
+        },
+        {
+            id: 3,
+            image: "/assets/images/slider-item.png",
             title: t("slider.items.hiphop.title"),
             description: t("slider.items.hiphop.description")
         }
@@ -103,125 +103,123 @@ export const useMockData = () => {
         },
     ];
 
-// Job postings mock data
     const featuredJobs = [
-    {
-        id: 1,
-        clientName: "Cleve Music",
-        clientAvatar: "/assets/images/avatar-3.png",
-        rating: 4.9,
-        reviewCount: 125,
-        jobType: "Salary",
-        workType: "Work",
-        specialization: "Specia",
-        title: "Write professional resume, cover letter",
-        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
-        description: "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually...",
-        price: 1400,
-        priceType: "Fixed Price",
-        deadline: "3 days ago",
-        proposalsSent: 1
-    },
-    {
-        id: 2,
-        clientName: "Melody Studios",
-        clientAvatar: "/assets/images/avatar-3.png",
-        rating: 4.8,
-        reviewCount: 98,
-        jobType: "Salary",
-        workType: "Work",
-        specialization: "Specia",
-        title: "Music producer needed for pop album",
-        skills: ["Production", "Mixing", "Mastering", "Vocals", "Arrangement"],
-        description: "Looking for an experienced music producer to help finalize our upcoming pop album. The ideal candidate will have experience with vocal production and modern pop arrangements...",
-        price: 45,
-        priceType: "Hourly Rate",
-        deadline: "1 week ago",
-        proposalsSent: 5
-    }
-];
+        {
+            id: 1,
+            clientName: "Cleve Music",
+            clientAvatar: "/assets/images/avatar-3.png",
+            rating: 4.9,
+            reviewCount: 125,
+            jobType: "Salary",
+            workType: "Work",
+            specialization: "Specia",
+            title: "Write professional resume, cover letter",
+            skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+            description: "We are seeking a talented Website Designer and Front-End Developer to join our team. In this role, you will be responsible for creating visually...",
+            price: 1400,
+            priceType: "Fixed Price",
+            deadline: "3 days ago",
+            proposalsSent: 1
+        },
+        {
+            id: 2,
+            clientName: "Melody Studios",
+            clientAvatar: "/assets/images/avatar-3.png",
+            rating: 4.8,
+            reviewCount: 98,
+            jobType: "Salary",
+            workType: "Work",
+            specialization: "Specia",
+            title: "Music producer needed for pop album",
+            skills: ["Production", "Mixing", "Mastering", "Vocals", "Arrangement"],
+            description: "Looking for an experienced music producer to help finalize our upcoming pop album. The ideal candidate will have experience with vocal production and modern pop arrangements...",
+            price: 45,
+            priceType: "Hourly Rate",
+            deadline: "1 week ago",
+            proposalsSent: 5
+        }
+    ];
 
-// Workers mock data
     const workers = [
-    {
-        id: 1,
-        name: "Cleve Music",
-        avatar: "/assets/images/avatar-3.png",
-        rating: 4.9,
-        reviewCount: 125,
-        jobType: "Salary",
-        workType: "Work",
-        specialization: "Specia",
-        description: "Passionate about delivering high-quality audio mixing and editing. Let's create something",
-        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
-        isFavorite: false
-    },
-    {
-        id: 2,
-        name: "Cleve Music",
-        avatar: "/assets/images/avatar-3.png",
-        rating: 4.9,
-        reviewCount: 125,
-        jobType: "Salary",
-        workType: "Work",
-        specialization: "Specia",
-        description: "Passionate about delivering high-quality audio mixing and editing. Let's create something..........",
-        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
-        isFavorite: false
-    },
-    {
-        id: 3,
-        name: "Cleve Music",
-        avatar: "/assets/images/avatar-3.png",
-        rating: 4.9,
-        reviewCount: 125,
-        jobType: "Salary",
-        workType: "Work",
-        specialization: "Specia",
-        description: "Passionate about delivering high-quality audio mixing and editing. Let's create something ama",
-        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
-        isFavorite: false
-    },
-    {
-        id: 4,
-        name: "Cleve Music",
-        avatar: "/assets/images/avatar-3.png",
-        rating: 4.9,
-        reviewCount: 125,
-        jobType: "Salary",
-        workType: "Work",
-        specialization: "Specia",
-        description: "Passionate about delivering high-quality audio mixing and editing. Let's create something",
-        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
-        isFavorite: false
-    },
-    {
-        id: 5,
-        name: "Cleve Music",
-        avatar: "/assets/images/avatar-3.png",
-        rating: 4.9,
-        reviewCount: 125,
-        jobType: "Salary",
-        workType: "Work",
-        specialization: "Specia",
-        description: "Passionate about delivering high-quality audio mixing and editing. Let's create something",
-        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
-        isFavorite: false
-    },
-    {
-        id: 6,
-        name: "Cleve Music",
-        avatar: "/assets/images/avatars-3.png",
-        rating: 4.9,
-        reviewCount: 125,
-        jobType: "Salary",
-        workType: "Work",
-        specialization: "Specia",
-        description: "Passionate about delivering high-quality audio mixing and editing. Let's create something",
-        skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
-        isFavorite: false
-    }
-];
+        {
+            id: 1,
+            name: "Cleve Music",
+            avatar: "/assets/images/avatar-3.png",
+            rating: 4.9,
+            reviewCount: 125,
+            jobType: "Salary",
+            workType: "Work",
+            specialization: "Specia",
+            description: "Passionate about delivering high-quality audio mixing and editing. Let's create something",
+            skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+            isFavorite: false
+        },
+        {
+            id: 2,
+            name: "Cleve Music",
+            avatar: "/assets/images/avatar-3.png",
+            rating: 4.9,
+            reviewCount: 125,
+            jobType: "Salary",
+            workType: "Work",
+            specialization: "Specia",
+            description: "Passionate about delivering high-quality audio mixing and editing. Let's create something..........",
+            skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+            isFavorite: false
+        },
+        {
+            id: 3,
+            name: "Cleve Music",
+            avatar: "/assets/images/avatar-3.png",
+            rating: 4.9,
+            reviewCount: 125,
+            jobType: "Salary",
+            workType: "Work",
+            specialization: "Specia",
+            description: "Passionate about delivering high-quality audio mixing and editing. Let's create something ama",
+            skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+            isFavorite: false
+        },
+        {
+            id: 4,
+            name: "Cleve Music",
+            avatar: "/assets/images/avatar-3.png",
+            rating: 4.9,
+            reviewCount: 125,
+            jobType: "Salary",
+            workType: "Work",
+            specialization: "Specia",
+            description: "Passionate about delivering high-quality audio mixing and editing. Let's create something",
+            skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+            isFavorite: false
+        },
+        {
+            id: 5,
+            name: "Cleve Music",
+            avatar: "/assets/images/avatar-3.png",
+            rating: 4.9,
+            reviewCount: 125,
+            jobType: "Salary",
+            workType: "Work",
+            specialization: "Specia",
+            description: "Passionate about delivering high-quality audio mixing and editing. Let's create something",
+            skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+            isFavorite: false
+        },
+        {
+            id: 6,
+            name: "Cleve Music",
+            avatar: "/assets/images/avatars-3.png",
+            rating: 4.9,
+            reviewCount: 125,
+            jobType: "Salary",
+            workType: "Work",
+            specialization: "Specia",
+            description: "Passionate about delivering high-quality audio mixing and editing. Let's create something",
+            skills: ["Mixing", "Singing", "Jazz", "Hip pop", "K pop"],
+            isFavorite: false
+        }
+    ];
 
     const buyerOrders = [
         {

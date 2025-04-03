@@ -24,12 +24,7 @@ const Attachments = ({ form }: AttachmentsProps) => {
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files) {
-            console.log('Selected files:', files);
-            
             const newAttachments = Array.from(files).map(file => {
-                console.log('Processing file:', file);
-                
-                // Dosya tipini kontrol et
                 const fileType = file.type || file.name.split('.').pop()?.toLowerCase() || '';
                 const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 
                     'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -39,47 +34,29 @@ const Attachments = ({ form }: AttachmentsProps) => {
                     toast.error(t("invalidFileType"));
                     return null;
                 }
-
-                // Dosya boyutunu kontrol et (max 10MB)
                 if (file.size > 10 * 1024 * 1024) {
                     toast.error(t("fileTooLarge"));
                     return null;
                 }
-
-                // Dosyanın geçerli olduğundan emin ol
                 if (!(file instanceof File)) {
                     toast.error(t("invalidFile"));
                     return null;
                 }
-
-                // Dosya nesnesini doğrudan sakla
                 const attachment = {
                     name: file.name,
                     size: file.size,
                     type: fileType,
-                    file: file  // Orijinal File nesnesini sakla
+                    file: file
                 };
-                
-                console.log('Created attachment:', {
-                    ...attachment,
-                    file: `File object: ${attachment.file.name}, size: ${attachment.file.size}, type: ${attachment.file.type}`
-                });
                 return attachment;
             }).filter(Boolean);
 
             if (newAttachments.length > 0) {
                 const currentAttachments = form.getValues("attachments") || [];
                 const updatedAttachments = [...currentAttachments, ...newAttachments];
-                console.log('Setting attachments:', updatedAttachments.map(att => ({
-                    name: att.name,
-                    size: att.size,
-                    type: att.type,
-                    fileInfo: `File object: ${att.file.name}, size: ${att.file.size}, type: ${att.file.type}`
-                })));
                 form.setValue("attachments", updatedAttachments);
             }
         }
-        // Reset file input
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }

@@ -24,8 +24,6 @@ export const userProcedures = createTRPCRouter({
     .mutation(async ({ input }) => {
       try {
         const token = await getTokenFromCookie();
-        
-        // Create a properly typed request body
         const requestBody: { nickname?: string; about?: string } = {};
         
         if (input.nickname !== undefined) {
@@ -34,6 +32,13 @@ export const userProcedures = createTRPCRouter({
         
         if (input.about !== undefined) {
           requestBody.about = input.about;
+        }
+        
+        if (Object.keys(requestBody).length === 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "No valid fields to update"
+          });
         }
         
         const response = await fetch(`${SERVICE_URL}/user/me`, {

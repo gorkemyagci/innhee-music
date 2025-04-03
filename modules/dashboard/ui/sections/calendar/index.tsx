@@ -10,13 +10,11 @@ import { Calendar as CalendarIcon, X } from "lucide-react";
 import { Icons } from "@/components/icons";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Calendar için skeleton bileşeni
 export const CalendarSkeleton = () => {
     return (
         <div className="hidden lg:block border border-soft-200 rounded-[20px] bg-white w-[352px] shrink-0 min-h-[calc(100vh-114px)]">
             <div className="flex flex-col w-full h-full">
                 <div className="w-full p-4">
-                    {/* DatePicker skeleton */}
                     <Skeleton className="h-8 w-full mb-4" />
                     <div className="grid grid-cols-7 gap-1 mb-4">
                         {[...Array(7)].map((_, i) => (
@@ -31,7 +29,6 @@ export const CalendarSkeleton = () => {
                 </div>
                 <Separator />
                 <div className="w-full flex-grow p-4">
-                    {/* Timeline skeleton */}
                     <Skeleton className="h-6 w-32 mb-4" />
                     {[1, 2, 3, 4].map((i) => (
                         <div key={i} className="mb-3">

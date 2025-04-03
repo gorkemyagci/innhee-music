@@ -13,7 +13,6 @@ const Price = () => {
         setPriceRange(value);
     };
 
-    // Format price display
     const formatPrice = (price: number) => {
         if (price === maxPrice) return `+$${price}`;
         return `$${price}`;
@@ -22,9 +21,7 @@ const Price = () => {
     return (
         <div className="flex flex-col items-start gap-4">
             <span className="text-strong-950 font-medium text-sm">Price</span>
-            
             <div className="w-full relative pt-8 pb-2">
-                {/* Price Tooltips */}
                 <div className="absolute -top-3 left-0 w-full">
                     <div 
                         className="absolute transform -translate-x-1/2"
@@ -37,7 +34,6 @@ const Price = () => {
                             <div className="absolute w-2 h-2 bg-strong-950 rotate-45 -bottom-1 left-1/2 transform -translate-x-1/2"></div>
                         </div>
                     </div>
-                    
                     <div 
                         className="absolute transform -translate-x-1/2"
                         style={{ 
@@ -50,8 +46,6 @@ const Price = () => {
                         </div>
                     </div>
                 </div>
-                
-                {/* Slider */}
                 <div className="price-slider-container">
                     <Slider
                         defaultValue={priceRange}
@@ -63,8 +57,6 @@ const Price = () => {
                     />
                 </div>
             </div>
-
-            {/* Custom Styling */}
             <style jsx global>{`
                 /* Make the track thicker */
                 .price-slider-container [data-orientation="horizontal"] {

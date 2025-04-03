@@ -33,7 +33,6 @@ const Profile = () => {
     const [isTablet, setIsTablet] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
 
     useEffect(() => {
         useAuthStore.getState().initializeFromToken();
@@ -44,7 +43,6 @@ const Profile = () => {
             try {
                 const tokenValue = token.startsWith('Bearer ') ? token.substring(7) : token;
                 const decoded = jwtDecode<DecodedToken>(tokenValue);
-                setDecodedToken(decoded);
                 if (decoded && decoded.nickname) {
                     setNickname(decoded.nickname);
                     setTempNickname(decoded.nickname);
@@ -54,8 +52,10 @@ const Profile = () => {
     }, [token]);
 
     const update = trpc.user.update.useMutation({
-        onSuccess: (data) => {
+        onSuccess: (data) => {  
             toast.success("Profile updated successfully");
+            const access_token = data.access_token;
+            useAuthStore.getState().updateToken(access_token);
             utils.auth.getMe.invalidate();
         },
         onError: (error) => {
@@ -151,7 +151,6 @@ const Profile = () => {
                 "w-full flex flex-col items-start",
                 isMobile ? "px-4 pt-3 gap-4" : "px-6 pt-4 gap-6"
             )}>
-                {/* Apex ID Section */}
                 <div className={cn(
                     "flex items-center justify-between",
                     isMobile ? "w-full" : "w-1/2"
@@ -170,8 +169,6 @@ const Profile = () => {
                 </div>
 
                 <div className="border border-dashed w-full h-[1px] border-soft-200" />
-
-                {/* Profile Photo Section */}
                 <div className={cn(
                     "flex items-center justify-between",
                     isMobile ? "w-full flex-col items-start gap-3" : isTablet ? "w-full" : "w-[65%]"
@@ -230,8 +227,6 @@ const Profile = () => {
                 </div>
 
                 <div className="border border-dashed w-full h-[1px] border-soft-200" />
-
-                {/* Nicknames Section */}
                 <div className={cn(
                     "flex w-full",
                     isMobile ? "flex-col gap-3" : "items-center justify-between"
@@ -367,10 +362,7 @@ const Profile = () => {
                         </motion.div>
                     )}
                 </div>
-
                 <div className="border border-dashed w-full h-[1px] border-soft-200" />
-
-                {/* Web Links Section */}
                 <div className={cn(
                     "flex w-full",
                     isMobile ? "flex-col gap-3" : "items-center justify-between"

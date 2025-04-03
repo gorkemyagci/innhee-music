@@ -56,15 +56,12 @@ const FindProjects = () => {
 
 
     const { data, isLoading } = trpc.jobPosting.getJobPosts.useQuery();
-
-    // Calculate pagination
     const totalItems = data?.length || 0;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
     const currentItems = data?.slice(startIndex, endIndex) || [];
 
-    // Handle page change
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -73,8 +70,6 @@ const FindProjects = () => {
     return (
         <div className="w-full flex flex-col gap-8">
             <Search />
-
-            {/* Loading skeletons */}
             {isLoading && (
                 <div className="flex flex-col gap-0 w-full">
                     {[...Array(3)].map((_, index) => (
@@ -83,7 +78,6 @@ const FindProjects = () => {
                 </div>
             )}
 
-            {/* Project items */}
             {!isLoading && (
                 <div
                     className="flex flex-col gap-0 w-full"
@@ -100,7 +94,6 @@ const FindProjects = () => {
                 </div>
             )}
 
-            {/* Pagination */}
             {!isLoading && totalPages > 1 && (
                 <Pagination className="mt-4">
                     <PaginationContent>
@@ -113,7 +106,6 @@ const FindProjects = () => {
 
                         {[...Array(totalPages)].map((_, index) => {
                             const page = index + 1;
-                            // Show current page, first, last, and pages around current
                             if (
                                 page === 1 ||
                                 page === totalPages ||
@@ -130,8 +122,6 @@ const FindProjects = () => {
                                     </PaginationItem>
                                 );
                             }
-
-                            // Show ellipsis for gaps
                             if (page === 2 || page === totalPages - 1) {
                                 return (
                                     <PaginationItem key={page}>

@@ -1,18 +1,14 @@
 import { Skeleton } from "../ui/skeleton";
 
-// Skeleton component for the BuyerPage
 const BuyerPageSkeleton = () => {
     return (
         <div className="flex flex-col md:flex-row items-start gap-8">
-            {/* SidebarLayout skeleton */}
             <div className="md:hidden">
                 <div className="z-40 bg-white w-full px-4 py-3 flex items-center justify-between">
                     <Skeleton className="w-10 h-10 rounded-full" />
                     <Skeleton className="w-10 h-10 rounded-full" />
                 </div>
             </div>
-
-            {/* Sidebar skeleton */}
             <div className="md:block hidden">
                 <div className="w-[352px] shrink-0 shadow-sm bg-white border border-soft-200 rounded-[20px] pb-6">
                     <div className="p-4 relative flex flex-col items-center gap-5">
@@ -55,12 +51,9 @@ const BuyerPageSkeleton = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Main content skeleton */}
             <div className="w-full">
                 <div className="flex flex-col w-full items-start gap-4 md:gap-6 overflow-hidden">
                     <div className="w-full flex items-start md:items-center justify-between overflow-visible">
-                        {/* Tabs skeleton */}
                         <div className="flex w-full">
                             <div className="grid grid-cols-2 gap-2 md:gap-4 w-full">
                                 <Skeleton className="h-10 rounded-lg" />
@@ -69,7 +62,6 @@ const BuyerPageSkeleton = () => {
                         </div>
                     </div>
                     <div className="w-full overflow-x-hidden">
-                        {/* Content skeleton */}
                         <div className="space-y-4 w-full">
                             {[1, 2, 3].map((i) => (
                                 <div key={i} className="border border-soft-200 rounded-[20px] p-4">

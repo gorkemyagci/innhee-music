@@ -11,7 +11,6 @@ const FilterSwitch = () => {
     const [professionalChecked, setProfessionalChecked] = useState(false);
     const { isFilterCleared } = useFilterContext();
 
-    // Listen for filter clear events
     useEffect(() => {
         if (isFilterCleared) {
             setAvailableChecked(false);

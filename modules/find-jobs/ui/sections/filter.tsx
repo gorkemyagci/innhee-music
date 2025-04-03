@@ -38,24 +38,16 @@ const FilterSuspense = () => {
     const [isLoading, setIsLoading] = useState(true);
     const filterRef = useRef<HTMLDivElement>(null);
 
-    // Check if we're on mobile when component mounts and when window resizes
     useEffect(() => {
         const checkIfMobile = () => {
             setIsMobile(window.innerWidth < 768);
             setIsLoading(false);
         };
-        
-        // Initial check
         checkIfMobile();
-        
-        // Add event listener for window resize
         window.addEventListener("resize", checkIfMobile);
-        
-        // Cleanup
         return () => window.removeEventListener("resize", checkIfMobile);
     }, []);
 
-    // Close filter panel when clicking outside on mobile
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (isMobile && isFilterOpen) {
@@ -70,7 +62,6 @@ const FilterSuspense = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isMobile, isFilterOpen]);
 
-    // Disable body scroll when filter panel is open on mobile
     useEffect(() => {
         if (isMobile && isFilterOpen) {
             document.body.style.overflow = 'hidden';
@@ -89,13 +80,11 @@ const FilterSuspense = () => {
             setIsFilterCleared(false);
         }, 100);
         
-        // Close filter panel on mobile after clearing
         if (isMobile) {
             setIsFilterOpen(false);
         }
     };
 
-    // Default values for selects
     const defaultProjectType = "";
     const defaultDeadline = "";
 
@@ -118,7 +107,6 @@ const FilterSuspense = () => {
         <FilterContext.Provider value={{ clearAllFilters, isFilterCleared }}>
             {!isLoading && (
                 <>
-                    {/* Mobile filter toggle button */}
                     {isMobile && (
                         <div className="fixed bottom-4 right-4 z-40">
                             <Button
@@ -130,8 +118,6 @@ const FilterSuspense = () => {
                             </Button>
                         </div>
                     )}
-
-                    {/* Overlay for mobile */}
                     <AnimatePresence>
                         {isMobile && isFilterOpen && (
                             <motion.div
@@ -150,9 +136,7 @@ const FilterSuspense = () => {
                         className={cn(
                             "bg-white flex flex-col",
                             "transition-all duration-300",
-                            // Desktop styles
                             !isMobile && "w-[342px] shrink-0 pb-4 min-h-[calc(100vh-114px)] static opacity-100 pointer-events-auto",
-                            // Mobile styles
                             isMobile && "fixed inset-4 z-50 max-h-[90vh] overflow-hidden"
                         )}
                         initial={false}
@@ -167,7 +151,6 @@ const FilterSuspense = () => {
                             damping: 40
                         }}
                     >
-                        {/* Mobile header with close button */}
                         {isMobile && (
                             <div className="flex items-center justify-between p-4 border-b border-soft-200">
                                 <h3 className="font-medium text-base">{t("title")}</h3>

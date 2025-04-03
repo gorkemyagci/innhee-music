@@ -11,6 +11,7 @@ interface IAuth {
   setUser: (user: any) => void;
   logout: () => void;
   initializeFromToken: () => void;
+  updateToken: (token: string) => void;
 }
 
 export const useAuthStore = create<IAuth>((set) => {
@@ -41,6 +42,19 @@ export const useAuthStore = create<IAuth>((set) => {
         set({ token: `Bearer ${token}`, user: decodedUser });
         setCookie(null, "token", token, {
           maxAge: keepLogged ? 30 * 24 * 60 * 60 : 24 * 60 * 60,
+          path: "/",
+          domain: domain,
+        });
+      } catch (error) {
+        set({ token: `Bearer ${token}` });
+      }
+    },
+    updateToken: (token) => {
+      try {
+        const decodedUser = jwtDecode(token) as any;
+        set({ token: `Bearer ${token}`, user: decodedUser });
+        setCookie(null, "token", token, {
+          maxAge: 24 * 60 * 60,
           path: "/",
           domain: domain,
         });

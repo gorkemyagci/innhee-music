@@ -39,14 +39,12 @@ const FilterSkills = () => {
 
     const [selectedSkills, setSelectedSkills] = useState<Skill[]>([]);
     const { isFilterCleared } = useFilterContext();
-
-    // Initialize selected skills based on the 'selected' property
+    
     useEffect(() => {
         const initialSelectedSkills = allSkills.filter(skill => skill.selected);
         setSelectedSkills(initialSelectedSkills);
     }, []);
 
-    // Listen for filter clear events
     useEffect(() => {
         if (isFilterCleared) {
             handleClearAll();

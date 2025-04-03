@@ -46,11 +46,8 @@ const Company = () => {
         if (e.target.files && e.target.files.length > 0) {
             const newFile = e.target.files[0];
             setFiles([newFile]);
-
-            // Simulate upload progress
             setIsUploading(true);
             setUploadProgress(0);
-
             const interval = setInterval(() => {
                 setUploadProgress(prev => {
                     if (prev >= 100) {
@@ -61,8 +58,6 @@ const Company = () => {
                     return prev + 10;
                 });
             }, 300);
-
-            // Update form value
             form.setValue("portfolio", [newFile.name]);
         }
     };

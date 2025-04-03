@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-// Define TypeScript interfaces for the data structure
 interface Attachment {
   id: string;
   filename: string;
@@ -31,7 +30,6 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
     const [expanded, setExpanded] = useState(false);
     const t = useTranslations("talent.wokerItem");
 
-    // Function to determine if the attachment is audio, video, or document
     const getFileType = (filename: string) => {
         if (!filename) return 'unknown';
         const extension = filename.split('_').pop()?.split('.').pop()?.toLowerCase();
@@ -42,27 +40,23 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
         return 'unknown';
     };
 
-    // Get the first attachment if it exists
     const firstAttachment = item?.attachments && item.attachments.length > 0 ? item.attachments[0] : null;
     const fileType = firstAttachment ? getFileType(firstAttachment.filename) : 'unknown';
 
-    // Function to get a display name for the attachment
     const getAttachmentDisplayName = (filename: string) => {
         const parts = filename.split('_');
         if (parts.length > 1) {
-            return parts[parts.length - 1]; // Get the last part after splitting by underscore
+            return parts[parts.length - 1];
         }
         return filename;
     };
 
-    // Handle opening attachments
     const handleOpenAttachment = (url: string) => {
         if (url) {
             window.open(url, '_blank');
         }
     };
 
-    // Function to get file type display name
     const getFileTypeDisplayName = (type: string) => {
         switch (type) {
             case 'pdf':
@@ -78,7 +72,6 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
 
     return (
         <div key={index} className="w-full">
-            {/* Mobile view (collapsed/expanded with animation) */}
             <div className="md:hidden w-full">
                 <div className="flex items-center justify-between w-full py-3">
                     <div className="flex items-center gap-2">
@@ -140,7 +133,6 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
                             className="overflow-hidden"
                         >
                             <div className="py-3 px-2 mb-3 flex flex-col gap-4 bg-gray-50 rounded-lg">
-                                {/* Display attachments */}
                                 {item?.attachments && item.attachments.length > 0 && (
                                     <div className="flex flex-col gap-2">
                                         <span className="text-soft-400 font-medium text-xs">{t("attachments")}:</span>
@@ -167,7 +159,6 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
                                         })}
                                     </div>
                                 )}
-                                
                                 <div className="flex flex-wrap items-center gap-1.5">
                                     <div className="border border-soft-200 h-6 py-1 px-2 rounded-md flex items-center justify-center text-sub-600 font-medium text-xs bg-white">
                                         {t("skills.mixing")}
@@ -211,8 +202,6 @@ const WokerItem = ({ index, item }: { index: number, item: PortfolioItem }) => {
                     )}
                 </AnimatePresence>
             </div>
-
-            {/* Desktop view */}
             <div className="hidden md:flex w-full items-center justify-between py-4">
                 <div className="flex items-center gap-2">
                     <Icons.play_pause className="flex-shrink-0 cursor-pointer" />

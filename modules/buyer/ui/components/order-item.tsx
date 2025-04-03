@@ -59,8 +59,6 @@ const OrderItem = ({ item }: OrderItemProps) => {
                         )}
                     </div>
                 </div>
-
-                {/* Right side - price and apply button */}
                 <div className={`flex ${isMobile ? 'flex-row justify-between mt-3' : 'gap-4 flex-col items-end'}`}>
                     <div className="flex flex-col gap-1 md:gap-2">
                         <span className="text-[#525866] font-medium text-xs md:text-sm">

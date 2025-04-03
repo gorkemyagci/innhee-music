@@ -16,12 +16,9 @@ const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
             setIsMobile(window.innerWidth < 1024);
             setIsLoading(false);
         };
-        
-        // Initial check
-        checkIfMobile();
 
+        checkIfMobile();
         window.addEventListener("resize", checkIfMobile);
-        
         return () => window.removeEventListener("resize", checkIfMobile);
     }, []);
 

@@ -49,7 +49,6 @@ const ReportMessage = ({ children }: ReportMessageProps) => {
         e.preventDefault();
         form.setValue("reportReason", selectedReason as "spam" | "harassment" | "violation-of-rules");
         form.setValue("detail", detail);
-        // onSubmit(form.getValues());
     };
     
     return (

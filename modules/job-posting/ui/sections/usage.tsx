@@ -20,7 +20,6 @@ const Usage = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
     const isOpen = tab === "usage";
     const item = jobPostingMenu.find((item) => item.value === "usage");
     
-    // Initialize from form values
     useEffect(() => {
         const formUsage = form.getValues("usage");
         const formPrivacy = form.getValues("privacy");
@@ -34,7 +33,6 @@ const Usage = ({ form }: { form: UseFormReturn<jobPostingFormSchema> }) => {
         }
     }, [form]);
     
-    // Update form when values change
     useEffect(() => {
         form.setValue("usage", usageType.toUpperCase());
     }, [usageType, form]);

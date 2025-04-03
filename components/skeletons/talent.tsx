@@ -1,7 +1,6 @@
 import { Separator } from "../ui/separator";
 import { Skeleton } from "../ui/skeleton";
 
-// Sidebar skeleton component
 export const SidebarSkeleton = () => {
     return (
         <div className="border border-soft-200 pb-6 w-[300px] shrink-0 min-h-[calc(100vh-114px)] rounded-[20px] bg-white">
@@ -46,17 +45,13 @@ export const SidebarSkeleton = () => {
     );
 };
 
-// Sidebar layout skeleton that mimics the SidebarLayout component
 export const SidebarLayoutSkeleton = () => {
     return (
         <>
-            {/* Mobile header skeleton */}
             <div className="w-full md:hidden flex items-center justify-between pb-4">
                 <Skeleton className="h-10 w-10 rounded-md" />
                 <Skeleton className="h-8 w-8 rounded-full" />
             </div>
-
-            {/* Desktop sidebar skeleton */}
             <div className="hidden md:block sticky top-5">
                 <SidebarSkeleton />
             </div>
@@ -64,7 +59,6 @@ export const SidebarLayoutSkeleton = () => {
     );
 };
 
-// Skeleton loader component for the talent page
 export const TalentPageSkeleton = () => {
     return (
         <div className="flex flex-col w-full items-start gap-4 md:gap-6">

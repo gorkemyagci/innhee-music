@@ -60,7 +60,6 @@ const Notifications = () => {
             <Head heading="Notification Settings" subHeading="Personalize your privacy settings and enhance the security of your account." />
             <div className="w-full px-6 pt-6">
                 <div className="max-w-[800px] mx-auto flex flex-col gap-8">
-                    {/* Mobile Phone Notifications */}
                     <div className="w-full">
                         <div>
                             <h3 className="text-sm text-strong-950 font-medium">Mobile Phone Notification</h3>
@@ -101,10 +100,7 @@ const Notifications = () => {
                             </div>
                         </div>
                     </div>
-
                     <div className="border border-soft-200 h-[1px] w-full border-dashed"></div>
-
-                    {/* Email Notifications */}
                     <div className="w-full">
                         <div>
                             <h3 className="text-sm text-strong-950 font-medium">Email Notification</h3>
@@ -137,10 +133,7 @@ const Notifications = () => {
                             </div>
                         </div>
                     </div>
-
                     <div className="border border-soft-200 h-[1px] w-full border-dashed"></div>
-
-                    {/* Wechat Notifications */}
                     <div className="w-full">
                         <div className="mb-2">
                             <h3 className="text-sm text-strong-950 font-medium">Wechat Notification</h3>

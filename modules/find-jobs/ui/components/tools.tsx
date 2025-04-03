@@ -52,13 +52,11 @@ const FilterTools = () => {
         tool => !selectedTools.some(t => t.id === tool.id)
     );
 
-    // Initialize selected tools
     useEffect(() => {
         const initialSelectedTools = allTools.filter(tool => tool.selected);
         setSelectedTools(initialSelectedTools);
     }, []);
 
-    // Listen for filter clear events
     useEffect(() => {
         if (isFilterCleared) {
             handleClearAll();

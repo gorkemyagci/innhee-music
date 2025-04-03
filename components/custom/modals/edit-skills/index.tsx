@@ -44,8 +44,6 @@ const EditSkills = ({ children, initialTags = [], onSave }: EditSkillsProps) => 
     const commandRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
 
-    
-    // Convert API tags to the format we need
     const availableSkills: Skill[] = skills && Array.isArray(skills) 
         ? skills.map(skill => ({
             id: skill.id,
@@ -53,7 +51,6 @@ const EditSkills = ({ children, initialTags = [], onSave }: EditSkillsProps) => 
         }))
         : [];
     
-    // Filter tags based on search query
     const filteredSkills = availableSkills.filter(skill => 
         skill.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
         !selectedSkills.some(selectedSkill => selectedSkill.id === skill.id)
@@ -69,7 +66,6 @@ const EditSkills = ({ children, initialTags = [], onSave }: EditSkillsProps) => 
     };
     
     const handleBlur = () => {
-        // Small delay to allow clicking on items
         setTimeout(() => {
             setIsFocused(false);
         }, 200);
@@ -93,7 +89,6 @@ const EditSkills = ({ children, initialTags = [], onSave }: EditSkillsProps) => 
         }
     };
     
-    // Show list when input is focused and empty, or when actively searching
     const shouldShowList = (isFocused && searchQuery === "") || isSearching;
     
     return (

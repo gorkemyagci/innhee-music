@@ -4,10 +4,7 @@ import { useState } from "react";
 import { Icons } from "@/components/icons";
 import { useTranslations } from "next-intl";
 
-// Toplantı durumları için tip tanımı
 type MeetingStatus = "Submitted" | "Pending" | "Overdue";
-
-// Toplantı verisi için arayüz
 interface Meeting {
     id: string;
     title: string;
@@ -16,7 +13,6 @@ interface Meeting {
     status: MeetingStatus;
 }
 
-// Mock veri
 const mockMeetings: Meeting[] = [
     {
         id: "1",
@@ -55,18 +51,13 @@ const mockMeetings: Meeting[] = [
     }
 ];
 
-// Sayıları biçimlendirmek için yardımcı fonksiyon
-// Sunucu ve istemci tarafında tutarlı biçimlendirme sağlar
 const formatNumber = (num: number): string => {
-    // 'en-US' locale'ini kullanarak nokta ile ayırma yapıyoruz
     return num.toLocaleString('en-US');
 };
 
 const Timeline = () => {
     const t = useTranslations("calendar.timeline");
     const [activeTab, setActiveTab] = useState("7-days");
-
-    // Durum badge'i için renk ve ikon belirleme
     const getStatusBadge = (status: MeetingStatus) => {
         switch (status) {
             case "Submitted":

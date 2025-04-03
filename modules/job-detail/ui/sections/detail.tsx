@@ -43,11 +43,6 @@ const Detail = ({ item }: DetailProps) => {
             <p className="text-[#525866] font-medium text-sm">
                 {item?.detail}
             </p>
-            <ul className="list-disc list-inside text-[#525866] font-medium text-sm">
-                <li>Neque sodales ut etiam sit amet nisl purus. Non tellus orci ac auctor.</li>
-                <li>Neque sodales ut etiam sit amet nisl purus. Non tellus orci ac auctor.</li>
-                <li>Neque sodales ut etiam sit amet nisl purus. Non tellus orci ac auctor.</li>
-            </ul>
         </div>
         <Separator className="bg-soft-200" />
         {(item?.skillLevels ?? []).length > 0 && (

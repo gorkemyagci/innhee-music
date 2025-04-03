@@ -307,7 +307,6 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive, contracts, handleA
     );
   }
 
-  // Render milestone messages
   if (message.type === "milestone") {
     return (
       <div

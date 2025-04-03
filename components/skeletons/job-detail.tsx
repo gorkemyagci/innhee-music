@@ -1,6 +1,5 @@
 import { Separator } from "../ui/separator";
 
-// Skeleton components for each section
 export const HeadSkeleton = () => (
     <div className="w-full h-10 flex items-center justify-between pr-2.5 animate-pulse">
         <div className="flex items-center gap-2">

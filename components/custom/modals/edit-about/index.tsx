@@ -68,8 +68,12 @@ const EditAbout = ({ children, initialText = "", onSave }: EditAboutProps) => {
     });
 
     const handleSave = () => {
+        if (!text.trim()) {
+            toast.error(t("errors.emptyAbout"));
+            return;
+        }
         updateMutation.mutate({
-            about: text
+            about: text.trim()
         });
     };
 

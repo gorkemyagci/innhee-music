@@ -63,8 +63,6 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                 [field]: value
             };
             form.setValue("milestones", updatedMilestones);
-            
-            // Calculate total amount from all milestones
             const totalAmount = updatedMilestones.reduce((sum: number, milestone: { amount: number }) => sum + (milestone.amount || 0), 0);
             form.setValue("amount", totalAmount);
         }
