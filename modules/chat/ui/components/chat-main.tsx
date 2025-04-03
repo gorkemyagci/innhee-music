@@ -35,7 +35,6 @@ const ChatMain = ({
     contracts = []
 }: ExtendedChatMainProps) => {
     const t = useTranslations("chat.main");
-    const router = useRouter();
     const [messageText, setMessageText] = useState("");
     const [attachments, setAttachments] = useState<File[]>([]);
     const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
@@ -680,8 +679,8 @@ const ChatMain = ({
                         </div>
                     </div>
                 ) : (
-                    <div className="max-w-3xl mx-auto">
-                        {messages.map((message, index) => (
+                    <div className="max-w-3xl space-y-2.5 mx-auto">
+                        {messages.map((message) => (
                             <MessageItem
                                 key={message.id}
                                 message={message}
