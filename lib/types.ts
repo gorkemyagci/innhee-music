@@ -9,7 +9,6 @@ export interface ProjectItemType {
     detail: string;
     salary: number;
     salaryCurrency: string;
-    deadline: string;
     usage: "BUSINESS" | "PRIVATE";
     privacy: "PUBLIC" | "PRIVATE";
     status: "ACTIVE" | "INACTIVE";
@@ -18,13 +17,18 @@ export interface ProjectItemType {
         nickname: string;
         email: string;
     };
-    attachments?: any[];
-    skillLevels?: any[];
-    candidateSources?: any[];
+    attachments?: Array<{
+        filename: string;
+        url: string;
+    }>;
+    skillLevels?: SkillLevel[];
+    candidateSources?: string[];
     proposals?: number;
-    budgetsActive?: boolean;
+    budgetsActive?: number;
+    deadline?: string;
     createdAt: string;
     updatedAt: string;
+    isApplied?: boolean;
 }
 
 export interface Message {
