@@ -161,9 +161,11 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                                                     type="number"
                                                     placeholder={t("amount.placeholder")}
                                                     className="w-full pl-8 h-10 border-r-0 rounded-r-none border-soft-200 focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none shadow-b"
-                                                    value={field.value}
+                                                    value={field.value || ""}
                                                     onChange={(e) => {
-                                                        field.onChange(parseFloat(e.target.value) || 0);
+                                                        const value = e.target.value;
+                                                        const parsedValue = value ? parseInt(value, 10) : 0;
+                                                        field.onChange(parsedValue);
                                                     }}
                                                 />
                                             </div>
@@ -236,9 +238,11 @@ const ContractTerms = ({ form }: ContractTermsProps) => {
                                                 type="number"
                                                 placeholder={t("amount.placeholder")}
                                                 className="w-full pl-8 h-10 border-r-0 rounded-r-none border-soft-200 focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none shadow-b"
-                                                value={field.value}
+                                                value={field.value || ""}
                                                 onChange={(e) => {
-                                                    field.onChange(parseFloat(e.target.value) || 0);
+                                                    const value = e.target.value;
+                                                    const parsedValue = value ? parseInt(value, 10) : 0;
+                                                    field.onChange(parsedValue);
                                                 }}
                                             />
                                         </div>
