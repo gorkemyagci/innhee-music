@@ -72,7 +72,7 @@ const ChatSidebar = ({ selectedChat, onSelectChat }: ChatSidebarProps) => {
                 <div className="relative">
                   <div className="w-11 h-11 p-0.5 flex items-center justify-center rounded-full bg-gray-100">
                     <Image
-                      src={otherUser.avatar || "/assets/images/avatar-4.png"}
+                      src={"/assets/svgs/avatar.svg"}
                       alt={otherUser.nickname || "Unknown"}
                       className="w-full h-full object-contain rounded-full"
                       width={44}

@@ -22,6 +22,7 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+
 const formSchema = z.object({
     receiver: z.object({
         userId: z.string(),
@@ -111,10 +112,10 @@ const SendOrder = () => {
                 reconnectionDelay: 1000
             });
 
-            socketRef.current.on("connect", () => {});
-            socketRef.current.on("connect_error", (error) => {});
-            socketRef.current.on("disconnect", (reason) => {});
-            socketRef.current.on("error", (error) => {});
+            socketRef.current.on("connect", () => { });
+            socketRef.current.on("connect_error", (error) => { });
+            socketRef.current.on("disconnect", (reason) => { });
+            socketRef.current.on("error", (error) => { });
         }
 
         return () => {
@@ -140,7 +141,7 @@ const SendOrder = () => {
 
             const contractData = {
                 receiverId: data.receiver.userId,
-                amount: data.paymentType === "installment" 
+                amount: data.paymentType === "installment"
                     ? data.milestones?.reduce((sum: number, milestone: { amount: number }) => sum + (milestone.amount || 0), 0) || 0
                     : data.amount,
                 amountCurrency: data.currency,
@@ -164,7 +165,7 @@ const SendOrder = () => {
             socketRef.current?.emit("createContract", contractData, async (response: any) => {
                 if (response.success) {
                     if (data.attachments && data.attachments.length > 0) {
-                        try {                            
+                        try {
                             const formData = new FormData();
 
                             for (let i = 0; i < data.attachments.length; i++) {
@@ -173,14 +174,13 @@ const SendOrder = () => {
                                     try {
                                         const blob = new Blob([attachment.file], { type: attachment.type });
                                         formData.append('attachments', blob, attachment.name);
-                                    } catch {}
+                                    } catch { }
                                 }
                             }
                             let hasFiles = false;
                             for (const [key, value] of formData.entries()) {
                                 hasFiles = true;
                             }
-
                             if (!hasFiles) {
                                 throw new Error('No valid files to upload');
                             }
@@ -237,11 +237,11 @@ const SendOrder = () => {
                             name="termsAgreed"
                             render={() => (
                                 <FormItem className="flex py-0.5 md:py-2 items-center gap-1 md:gap-2">
-                                    <Checkbox 
+                                    <Checkbox
                                         checked={form.getValues("termsAgreed")}
                                         onCheckedChange={(checked) => form.setValue("termsAgreed", checked === true)}
-                                        id="terms" 
-                                        className="border w-[18px] h-[18px] border-soft-200 hover:shadow-sm data-[state=checked]:bg-main-900 data-[state=checked]:border-main-900" 
+                                        id="terms"
+                                        className="border w-[18px] h-[18px] border-soft-200 hover:shadow-sm data-[state=checked]:bg-main-900 data-[state=checked]:border-main-900"
                                     />
                                     <label
                                         htmlFor="terms"

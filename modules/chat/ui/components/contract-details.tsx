@@ -55,7 +55,7 @@ const ContractDetails = ({
             <div className="flex flex-col items-center gap-3 lg:gap-4">
                 <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-full p-0.5 overflow-hidden">
                     <Image
-                        src="/assets/images/Avatar-4.png"
+                        src="/assets/svgs/avatar.svg"
                         alt="James Brown"
                         className="w-full h-full object-contain"
                         width={64}
@@ -278,7 +278,7 @@ const ContractDetails = ({
                                             <div className="flex gap-2 items-center">
                                                 <div className="w-9 h-9 lg:w-11 lg:h-11 p-0.5 rounded-full overflow-hidden">
                                                     <Image
-                                                        src={person.user.avatar || "/assets/images/avatar-4.png"}
+                                                        src={person.user.avatar || "/assets/svgs/avatar.svg"}
                                                         alt={person.user.nickname || "Unknown"}
                                                         className="w-9 h-9 lg:w-11 lg:h-11 object-contain"
                                                         width={44}

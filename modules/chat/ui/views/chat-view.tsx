@@ -24,10 +24,9 @@ const ChatView = () => {
     { roomId: chatId || "" },
     { enabled: !!chatId }
   );
+
   const { user: currentAuthUser, initializeFromToken } = useAuthStore();
   const selectedChat = chatId ? chatRooms.find((room: ChatRoom) => room.id === chatId) : undefined;
-
-  console.log(contractsData);
   
   useEffect(() => {
     initializeFromToken();
@@ -93,7 +92,7 @@ const ChatView = () => {
       return {
         id: "default",
         name: "Unknown User",
-        avatar: "/assets/images/avatar-4.png",
+        avatar: "/assets/svgs/avatar.svg",
         online: false
       };
     }
@@ -101,7 +100,7 @@ const ChatView = () => {
     return {
       id: otherUser.id,
       name: otherUser.nickname || "Unknown User",
-      avatar: otherUser.avatar || "/assets/images/avatar-4.png",
+      avatar: otherUser.avatar || "/assets/svgs/avatar.svg",
       online: room.users.find(u => u.userId !== currentAuthUser?.id)?.isOnline || false
     };
   };
@@ -112,7 +111,7 @@ const ChatView = () => {
       return {
         id: currentAuthUser?.id || "default",
         name: currentAuthUser?.nickname || "Current User",
-        avatar: currentAuthUser?.avatar || "/assets/images/avatar-4.png",
+        avatar: currentAuthUser?.avatar || "/assets/svgs/avatar.svg",
         online: true
       };
     }
@@ -120,7 +119,7 @@ const ChatView = () => {
     return {
       id: user.id,
       name: user.nickname || "Current User",
-      avatar: user.avatar || "/assets/images/avatar-4.png",
+      avatar: user.avatar || "/assets/svgs/avatar.svg",
       online: true
     };
   };

@@ -1,37 +1,33 @@
 "use client";
 
-import { Attachment, Message, User, Offer, Milestone } from "../../types";
+import { Message, User } from "../../types";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import UserAvatar from "@/components/user-avatar";
 import { Icons } from "@/components/icons";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import ContractDetailsModal from "@/components/custom/modals/contract-details/index";
 import { useTranslations } from "next-intl";
-import { Socket } from "socket.io-client";
-import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 
 interface MessageItemProps {
   message: Message;
   isOwn: boolean;
   sender: User;
-  isConsecutive?: boolean;
   contracts?: any[];
   handleApplyContract: (contractId: string, status: "ACCEPTED" | "REJECTED") => void;
+  onRetry?: (messageId: string) => void;
 }
 
-const MessageItem = ({ message, isOwn, sender, isConsecutive, contracts, handleApplyContract }: MessageItemProps) => {
+const MessageItem = ({ message, isOwn, sender, contracts, handleApplyContract, onRetry }: MessageItemProps) => {
   const t = useTranslations("chat.main");
   const tMessages = useTranslations("chat.messages");
   const [showContractDetails, setShowContractDetails] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [expandedContracts, setExpandedContracts] = useState<{ [key: string]: boolean }>({});
-
-
 
   const formatTime = (date: Date) => {
     return format(date, "h:mm a");
@@ -371,13 +367,11 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive, contracts, handleA
       className={cn(
         "flex",
         isOwn ? "justify-end" : "justify-start",
-        !isConsecutive ? "mb-4" : "mb-1"
       )}
     >
       {!isOwn && (
         <div className={cn(
           "w-10 h-10 rounded-full p-1 overflow-hidden mr-2 flex-shrink-0 mt-1",
-          isConsecutive && "invisible"
         )}>
           <UserAvatar
             imageUrl={sender.avatar}
@@ -395,12 +389,25 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive, contracts, handleA
       >
         <div className={cn(
           "flex items-center justify-between mb-1 flex-shrink-0",
-          isConsecutive && "hidden"
         )}>
-          <span className="text-xs font-medium text-sub-600">
+          <span className="text-xs font-normal text-sub-600">
             {isOwn ? tMessages("regular.me") : sender.name}
           </span>
-          <span className="text-xs text-sub-600 ml-2">{formatTime(message.timestamp)}</span>
+          <div className="flex items-center gap-2">
+            {isOwn && (message as Message & { status?: "sending" | "sent" | "failed" }).status === "failed" && (
+              <div className="flex items-center gap-1.5 bg-red-50 px-2 py-0.5 rounded-full">
+                <Icons.close className="w-3 h-3 text-red-500 flex-shrink-0" />
+                <span className="text-[10px] text-red-600 font-medium">{tMessages("errors.sendFailed")}</span>
+                <button 
+                  onClick={() => onRetry?.(message.id)}
+                  className="flex items-center justify-center hover:bg-red-100 rounded-full p-0.5 transition-colors"
+                >
+                  <Icons.send_message className="w-3 h-3 text-red-500" />
+                </button>
+              </div>
+            )}
+            <span className="text-xs font-normal pl-1.5 text-sub-600">{formatTime(message.timestamp)}</span>
+          </div>
         </div>
         <div className="whitespace-pre-wrap break-words overflow-hidden overflow-wrap-break-word hyphens-auto text-sub-600 font-normal text-xs max-h-[300px] overflow-y-auto custom-scroll">
           {message.content && String(message.content).trim() !== "0" && renderTextWithLinks(String(message.content))}
@@ -466,12 +473,13 @@ const MessageItem = ({ message, isOwn, sender, isConsecutive, contracts, handleA
       {isOwn && (
         <div className={cn(
           "w-10 h-10 rounded-full p-1 overflow-hidden ml-2 flex-shrink-0 mt-1",
-          isConsecutive && "invisible"
         )}>
           <img
-            src={sender.avatar || "/assets/images/avatar-4.png"}
+            src={sender.avatar || "/assets/svgs/avatar.svg"}
             alt={sender.name}
             className="w-full h-full object-cover"
+            width={32}
+            height={32}
           />
         </div>
       )}

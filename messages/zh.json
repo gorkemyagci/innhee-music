@@ -374,6 +374,9 @@
       },
       "attachments": {
         "downloadFile": "下载文件"
+      },
+      "errors": {
+        "sendFailed": "消息发送失败"
       }
     },
     "main": {

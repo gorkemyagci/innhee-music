@@ -55,6 +55,7 @@ export interface Message {
   senderId: string;
   receiverId: string;
   timestamp: Date;
+  status?: "sending" | "sent" | "failed";
   additionalInfo?: string;
   attachments?: Attachment[];
   fileCount?: number;

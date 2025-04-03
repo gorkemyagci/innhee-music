@@ -375,6 +375,9 @@
       },
       "attachments": {
         "downloadFile": "Download File"
+      },
+      "errors": {
+        "sendFailed": "Failed to send message"
       }
     },
     "main": {

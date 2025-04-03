@@ -64,6 +64,7 @@ const ChatMain = ({
         { roomId: chatRoomId || "" },
         { enabled: !!chatRoomId }
     );
+    
 
     const initializeSocket = () => {
         if (socketRef.current?.connected) {
@@ -224,10 +225,23 @@ const ChatMain = ({
             socketRef.current?.emit("sendMessage", message.data, (response: any) => {
                 if (response?.success) {
                     setMessageQueue(prev => prev.filter(msg => msg.id !== message.id));
+                    setMessages((prev: Message[]) => 
+                        prev.map(msg => 
+                            msg.id === message.id 
+                                ? { ...msg, status: "sent" } 
+                                : msg
+                        )
+                    );
                 }
             });
         });
     };
+
+    useEffect(() => {
+        if (socketRef.current?.connected && messageQueue.length > 0) {
+            processMessageQueue();
+        }
+    }, [socketRef.current?.connected, messageQueue]);
 
     useEffect(() => {
         const cleanup = initializeSocket();
@@ -421,13 +435,14 @@ const ChatMain = ({
                 attachmentIds: uploadedAttachments.map((att: UploadedAttachment) => att.id)
             };
 
-            const optimisticMessage: Message = {
+            const optimisticMessage = {
                 id: `msg-${Date.now()}`,
                 senderId: currentUser.id,
                 receiverId: selectedUser.id,
                 content: messageText,
                 timestamp: new Date(),
                 type: "text",
+                status: "sending",
                 attachments: uploadedAttachments.map((att: UploadedAttachment) => ({
                     id: att.id,
                     name: att.filename,
@@ -436,13 +451,20 @@ const ChatMain = ({
                     url: att.path,
                     size: att.size ? Math.round(att.size / 1024) : 0
                 }))
-            };
+            } as Message;
 
             setMessages((prev: Message[]) => [...prev, optimisticMessage]);
             setMessageText("");
             setAttachments([]);
 
             if (!socketRef.current?.connected) {
+                setMessages((prev: Message[]) => 
+                    prev.map(msg => 
+                        msg.id === optimisticMessage.id 
+                            ? { ...msg, status: "failed" } 
+                            : msg
+                    )
+                );
                 setMessageQueue(prev => [...prev, {
                     id: optimisticMessage.id,
                     data: messageData
@@ -453,14 +475,27 @@ const ChatMain = ({
             return new Promise((resolve, reject) => {
                 socketRef.current?.emit("sendMessage", messageData, (response: any) => {
                     if (!response?.success) {
-                        setMessages((prev: Message[]) => prev.filter(msg => msg.id !== optimisticMessage.id));
+                        setMessages((prev: Message[]) => 
+                            prev.map(msg => 
+                                msg.id === optimisticMessage.id 
+                                    ? { ...msg, status: "failed" } 
+                                    : msg
+                            )
+                        );
                         setMessageQueue(prev => [...prev, {
                             id: optimisticMessage.id,
                             data: messageData
                         }]);
-                        toast.error("Failed to send message. Will retry when connection is restored.");
+                        toast.error(t("errors.sendFailed"));
                         reject(new Error("Message sending failed"));
                     } else {
+                        setMessages((prev: Message[]) => 
+                            prev.map(msg => 
+                                msg.id === optimisticMessage.id 
+                                    ? { ...msg, status: "sent" } 
+                                    : msg
+                            )
+                        );
                         resolve(response);
                     }
                 });
@@ -521,6 +556,66 @@ const ChatMain = ({
     const { data: chatRooms } = trpc.chat.chatRooms.useQuery();
     const selectedChat = chatRooms?.find((room: ChatRoom) => room.id === chatRoomId);
 
+    const handleRetry = (messageId: string) => {
+        const failedMessage = messages.find(msg => msg.id === messageId);
+        if (!failedMessage) return;
+
+        setMessages((prev: Message[]) => 
+            prev.map(msg => 
+                msg.id === messageId 
+                    ? { ...msg, status: "sending" } 
+                    : msg
+            )
+        );
+
+        const messageData = {
+            chatRoomId: chatRoomId,
+            content: failedMessage.content,
+            type: "text",
+            attachmentIds: failedMessage.attachments?.map(att => att.id) || []
+        };
+
+        if (!socketRef.current?.connected) {
+            setMessages((prev: Message[]) => 
+                prev.map(msg => 
+                    msg.id === messageId 
+                        ? { ...msg, status: "failed" } 
+                        : msg
+                )
+            );
+            setMessageQueue(prev => [...prev, {
+                id: messageId,
+                data: messageData
+            }]);
+            return;
+        }
+
+        socketRef.current.emit("sendMessage", messageData, (response: any) => {
+            if (!response?.success) {
+                setMessages((prev: Message[]) => 
+                    prev.map(msg => 
+                        msg.id === messageId 
+                            ? { ...msg, status: "failed" } 
+                            : msg
+                    )
+                );
+                setMessageQueue(prev => [...prev, {
+                    id: messageId,
+                    data: messageData
+                }]);
+                toast.error(t("errors.sendFailed"));
+            } else {
+                setMessages((prev: Message[]) => 
+                    prev.map(msg => 
+                        msg.id === messageId 
+                            ? { ...msg, status: "sent" } 
+                            : msg
+                    )
+                );
+            }
+        });
+    };
+
     if (!selectedUser) {
         return (
             <div className="flex-1 flex items-center justify-center bg-soft-50">
@@ -544,7 +639,7 @@ const ChatMain = ({
                     <div className="relative">
                         <div className="w-9 h-9 sm:w-11 sm:h-11 p-0.5 flex items-center justify-center rounded-full overflow-hidden">
                             <Image
-                                src={selectedUser.avatar || "/assets/images/avatar-4.png"}
+                                src={selectedUser.avatar || "/assets/svgs/avatar.svg"}
                                 alt={selectedUser.name || "Unknown"}
                                 className="w-9 h-9 sm:w-11 sm:h-11 object-contain"
                                 width={44}
@@ -593,17 +688,11 @@ const ChatMain = ({
                                 contracts={contractsData || []}
                                 isOwn={message.senderId === currentUser.id}
                                 handleApplyContract={handleApplyContract}
+                                onRetry={handleRetry}
                                 sender={
                                     message.senderId === currentUser.id
                                         ? currentUser
                                         : selectedUser
-                                }
-                                isConsecutive={
-                                    index > 0 &&
-                                    messages[index - 1].senderId === message.senderId &&
-                                    message.type !== "system" &&
-                                    message.type !== "offer" &&
-                                    message.type !== "milestone"
                                 }
                             />
                         ))}
