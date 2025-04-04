@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl";
 const Sidebar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { data: user, isLoading } = trpc.auth.getMe.useQuery();
+    console.log(user);
     const isUserAvailable = !isLoading && user?.id;
     const t = useTranslations("sidebar");
     return (
@@ -36,7 +37,7 @@ const Sidebar = () => {
                     <div className="overflow-y-auto custom-scroll h-full">
                         <Profile user={user} />
                         <Separator className="bg-soft-200" />
-                        <Menu userId={user.id} />
+                        <Menu userId={user.id} userType={user.userType} />
                         <Separator className="bg-soft-200" />
                         <Skills skills={user.worker?.skills || []} />
                         <Separator className="bg-soft-200" />
@@ -85,7 +86,7 @@ const Sidebar = () => {
                                     <>
                                         <Profile user={user} />
                                         <Separator className="bg-soft-200" />
-                                        <Menu userId={user.id} />
+                                        <Menu userId={user.id} userType={user.userType} />
                                         <Separator className="bg-soft-200" />
                                         <Skills skills={user.worker?.skills || []} />
                                         <Separator className="bg-soft-200" />

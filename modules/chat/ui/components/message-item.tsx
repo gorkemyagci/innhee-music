@@ -23,7 +23,7 @@ interface MessageItemProps {
   onRetry?: (messageId: string) => void;
 }
 
-const MessageItem = ({ message, isOwn, sender, contracts, handleApplyContract, onRetry }: MessageItemProps) => {
+const MessageItem = ({ message, isOwn, sender, contracts, handleApplyContract, onRetry }: MessageItemProps) => {  
   const t = useTranslations("chat.main");
   const tMessages = useTranslations("chat.messages");
   const [showContractDetails, setShowContractDetails] = useState(false);
@@ -129,176 +129,141 @@ const MessageItem = ({ message, isOwn, sender, contracts, handleApplyContract, o
 
   if (message.type === "offer") {
     return (
-      <div
-        className={cn(
-          "flex flex-col-reverse gap-4 mb-6",
-          isOwn ? "items-end" : "items-start"
-        )}
-      >
-        {contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "ACCEPTED" && (
-          <div className="flex ml-12 justify-end w-full">
-            <div className="flex flex-col items-start w-full gap-2">
-              <span className="text-sub-600 font-normal text-xs">Accepted an offer</span>
-              <div className="bg-weak-50 w-full max-w-[80%] lg:max-w-[50%] rounded-[12px] p-4">
-                <Link href={`/order-details/${contracts?.find((item: any) => item.id === message?.offer?.id)?.id}`} prefetch className="text-primary-base cursor-pointer text-sm font-medium">
-                  View Contract
-                </Link>
+      <div className={cn(
+        "flex flex-col",
+        isOwn ? "items-end" : "items-start"
+      )}>
+
+        <div
+          className={cn(
+            "flex flex-col-reverse w-full gap-4 mb-6",
+            isOwn ? "items-end" : "items-start"
+          )}
+        >
+          {contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "ACCEPTED" && (
+            <div className="flex ml-12 justify-end w-full">
+              <div className="flex flex-col items-start w-full gap-2">
+                <span className="text-sub-600 font-normal text-xs">Accepted an offer</span>
+                <div className="bg-weak-50 w-full max-w-[80%] lg:max-w-[50%] rounded-[12px] p-4">
+                  <Link href={`/order-details/${contracts?.find((item: any) => item.id === message?.offer?.id)?.id}`} prefetch className="text-primary-base cursor-pointer text-sm font-medium">
+                    View Contract
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+          <div className={cn(
+            "max-w-[80%] flex flex-row gap-2.5",
+            isOwn ? "flex-row-reverse" : "flex-row"
+          )}>
+            <UserAvatar
+              imageUrl={sender.avatar}
+              name={sender.name}
+              className="w-10 h-10 rounded-full p-1"
+            />
+            <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col gap-2.5">
+                <div className="flex items-center gap-0.5 text-xs">
+                  <span className="font-medium text-sub-600">{sender.name}</span>
+                  <span className="font-normal text-soft-400">{formatTime(message.timestamp)}</span>
+                </div>
+                <span className="text-sub-600 font-normal text-xs flex items-center gap-1">{tMessages("offer.title")} <Icons.information_line /></span>
+              </div>
+              <div className="lg:w-[360px] w-full rounded-2xl border border-soft-200">
+                <div className="p-4 bg-weak-50 rounded-t-2xl flex items-center justify-between">
+                  <span className="font-medium text-sm text-strong-950">
+                    {message.offer?.title}
+                  </span>
+                  <span className="font-medium text-base text-strong-950">
+                    {message.offer?.currency === "USD" ? "USD$" : message.offer?.currency}{message.offer?.amount}
+                  </span>
+                </div>
+                <div className="flex flex-col items-start gap-3 p-4">
+                  <span className="text-strong-950 font-normal text-xs">{message.offer?.description}</span>
+                  <Separator className="bg-soft-200" />
+                  <div className="flex flex-col items-start gap-1">
+                    <span className="text-strong-950 text-xs font-medium">
+                      {tMessages("offer.yourOfferIncludes")}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <Icons.time_line />
+                      <span className="text-sub-600 text-xs font-normal">
+                        {message.offer?.deliveryDays} {tMessages("offer.deliveryTime")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                {!isOwn && contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "ACCEPTED" ? (
+                  <></>
+                ) : !isOwn && (
+                  <div className="p-4 flex gap-3 items-center border-t border-soft-200">
+                    <Button
+                      variant="outline"
+                      disabled={contracts?.find((item: any) => item.id === message?.offer?.id)?.status !== "PENDING"}
+                      onClick={() => handleApplyContract(message?.offer?.id || "", "REJECTED")}
+                      className="h-9 flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm"
+                    >
+                      {tMessages("offer.cancel")}
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        handleApplyContract(message?.offer?.id || "", "ACCEPTED")
+                      }}
+                      disabled={contracts?.find((item: any) => item.id === message?.offer?.id)?.status !== "PENDING"}
+                      className="h-9 flex-1 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
+                      <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
+                      {contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "ACCEPTED" ? "Accepted" : tMessages("offer.accept")}
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-        )}
-        <div className={cn(
-          "max-w-[80%] flex flex-row gap-2.5",
-          isOwn ? "flex-row-reverse" : "flex-row"
-        )}>
-          <UserAvatar
-            imageUrl={sender.avatar}
-            name={sender.name}
-            className="w-10 h-10 rounded-full p-1"
+          <ContractDetailsModal
+            isOpen={showContractDetails}
+            onClose={() => setShowContractDetails(false)}
+            contractData={{
+              contractId: message.offer?.id || "",
+              contractName: message.offer?.title || "",
+              startDate: format(new Date(), "dd MMMM, yyyy"),
+              deadline: message.offer?.deadline ? format(new Date(message.offer.deadline), "dd MMMM, yyyy") : "",
+              amount: message.offer?.amount || 0,
+              milestones: message?.milestones
+            }}
           />
-          <div className="flex flex-col gap-2.5">
-            <div className="flex flex-col gap-2.5">
-              <div className="flex items-center gap-0.5 text-xs">
-                <span className="font-medium text-sub-600">{sender.name}</span>
-                <span className="font-normal text-soft-400">{formatTime(message.timestamp)}</span>
-              </div>
-              <span className="text-sub-600 font-normal text-xs flex items-center gap-1">{tMessages("offer.title")} <Icons.information_line /></span>
-            </div>
-            <div className="lg:w-[360px] w-full rounded-2xl border border-soft-200">
-              <div className="p-4 bg-weak-50 rounded-t-2xl flex items-center justify-between">
-                <span className="font-medium text-sm text-strong-950">
-                  {message.offer?.title}
-                </span>
-                <span className="font-medium text-base text-strong-950">
-                  {message.offer?.currency === "USD" ? "USD$" : message.offer?.currency}{message.offer?.amount}
-                </span>
-              </div>
-              <div className="flex flex-col items-start gap-3 p-4">
-                <span className="text-strong-950 font-normal text-xs">{message.offer?.description}</span>
-                <Separator className="bg-soft-200" />
-
-                {contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "PENDING" && contracts?.map((item) => (
-                  item.id === message.offer?.id && item.milestones && item.milestones.length > 0 && (
-                    <div key={item.id} className="w-full">
-                      <motion.button
-                        onClick={() => toggleExpand(item.id)}
-                        className="w-full flex items-center justify-between py-1"
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <div className="flex items-center cursor-pointer gap-2">
-                          <motion.div
-                            animate={{ rotate: expandedContracts[item.id] ? 90 : 0 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <Icons.chevron_right className="w-4 h-4 text-sub-600" />
-                          </motion.div>
-                          <span className="text-strong-950 text-xs font-medium">Milestones ({item.milestones.length})</span>
-                        </div>
-                        <span className="text-sub-600 text-xs font-normal">Total: {message.offer?.currency}{message.offer?.amount}</span>
-                      </motion.button>
-
-                      <AnimatePresence>
-                        {expandedContracts[item.id] && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="overflow-hidden pt-2"
-                          >
-                            <div className="flex flex-col gap-1.5 px-1">
-                              {item.milestones?.map((milestone: any, index: number) => (
-                                <motion.div
-                                  key={milestone.id}
-                                  initial={{ x: -20, opacity: 0 }}
-                                  animate={{ x: 0, opacity: 1 }}
-                                  transition={{ delay: index * 0.1 }}
-                                  className="w-full rounded-lg border border-soft-200 p-2 bg-white"
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex flex-col">
-                                      <span className="text-strong-950 font-medium text-xs">{milestone.title}</span>
-                                      <div className="flex items-center gap-1">
-                                        <Icons.calendar className="w-3 h-3 text-sub-600" />
-                                        <span className="text-sub-600 text-[10px] font-normal">
-                                          {format(new Date(milestone.deadline), "MMM dd, yyyy")}
-                                        </span>
-                                      </div>
-                                    </div>
-                                    <div className="flex flex-col items-end gap-1">
-                                      <span className="text-sub-600 font-medium text-xs">
-                                        {milestone.amountCurrency}{milestone.amount}
-                                      </span>
-                                      <span className={cn(
-                                        "text-[10px] font-medium px-2 py-0.5 rounded-full",
-                                        milestone.status === "PENDING" ? "bg-yellow-50 text-yellow-600" :
-                                          milestone.status === "COMPLETED" ? "bg-green-50 text-green-600" :
-                                            "bg-red-50 text-red-600"
-                                      )}>
-                                        {milestone.status}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </motion.div>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  )
-                ))}
-
-                <div className="flex flex-col items-start gap-1">
-                  <span className="text-strong-950 text-xs font-medium">
-                    {tMessages("offer.yourOfferIncludes")}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <Icons.time_line />
-                    <span className="text-sub-600 text-xs font-normal">
-                      {message.offer?.deliveryDays} {tMessages("offer.deliveryTime")}
+        </div>
+        <div>
+          {contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "ACCEPTED" && contracts?.map((item) => (
+            item.id === message.offer?.id && item.milestones && item.milestones.length > 0 && (
+              <div className="flex gap-2 items-start w-full">
+                <UserAvatar
+                  imageUrl={sender.avatar || "/assets/images/avatar.png"}
+                  name={sender.name}
+                  className="w-10 h-10 rounded-full p-1"
+                />
+                <div className="flex flex-col gap-2 items-start">
+                  <div className="flex flex-col items-start gap-1.5">
+                    <span className="text-sub-600 font-normal text-xs">{sender.name}</span>
+                    <span className="text-sub-600 font-normal text-xs">Activated the milestone</span>
+                  </div>
+                  <div className="bg-weak-50 lg:w-[396px] mt-1.5 rounded-[12px] p-4 flex flex-col items-start gap-2">
+                    <span className="text-strong-950 font-normal text-sm">
+                      {item.milestones[0].title}
                     </span>
+                    <span className="text-strong-950 font-normal text-sm">
+                      Amount: {" "}
+                      {item.milestones[0].amountCurrency} {item.milestones[0].amount}
+                    </span>
+                    <Link href={`/order-details/${item.id}`} prefetch className="text-primary-base cursor-pointer text-sm font-medium">
+                      View contract
+                    </Link>
                   </div>
                 </div>
               </div>
-              {!isOwn && contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "ACCEPTED" ? (
-                <></>
-              ) : !isOwn && (
-                <div className="p-4 flex gap-3 items-center border-t border-soft-200">
-                  <Button
-                    variant="outline"
-                    disabled={contracts?.find((item: any) => item.id === message?.offer?.id)?.status !== "PENDING"}
-                    onClick={() => handleApplyContract(message?.offer?.id || "", "REJECTED")}
-                    className="h-9 flex-1 border-soft-200 rounded-lg bg-white flex items-center gap-1.5 text-sub-600 font-medium text-sm"
-                  >
-                    {tMessages("offer.cancel")}
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleApplyContract(message?.offer?.id || "", "ACCEPTED")
-                    }}
-                    disabled={contracts?.find((item: any) => item.id === message?.offer?.id)?.status !== "PENDING"}
-                    className="h-9 flex-1 disabled:cursor-auto group rounded-lg text-white text-sm cursor-pointer font-medium relative overflow-hidden transition-all bg-gradient-to-b from-[#20232D]/90 to-[#20232D] border border-[#515256] shadow-[0_1px_2px_0_rgba(27,28,29,0.05)]">
-                    <div className="absolute top-0 left-0 w-full h-3 group-hover:h-5 transition-all duration-500 bg-gradient-to-b from-[#FFF]/[0.09] group-hover:from-[#FFF]/[0.12] to-[#FFF]/0" />
-                    {contracts?.find((item: any) => item.id === message?.offer?.id)?.status === "ACCEPTED" ? "Accepted" : tMessages("offer.accept")}
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
+            )
+          ))}
         </div>
-        <ContractDetailsModal
-          isOpen={showContractDetails}
-          onClose={() => setShowContractDetails(false)}
-          contractData={{
-            contractId: message.offer?.id || "",
-            contractName: message.offer?.title || "",
-            startDate: format(new Date(), "dd MMMM, yyyy"),
-            deadline: message.offer?.deadline ? format(new Date(message.offer.deadline), "dd MMMM, yyyy") : "",
-            amount: message.offer?.amount || 0,
-            milestones: message?.milestones
-          }}
-        />
+
       </div>
     );
   }
@@ -398,7 +363,7 @@ const MessageItem = ({ message, isOwn, sender, contracts, handleApplyContract, o
               <div className="flex items-center gap-1.5 bg-red-50 px-2 py-0.5 rounded-full">
                 <Icons.close className="w-3 h-3 text-red-500 flex-shrink-0" />
                 <span className="text-[10px] text-red-600 font-medium">{tMessages("errors.sendFailed")}</span>
-                <button 
+                <button
                   onClick={() => onRetry?.(message.id)}
                   className="flex items-center justify-center hover:bg-red-100 rounded-full p-0.5 transition-colors"
                 >
