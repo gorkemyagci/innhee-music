@@ -31,6 +31,7 @@ const Sidebar = ({ data }: SidebarProps) => {
             userIds: [data?.id]
         });
     };
+    
 
     return (
         <div className="w-full md:w-[352px] shrink-0 max-h-[calc(100vh-120px)] shadow-sm bg-white border border-soft-200 rounded-[20px] pb-6">
@@ -38,8 +39,8 @@ const Sidebar = ({ data }: SidebarProps) => {
                 <div className="flex flex-col items-center gap-2">
                     <div className="flex flex-col items-center gap-1">
                         <UserAvatar
-                            imageUrl="/assets/images/avatar2.png"
-                            name={data?.user?.nickname}
+                            imageUrl={data?.user?.profilePicture?.url || ""}
+                            name={data?.user?.nickname || ""}
                             className="w-16 h-16 md:w-20 md:h-20 shrink-0 p-0.5"
                         />
                         <p className="text-sm md:text-base font-medium text-sub-600">{data?.user?.nickname}</p>

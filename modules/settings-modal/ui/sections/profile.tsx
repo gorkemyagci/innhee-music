@@ -27,12 +27,18 @@ const Profile = () => {
     const [isEditingWebLink, setIsEditingWebLink] = useState(false);
     const [tempNickname, setTempNickname] = useState(nickname);
     const [tempWebLink, setTempWebLink] = useState(webLink);
-    const [profileImage, setProfileImage] = useState("/assets/images/profile.png");
+    const [profileImage, setProfileImage] = useState("");
     const [isUploading, setIsUploading] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [isTablet, setIsTablet] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const { data: userData } = trpc.auth.getMe.useQuery();
+
+    const SERVICE_URL =
+        process.env.NEXT_PUBLIC_API_URL ||
+        "https://music-upwork-project-production.up.railway.app";
 
     useEffect(() => {
         useAuthStore.getState().initializeFromToken();
@@ -47,12 +53,12 @@ const Profile = () => {
                     setNickname(decoded.nickname);
                     setTempNickname(decoded.nickname);
                 }
-            } catch {}
+            } catch { }
         }
     }, [token]);
 
     const update = trpc.user.update.useMutation({
-        onSuccess: (data) => {  
+        onSuccess: (data) => {
             toast.success("Profile updated successfully");
             const access_token = data.access_token;
             useAuthStore.getState().updateToken(access_token);
@@ -105,7 +111,7 @@ const Profile = () => {
         fileInputRef.current?.click();
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -120,29 +126,38 @@ const Profile = () => {
         }
 
         setIsUploading(true);
-        const reader = new FileReader();
+        const formData = new FormData();
+        formData.append('attachment', file);
 
-        reader.onload = (event) => {
-            setTimeout(() => {
-                if (event.target?.result) {
-                    setProfileImage(event.target.result as string);
-                    setIsUploading(false);
-                    toast.success("Profile photo updated successfully");
-                }
-            }, 1000);
-        };
+        try {
+            const response = await fetch(`${SERVICE_URL}/user/profile-picture`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `${token}`,
+                },
+                body: formData
+            });
 
-        reader.onerror = () => {
+            if (!response.ok) {
+                throw new Error('Failed to upload profile picture');
+            }
+
+            const data = await response.json();
+            setProfileImage(data.profilePicture.url);
+            useAuthStore.getState().updateToken(data.access_token);
+            toast.success("Profile photo updated successfully");
+            utils.auth.getMe.invalidate();
+        } catch (error) {
+            toast.error("Failed to upload profile picture");
+        } finally {
             setIsUploading(false);
-            toast.error("Failed to read the image file");
-        };
-
-        reader.readAsDataURL(file);
+        }
     };
 
     if (isLoading) {
         return null;
     }
+    
 
     return (
         <div className="w-full">
@@ -200,8 +215,8 @@ const Profile = () => {
                                 ) : null}
                             </AnimatePresence>
                             <UserAvatar
-                                imageUrl={profileImage}
-                                name="Avatar"
+                                imageUrl={profileImage || userData?.profilePicture?.url || ""}
+                                name={userData?.nickname || ""}
                                 className="h-14 w-14 cursor-pointer"
                                 onClick={handleUploadClick}
                             />

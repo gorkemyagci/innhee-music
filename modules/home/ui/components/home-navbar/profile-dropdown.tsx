@@ -19,6 +19,7 @@ import { useAuthStore } from "@/store/auth-store"
 import SettingsModal from "@/components/custom/modals/settings"
 import { useRouter } from "next/navigation"
 import { trpc } from "@/trpc/client"
+import UserAvatar from "@/components/user-avatar"
 
 const ProfileDropdown = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
@@ -51,10 +52,11 @@ const ProfileDropdown = ({ children }: { children: React.ReactNode }) => {
                                 <span className="absolute -top-1 -right-1 size-5 z-10">
                                     <Icons.top_rated />
                                 </span>
-                                <Avatar className="h-10 w-10">
-                                    <AvatarImage src="/assets/images/profile.png" alt={user?.nickname || ""} />
-                                    <AvatarFallback>EW</AvatarFallback>
-                                </Avatar>
+                                <UserAvatar
+                                    imageUrl={user?.profilePicture?.url || ""}
+                                    name={user?.nickname || ""}
+                                    className="size-10"
+                                />
                             </div>
                             <div>
                                 <h3 className="font-medium text-sm text-strong-950">{user?.nickname || ""}</h3>

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const avatarVariants = cva("", {
@@ -27,7 +27,13 @@ interface UserAvatarProps extends VariantProps<typeof avatarVariants> {
 const UserAvatar = ({ imageUrl, name, className, onClick, size }: UserAvatarProps) => {
     return (
         <Avatar className={cn(avatarVariants({ size }), className)} onClick={onClick}>
-            <AvatarImage src={imageUrl} alt={name} className="object-contain shrink-0" />
+            <AvatarImage src={imageUrl} alt={name} className="object-cover shrink-0" />
+            <AvatarFallback>
+                {name ? (name.split(' ').length > 1 
+                    ? `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`
+                    : name.slice(0, 2)
+                ).toUpperCase() : 'IN'}
+            </AvatarFallback>
         </Avatar>
     )
 }

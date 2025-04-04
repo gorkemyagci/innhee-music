@@ -10,7 +10,7 @@ const Profile = ({ user }: ProfileProps) => {
     return (
         <div className="p-4 flex flex-col items-center gap-2">
             <UserAvatar
-                imageUrl="/assets/images/avatar.png"
+                imageUrl={user?.profilePicture?.url || ""}
                 name={user?.nickname || ""}
                 className="w-12 h-12"
             />

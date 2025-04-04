@@ -79,6 +79,9 @@ export type UserType = {
   phone: string | null;
   phoneVerified: boolean;
   nickname: string | null;
+  profilePicture: {
+    url: string;
+  };
   password: string | null;
   userType: string;
   createdAt: string;
