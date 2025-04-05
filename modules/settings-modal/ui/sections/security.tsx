@@ -25,7 +25,6 @@ const Security = () => {
             setIsEditingEmail(false);
         },
         onError: (error) => {
-            console.log(error);
             toast.error("Failed to update email");
         }
     });
