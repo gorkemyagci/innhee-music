@@ -3,10 +3,51 @@ import { Icons } from "@/components/icons";
 import Head from "../components/head";
 import { trpc } from "@/trpc/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const Security = () => {
     const { data, isPending } = trpc.auth.getMe.useQuery();
-    console.log(data);
+    const [isEditingEmail, setIsEditingEmail] = useState(false);
+    const [isEditingPhone, setIsEditingPhone] = useState(false);
+    const [tempEmail, setTempEmail] = useState(data?.email || "");
+    const [tempPhone, setTempPhone] = useState(data?.phone || "");
+    const utils = trpc.useUtils();
+
+    const updateEmail = trpc.user.updateEmail.useMutation({
+        onSuccess: (data) => {
+            toast.success("Email updated successfully");
+            utils.auth.getMe.invalidate();
+            setIsEditingEmail(false);
+        },
+        onError: (error) => {
+            console.log(error);
+            toast.error("Failed to update email");
+        }
+    });
+
+    const updatePhone = trpc.user.updatePhone.useMutation({
+        onSuccess: (data) => {
+            toast.success("Phone number updated successfully");
+            utils.auth.getMe.invalidate();
+            setIsEditingPhone(false);
+        },
+        onError: (error) => {
+            toast.error("Failed to update phone number");
+        }
+    });
+
+    const handleSaveEmail = () => {
+        updateEmail.mutate({ email: tempEmail });
+    };
+
+    const handleSavePhone = () => {
+        updatePhone.mutate({ phone: tempPhone });
+    };
 
     if (isPending) {
         return (
@@ -37,8 +78,86 @@ const Security = () => {
                         <p className="text-strong-950 font-medium text-sm">Email</p>
                         <span className="text-sub-600 text-xs font-normal">Business email address recommended.</span>
                     </div>
-                    <span className="text-sub-600 font-normal text-sm">{data?.email}</span>
-                    <Icons.pencil />
+                    <div className="flex items-center gap-2">
+                        <AnimatePresence mode="wait">
+                            {isEditingEmail && !updateEmail.isPending ? (
+                                <motion.div
+                                    key="email-input"
+                                    initial={{ opacity: 0, y: 5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -5 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="lg:w-52 w-40"
+                                >
+                                    <Input
+                                        type="email"
+                                        value={tempEmail}
+                                        onChange={(e) => setTempEmail(e.target.value)}
+                                        className="h-9 text-sm font-normal text-main-900"
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') handleSaveEmail();
+                                            if (e.key === 'Escape') setIsEditingEmail(false);
+                                        }}
+                                    />
+                                </motion.div>
+                            ) : (
+                                <motion.span
+                                    key="email-text"
+                                    initial={{ opacity: 0, y: -5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 5 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="text-sub-600 font-normal text-sm"
+                                >
+                                    {updateEmail?.isPending ? (
+                                        <div className="flex items-center gap-2 text-sub-600 font-normal text-sm">
+                                            <Loader2 className="w-3 h-3 animate-spin text-sub-600" />
+                                            Saving..
+                                        </div>
+                                    ) : data?.email || "No email"}
+                                </motion.span>
+                            )}
+                        </AnimatePresence>
+                        <AnimatePresence mode="wait">
+                            {isEditingEmail && !updateEmail.isPending ? (
+                                <motion.div
+                                    key="save-button"
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                >
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-8 w-8 rounded-full border border-soft-200"
+                                        onClick={handleSaveEmail}
+                                    >
+                                        <Icons.check_icon />
+                                    </Button>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="edit-button"
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                >
+                                    <Button
+                                        variant="ghost"
+                                        className="p-0 h-9 w-9 flex items-center justify-center"
+                                        onClick={() => {
+                                            setTempEmail(data?.email || "");
+                                            setIsEditingEmail(true);
+                                        }}
+                                    >
+                                        <Icons.pencil />
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
                 <div className="border border-dashed w-full h-[1px] border-soft-200" />
                 <div className="w-full flex items-center justify-between">
@@ -46,8 +165,87 @@ const Security = () => {
                         <p className="text-strong-950 font-medium text-sm">Phone Number</p>
                         <span className="text-sub-600 text-xs font-normal">Business phone number recommended.</span>
                     </div>
-                    <span className="text-sub-600 font-normal text-sm">{data?.phone || "No phone number"}</span>
-                    <Icons.pencil />
+                    <div className="flex items-center gap-2">
+                        <AnimatePresence mode="wait">
+                            {isEditingPhone && !updatePhone.isPending ? (
+                                <motion.div
+                                    key="phone-input"
+                                    initial={{ opacity: 0, y: 5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -5 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="lg:w-52 w-40"
+                                >
+                                    <Input
+                                        type="text"
+                                        value={tempPhone}
+                                        onChange={(e) => setTempPhone(e.target.value)}
+                                        className="h-9 text-sm font-normal text-main-900"
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') handleSavePhone();
+                                            if (e.key === 'Escape') setIsEditingPhone(false);
+                                        }}
+                                    />
+                                </motion.div>
+                            ) : (
+                                <motion.span
+                                    key="phone-text"
+                                    initial={{ opacity: 0, y: -5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 5 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="text-sub-600 font-normal text-sm"
+                                >
+                                    {updatePhone?.isPending ? (
+                                        <div className="flex items-center gap-2 text-sub-600 font-normal text-sm">
+                                            <Loader2 className="w-3 h-3 animate-spin text-sub-600" />
+                                            Saving..
+                                        </div>
+                                    ) : data?.phone || "No phone number"}
+                                </motion.span>
+                            )}
+                        </AnimatePresence>
+                        <AnimatePresence mode="wait">
+                            {isEditingPhone && !updatePhone.isPending ? (
+                                <motion.div
+                                    key="save-button"
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                >
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-8 w-8 rounded-full border border-soft-200"
+                                        onClick={handleSavePhone}
+                                        disabled={updatePhone.isPending}
+                                    >
+                                        <Icons.check_icon />
+                                    </Button>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="edit-button"
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                >
+                                    <Button
+                                        variant="ghost"
+                                        className="p-0 h-9 w-9 flex items-center justify-center"
+                                        onClick={() => {
+                                            setTempPhone(data?.phone || "");
+                                            setIsEditingPhone(true);
+                                        }}
+                                    >
+                                        <Icons.pencil />
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
                 <div className="border border-dashed w-full h-[1px] border-soft-200" />
                 <div className="w-full flex items-center justify-between">
