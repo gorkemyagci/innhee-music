@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 import { useAuthStore } from "@/store/auth-store";
 import { jwtDecode, JwtPayload } from "jwt-decode";
+import { Loader2 } from "lucide-react";
 
 interface DecodedToken extends JwtPayload {
     nickname?: string;
@@ -20,8 +21,8 @@ interface DecodedToken extends JwtPayload {
 }
 
 const Profile = () => {
-    const { token, user } = useAuthStore();
-    const [nickname, setNickname] = useState("Anonymous");
+    const { token } = useAuthStore();
+    const [nickname, setNickname] = useState<any>(null);
     const [webLink, setWebLink] = useState("");
     const [isEditingNickname, setIsEditingNickname] = useState(false);
     const [isEditingWebLink, setIsEditingWebLink] = useState(false);
@@ -34,7 +35,7 @@ const Profile = () => {
     const [isLoading, setIsLoading] = useState(true);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const { data: userData } = trpc.auth.getMe.useQuery();
+    const { data: userData, isPending: isUserPending } = trpc.auth.getMe.useQuery();
 
     const SERVICE_URL =
         process.env.NEXT_PUBLIC_API_URL ||
@@ -157,7 +158,7 @@ const Profile = () => {
     if (isLoading) {
         return null;
     }
-    
+
 
     return (
         <div className="w-full">
@@ -216,7 +217,7 @@ const Profile = () => {
                             </AnimatePresence>
                             <UserAvatar
                                 imageUrl={profileImage || userData?.profilePicture?.url || ""}
-                                name={userData?.nickname || ""}
+                                name={userData?.nickname}
                                 className="h-14 w-14 cursor-pointer"
                                 onClick={handleUploadClick}
                             />
@@ -290,7 +291,14 @@ const Profile = () => {
                                     className="text-main-900 text-sm font-normal cursor-pointer"
                                     onClick={() => copyToClipboard(nickname, "Nickname")}
                                 >
-                                    {nickname}
+                                    {isUserPending ?
+                                        <Loader2 className="w-3 h-3 animate-spin text-sub-600" />
+                                        : update.isPending ?
+                                            <div className="flex items-center gap-2 text-sub-600 font-normal text-sm">
+                                                <Loader2 className="w-3 h-3 animate-spin text-sub-600" />
+                                                Saving..
+                                            </div>
+                                            : userData?.nickname || "Anonymous"}
                                 </motion.span>
                             )}
                         </AnimatePresence>
