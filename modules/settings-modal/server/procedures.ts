@@ -147,4 +147,42 @@ export const userProcedures = createTRPCRouter({
         });
       }
     }),
+  updatePassword: protectedProcedure
+    .input(
+      z.object({
+        password: z.string().min(1, "Password is required"),
+        oldPassword: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const token = await getTokenFromCookie();
+        
+        const response = await fetch(`${SERVICE_URL}/auth/password`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(input),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: errorData.message || "Failed to update password",
+          });
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            error instanceof Error ? error.message : "Failed to update password",
+        });
+      }
+    }),
 });

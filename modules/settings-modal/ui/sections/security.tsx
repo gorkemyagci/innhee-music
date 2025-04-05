@@ -14,8 +14,10 @@ const Security = () => {
     const { data, isPending } = trpc.auth.getMe.useQuery();
     const [isEditingEmail, setIsEditingEmail] = useState(false);
     const [isEditingPhone, setIsEditingPhone] = useState(false);
+    const [isEditingPassword, setIsEditingPassword] = useState(false);
     const [tempEmail, setTempEmail] = useState(data?.email || "");
     const [tempPhone, setTempPhone] = useState(data?.phone || "");
+    const [tempPassword, setTempPassword] = useState("");
     const utils = trpc.useUtils();
 
     const updateEmail = trpc.user.updateEmail.useMutation({
@@ -40,12 +42,35 @@ const Security = () => {
         }
     });
 
+    const updatePassword = trpc.user.updatePassword.useMutation({
+        onSuccess: () => {
+            toast.success("Password updated successfully");
+            setIsEditingPassword(false);
+            setTempPassword("");
+        },
+        onError: (error) => {
+            toast.error("Failed to update password");
+        }
+    });
+
     const handleSaveEmail = () => {
         updateEmail.mutate({ email: tempEmail });
     };
 
     const handleSavePhone = () => {
         updatePhone.mutate({ phone: tempPhone });
+    };
+
+    const handleSavePassword = () => {
+        if (!tempPassword) return;
+        
+        const requestBody: { password: string; oldPassword?: string } = {
+            password: tempPassword
+        };
+        if (data?.password) {
+            requestBody.oldPassword = data.password;
+        }
+        updatePassword.mutate(requestBody);
     };
 
     if (isPending) {
@@ -261,7 +286,84 @@ const Security = () => {
                         <p className="text-strong-950 font-medium text-sm">Change Password</p>
                         <span className="text-sub-600 text-xs font-normal">Update password for enhanced account security.</span>
                     </div>
-                    <Icons.pencil />
+                    <div className="flex items-center gap-2">
+                        <AnimatePresence mode="wait">
+                            {isEditingPassword ? (
+                                <motion.div
+                                    key="password-input"
+                                    initial={{ opacity: 0, y: 5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -5 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="w-48"
+                                >
+                                    <Input
+                                        type="password"
+                                        placeholder="New password"
+                                        value={tempPassword}
+                                        onChange={(e) => setTempPassword(e.target.value)}
+                                        className="h-9 text-sm font-normal text-main-900"
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') handleSavePassword();
+                                            if (e.key === 'Escape') setIsEditingPassword(false);
+                                        }}
+                                    />
+                                </motion.div>
+                            ) : (
+                                <motion.span
+                                    key="password-text"
+                                    initial={{ opacity: 0, y: -5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 5 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="text-sub-600 font-normal text-sm"
+                                >
+                                    {updatePassword.isPending ? (
+                                        <div className="flex items-center gap-2 text-sub-600 font-normal text-sm">
+                                            <Loader2 className="w-3 h-3 animate-spin text-sub-600" />
+                                            Saving..
+                                        </div>
+                                    ) : "••••••••"}
+                                </motion.span>
+                            )}
+                        </AnimatePresence>
+                        <AnimatePresence mode="wait">
+                            {isEditingPassword ? (
+                                <motion.div
+                                    key="save-button"
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                >
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-8 w-8 rounded-full border border-soft-200"
+                                        onClick={handleSavePassword}
+                                    >
+                                        <Icons.check_icon />
+                                    </Button>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="edit-button"
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                >
+                                    <Button
+                                        variant="ghost"
+                                        className="p-0 h-9 w-9 flex items-center justify-center"
+                                        onClick={() => setIsEditingPassword(true)}
+                                    >
+                                        <Icons.pencil />
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
                 <div className="border border-dashed w-full h-[1px] border-soft-200" />
             </div>
