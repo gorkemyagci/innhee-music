@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Message, Offer, User } from "@/modules/chat/types";
+import { Message, Offer } from "@/modules/chat/types";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import MessageItem from "@/modules/chat/ui/components/message-item";
 import OfferModal from "@/modules/chat/ui/sections/offer-modal";
@@ -21,9 +21,12 @@ import IsTyping from "./is-typing";
 import AttachmentItem from "./attachment-item";
 import { toast } from "sonner";
 import EmojiPicker from 'emoji-picker-react';
-import { useRouter } from "next/navigation";
 
 const SOCKET_URL = "wss://inhee-chat-production.up.railway.app/chat";
+
+type ExtendedMessage = Message & {
+    status?: 'sending' | 'sent' | 'failed';
+};
 
 const ChatMain = ({
     messages,
@@ -44,6 +47,7 @@ const ChatMain = ({
     const [isConnected, setIsConnected] = useState(false);
     const [messageQueue, setMessageQueue] = useState<any[]>([]);
     const [reconnectAttempts, setReconnectAttempts] = useState(0);
+    const MESSAGE_RATE_LIMIT = 300;
     const maxReconnectAttempts = 5;
     const emojiPickerRef = useRef<HTMLDivElement>(null);
     const socketRef = useRef<Socket | null>(null);
@@ -58,6 +62,7 @@ const ChatMain = ({
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const utils = trpc.useUtils();
     const [isSending, setIsSending] = useState(false);
+    const [lastScrolledMessageId, setLastScrolledMessageId] = useState<string | null>(null);
 
     const { data: contractsData } = trpc.chat.getRoomContracts.useQuery(
         { roomId: chatRoomId || "" },
@@ -220,25 +225,28 @@ const ChatMain = ({
             return;
         }
 
-        messageQueue.forEach(message => {
-            socketRef.current?.emit("sendMessage", message.data, (response: any) => {
-                if (response?.success) {
-                    setMessageQueue(prev => prev.filter(msg => msg.id !== message.id));
-                    setMessages((prev: Message[]) => 
-                        prev.map(msg => 
-                            msg.id === message.id 
-                                ? { ...msg, status: "sent" } 
-                                : msg
-                        )
-                    );
-                }
-            });
+        const [message, ...rest] = messageQueue;
+        socketRef.current.emit("sendMessage", message.data, (response: any) => {
+            if (response?.success) {
+                setMessageQueue(rest);
+                setMessages((prev: Message[]) => 
+                    prev.map(msg => 
+                        msg.id === message.id 
+                            ? { ...msg, status: "sent" } 
+                            : msg
+                    )
+                );
+            }
         });
     };
 
     useEffect(() => {
         if (socketRef.current?.connected && messageQueue.length > 0) {
-            processMessageQueue();
+            const interval = setInterval(() => {
+                processMessageQueue();
+            }, 300);
+
+            return () => clearInterval(interval);
         }
     }, [socketRef.current?.connected, messageQueue]);
 
@@ -256,8 +264,20 @@ const ChatMain = ({
     }, [cookies.token, chatRoomId, currentUser]);
 
     useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
+        if (messages.length > 0) {
+            const lastMessage = messages[messages.length - 1];
+            const isInQueue = messageQueue.some(m => m.id === lastMessage.id);
+            const wasScrolledBefore = lastScrolledMessageId === lastMessage.id;
+            if (lastMessage.hasOwnProperty('status') && (lastMessage as any).status === "sent" && !isInQueue && !wasScrolledBefore) {
+                scrollToBottom();
+                setLastScrolledMessageId(lastMessage.id);
+            }
+            else if (lastMessage.hasOwnProperty('status') && (lastMessage as any).status === "sending" && isInQueue && !wasScrolledBefore) {
+                scrollToBottom();
+                setLastScrolledMessageId(lastMessage.id);
+            }
+        }
+    }, [messages, messageQueue]);
 
     useEffect(() => {
         if (isTyping) {
@@ -385,7 +405,7 @@ const ChatMain = ({
         if (!selectedUser) return;
 
         if (attachments.length > 0 && !messageText.trim()) {
-            toast.error("Please add a message with your attachments");
+            toast.error("Lütfen eklerinizle birlikte bir mesaj ekleyin");
             return;
         }
 
@@ -456,52 +476,13 @@ const ChatMain = ({
             setMessageText("");
             setAttachments([]);
 
-            if (!socketRef.current?.connected) {
-                setMessages((prev: Message[]) => 
-                    prev.map(msg => 
-                        msg.id === optimisticMessage.id 
-                            ? { ...msg, status: "failed" } 
-                            : msg
-                    )
-                );
-                setMessageQueue(prev => [...prev, {
-                    id: optimisticMessage.id,
-                    data: messageData
-                }]);
-                return;
-            }
-
-            return new Promise((resolve, reject) => {
-                socketRef.current?.emit("sendMessage", messageData, (response: any) => {
-                    if (!response?.success) {
-                        setMessages((prev: Message[]) => 
-                            prev.map(msg => 
-                                msg.id === optimisticMessage.id 
-                                    ? { ...msg, status: "failed" } 
-                                    : msg
-                            )
-                        );
-                        setMessageQueue(prev => [...prev, {
-                            id: optimisticMessage.id,
-                            data: messageData
-                        }]);
-                        toast.error(t("errors.sendFailed"));
-                        reject(new Error("Message sending failed"));
-                    } else {
-                        setMessages((prev: Message[]) => 
-                            prev.map(msg => 
-                                msg.id === optimisticMessage.id 
-                                    ? { ...msg, status: "sent" } 
-                                    : msg
-                            )
-                        );
-                        resolve(response);
-                    }
-                });
-            });
+            setMessageQueue(prev => [...prev, {
+                id: optimisticMessage.id,
+                data: messageData
+            }]);
 
         } catch (error) {
-            toast.error(error instanceof Error ? error.message : "Failed to send message. Please try again.");
+            toast.error(error instanceof Error ? error.message : "Mesaj gönderilemedi. Lütfen tekrar deneyin.");
             throw error;
         } finally {
             setIsSending(false);
@@ -841,7 +822,7 @@ const ChatMain = ({
                     <div className="flex items-center justify-between p-4 border-t border-soft-200">
                         <span className="text-xs font-medium text-sub-600">{t("input.fields.totalAmount")}</span>
                         <span className="text-xs font-medium text-strong-950">
-                            ${(contractsData || []).reduce((total: number, contract: { amount: number }) => total + (contract.amount || 0), 0)}
+                            ${Array.isArray(contractsData) ? contractsData.reduce((total: number, contract: { amount: number }) => total + (contract.amount || 0), 0) : 0}
                         </span>
                     </div>
                 </DialogContent>

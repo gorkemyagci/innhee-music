@@ -59,7 +59,7 @@ const ProfileDropdown = ({ children }: { children: React.ReactNode }) => {
                                 />
                             </div>
                             <div>
-                                <h3 className="font-medium text-sm text-strong-950">{user?.nickname || ""}</h3>
+                                <h3 className="font-medium text-sm text-strong-950">{user?.nickname || "Anonymous"}</h3>
                                 <div className="flex items-center gap-3">
                                     <p className="text-xs text-sub-600">ID: 1235984</p>
                                     <Icons.copy className="cursor-pointer" onClick={() => copyToClipboard("1235984")} />

@@ -11,7 +11,7 @@ const Profile = ({ user }: ProfileProps) => {
         <div className="p-4 flex flex-col items-center gap-2">
             <UserAvatar
                 imageUrl={user?.profilePicture?.url || ""}
-                name={user?.nickname || ""}
+                name={user?.nickname || "Anonymous"}
                 className="w-12 h-12"
             />
             <div className="flex flex-col items-center gap-1">

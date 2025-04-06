@@ -217,7 +217,7 @@ const Profile = () => {
                             </AnimatePresence>
                             <UserAvatar
                                 imageUrl={profileImage || userData?.profilePicture?.url || ""}
-                                name={userData?.nickname}
+                                name={userData?.nickname || "Anonymous"}
                                 className="h-14 w-14 cursor-pointer"
                                 onClick={handleUploadClick}
                             />

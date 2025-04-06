@@ -61,4 +61,5 @@ export interface Message {
   fileCount?: number;
   chatRoomId?: string;
   createdAt?: string;
+  status?: 'sending' | 'sent' | 'failed';
 } 
