@@ -23,6 +23,7 @@ const TalentPage = ({ workerId, userId }: TalentPageProps) => {
         defaultValue: "woker",
     });
     const { data, isPending } = trpc.talent.getWorkerById.useQuery(workerId);
+    console.log(data);
     const { data: portfolio, isPending: isPortfolioPending } = trpc.talent.getWorkerPortfolio.useQuery(workerId);
     if (isPending || isPortfolioPending) {
         return <>

@@ -29,7 +29,7 @@ const Workers = ({ workers, isPending }: WorkersProps) => {
                         <div className="flex items-center gap-2 sm:gap-2.5">
                             <Link href={`/talent/${item?.id}`} prefetch>
                                 <UserAvatar
-                                    imageUrl="/assets/images/avatar-3.png"
+                                    imageUrl={item?.user?.profilePicture?.url || ""}
                                     name={item?.user?.nickname || "Unknown"}
                                     className="size-10 sm:size-12"
                                 />

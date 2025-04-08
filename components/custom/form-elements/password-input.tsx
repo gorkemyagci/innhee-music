@@ -30,7 +30,9 @@ export function PasswordInput({ form, name, placeholder }: Props) {
             name={name}
             render={() => (
                 <FormItem>
-                    <FormLabel>Password<span className="text-sm text-error-base">*</span></FormLabel>
+                    <FormLabel>Password
+                        {form.formState.errors.password && <span className="text-sm text-error-base">*</span>}
+                    </FormLabel>
                     <div>
                         <FormControl>
                             <div className="flex h-10 items-center relative gap-0 px-1 pr-2 py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">

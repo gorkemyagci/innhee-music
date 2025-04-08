@@ -23,6 +23,8 @@ const FindJobsWorkers = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const { data: workers, isPending } = trpc.dashboard.getAllWorkers.useQuery();
 
+    console.log(workers);
+
     useEffect(() => {
         setIsLoaded(true);
     }, []);

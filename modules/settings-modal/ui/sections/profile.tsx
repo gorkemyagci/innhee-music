@@ -13,11 +13,29 @@ import { trpc } from "@/trpc/client";
 import { useAuthStore } from "@/store/auth-store";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { Loader2 } from "lucide-react";
+import { z } from "zod";
+import ReactCrop, { Crop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 interface DecodedToken extends JwtPayload {
     nickname?: string;
     email?: string;
     [key: string]: any;
+}
+
+const nicknameSchema = z.object({
+    nickname: z.string()
+        .min(6, { message: "Nickname must be 6-16 characters long" })
+        .max(16, { message: "Nickname must be 6-16 characters long" })
+        .regex(/^[\u4e00-\u9fa5a-zA-Z0-9_]{6,16}$/, { 
+            message: "Supports Chinese characters, letters, numbers, and underscores only" 
+        })
+});
+
+declare global {
+    interface Window {
+        Cropper: any;
+    }
 }
 
 const Profile = () => {
@@ -33,7 +51,22 @@ const Profile = () => {
     const [isMobile, setIsMobile] = useState(false);
     const [isTablet, setIsTablet] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isCropping, setIsCropping] = useState(false);
+    const [croppedImage, setCroppedImage] = useState<string | null>(null);
+    const imageRef = useRef<HTMLImageElement>(null);
+    const cropperRef = useRef<any>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [crop, setCrop] = useState<Crop>({
+        unit: '%',
+        width: 90,
+        height: 90,
+        x: 5,
+        y: 5
+    });
+    const [completedCrop, setCompletedCrop] = useState<Crop | null>(null);
+    const [imgSrc, setImgSrc] = useState<string>('');
+    const imgRef = useRef<HTMLImageElement>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { data: userData, isPending: isUserPending } = trpc.auth.getMe.useQuery();
 
@@ -57,6 +90,23 @@ const Profile = () => {
             } catch { }
         }
     }, [token]);
+
+    useEffect(() => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js';
+        script.async = true;
+        document.body.appendChild(script);
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css';
+        document.head.appendChild(link);
+
+        return () => {
+            document.body.removeChild(script);
+            document.head.removeChild(link);
+        };
+    }, []);
 
     const update = trpc.user.update.useMutation({
         onSuccess: (data) => {
@@ -96,10 +146,20 @@ const Profile = () => {
     };
 
     const handleSaveNickname = () => {
-        update.mutate({ nickname: tempNickname });
-        setNickname(tempNickname);
-        setIsEditingNickname(false);
-        toast.success("Nickname updated successfully");
+        try {
+            const validationResult = nicknameSchema.safeParse({ nickname: tempNickname });
+            if (!validationResult.success) {
+                const error = validationResult.error.errors[0];
+                toast.error(error.message);
+                return;
+            }
+            update.mutate({ nickname: tempNickname });
+            setNickname(tempNickname);
+            setIsEditingNickname(false);
+            toast.success("Nickname updated successfully");
+        } catch (error) {
+            toast.error("Failed to update nickname");
+        }
     };
 
     const handleSaveWebLink = () => {
@@ -126,12 +186,53 @@ const Profile = () => {
             return;
         }
 
-        setIsUploading(true);
-        const formData = new FormData();
-        formData.append('attachment', file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            setImgSrc(e.target?.result as string);
+            setIsCropping(true);
+        };
+        reader.readAsDataURL(file);
+    };
 
+    const handleCrop = async () => {
+        if (!imgRef.current || !completedCrop) return;
+
+        const image = imgRef.current;
+        const canvas = document.createElement('canvas');
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+        canvas.width = completedCrop.width;
+        canvas.height = completedCrop.height;
+        const ctx = canvas.getContext('2d');
+
+        if (!ctx) return;
+
+        ctx.drawImage(
+            image,
+            completedCrop.x * scaleX,
+            completedCrop.y * scaleY,
+            completedCrop.width * scaleX,
+            completedCrop.height * scaleY,
+            0,
+            0,
+            completedCrop.width,
+            completedCrop.height
+        );
+
+        const croppedImageUrl = canvas.toDataURL('image/jpeg');
+        setIsCropping(false);
+        handleUpload(croppedImageUrl);
+    };
+
+    const handleUpload = async (imageData: string) => {
+        setIsUploading(true);
         try {
-            const response = await fetch(`${SERVICE_URL}/user/profile-picture`, {
+            const response = await fetch(imageData);
+            const blob = await response.blob();
+            const formData = new FormData();
+            formData.append('attachment', blob, 'profile.jpg');
+
+            const uploadResponse = await fetch(`${SERVICE_URL}/user/profile-picture`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `${token}`,
@@ -139,13 +240,12 @@ const Profile = () => {
                 body: formData
             });
 
-            if (!response.ok) {
+            if (!uploadResponse.ok) {
                 throw new Error('Failed to upload profile picture');
             }
 
-            const data = await response.json();
+            const data = await uploadResponse.json();
             setProfileImage(data.profilePicture.url);
-            useAuthStore.getState().updateToken(data.access_token);
             toast.success("Profile photo updated successfully");
             utils.auth.getMe.invalidate();
         } catch (error) {
@@ -159,6 +259,44 @@ const Profile = () => {
         return null;
     }
 
+    if (isCropping) {
+        return (
+            <div className="w-full h-[600px] flex flex-col items-center p-4">
+                <div className="w-full max-w-[600px] h-full flex flex-col">
+                    <h2 className="text-lg font-semibold mb-4">Crop Profile Picture</h2>
+                    <div className="flex-1 flex items-center justify-center">
+                        <ReactCrop
+                            crop={crop}
+                            onChange={(c) => setCrop(c)}
+                            onComplete={(c) => setCompletedCrop(c)}
+                            aspect={1}
+                            className="w-full max-h-[500px] flex items-center justify-center"
+                        >
+                            <img
+                                ref={imgRef}
+                                src={imgSrc}
+                                alt="Crop me"
+                                className="max-w-full max-h-[500px] object-contain"
+                            />
+                        </ReactCrop>
+                    </div>
+                    <div className="mt-4 flex gap-2 justify-end">
+                        <Button
+                            variant="outline"
+                            onClick={() => setIsCropping(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleCrop}
+                        >
+                            Crop & Upload
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full">
@@ -173,12 +311,12 @@ const Profile = () => {
                 )}>
                     <div className="flex flex-col items-start gap-1">
                         <span className="text-main-900 text-sm font-medium">Apex ID</span>
-                        <span className="text-sub-600 font-normal text-xs">A-12341234</span>
+                        <span className="text-sub-600 font-normal text-xs">{userData?.id}</span>
                     </div>
                     <Button
                         variant="outline"
                         className="border border-soft-200 w-8 h-8 rounded-lg p-1.5 flex items-center justify-center"
-                        onClick={() => copyToClipboard("A-12341234", "Apex ID")}
+                        onClick={() => copyToClipboard(userData?.id || "", "Apex ID")}
                     >
                         <Icons.copy />
                     </Button>
@@ -197,31 +335,14 @@ const Profile = () => {
                         <span className="text-sub-600 font-normal text-xs">Min 400x400px, PNG or JPEG formats.</span>
                     </div>
                     <div className="flex items-center gap-4">
-                        <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="relative"
-                        >
-                            <AnimatePresence mode="wait">
-                                {isUploading ? (
-                                    <motion.div
-                                        key="uploading"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-full"
-                                    >
-                                        <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                    </motion.div>
-                                ) : null}
-                            </AnimatePresence>
+                        <div className="relative">
                             <UserAvatar
                                 imageUrl={profileImage || userData?.profilePicture?.url || ""}
                                 name={userData?.nickname || "Anonymous"}
                                 className="h-14 w-14 cursor-pointer"
                                 onClick={handleUploadClick}
                             />
-                        </motion.div>
+                        </div>
                         <input
                             type="file"
                             ref={fileInputRef}

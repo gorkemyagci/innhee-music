@@ -23,7 +23,7 @@ const SidebarLayout = ({ data, isOwner }: { data: any, isOwner: boolean }) => {
 
                 <div className="flex items-center gap-2">
                     <UserAvatar
-                        imageUrl="/assets/images/avatar-3.png"
+                        imageUrl={data?.user?.profilePicture || ""}
                         name={data?.user?.nickname}
                         className="w-8 h-8"
                     />

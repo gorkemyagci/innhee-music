@@ -24,7 +24,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
 const signinSchema = z.object({
-    account: z.string().email(),
+    account: z.string().min(1, { message: "Account is required" }).email(),
     code: z.string().min(6).optional(),
     password: z.string().regex(PASSWORD_REGEX, {
         message: ERROR_MESSAGES.PASSWORD_COMPLEXITY,
@@ -102,7 +102,7 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
     };
 
     const form = useForm<SignIn>({
-        mode: "onSubmit",
+        mode: "onChange",
         reValidateMode: "onChange",
         resolver: zodResolver(signinSchema),
         defaultValues: {
@@ -161,19 +161,19 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
         const terms = form.getValues("terms");
 
         if (!account) {
-            toast.error(t("errors.accountRequired"));
+            form.setError("account", { message: t("errors.accountRequired") });
             return;
         }
         if (activeTab === "code" && !code) {
-            toast.error(t("errors.codeRequired"));
+            form.setError("code", { message: t("errors.codeRequired") });
             return;
         }
         if (activeTab === "password" && !password) {
-            toast.error(t("errors.passwordRequired"));
+            form.setError("password", { message: t("errors.passwordRequired") });
             return;
         }
         if (!terms) {
-            toast.error(t("errors.termsRequired"));
+            form.setError("terms", { message: t("errors.termsRequired") });
             return;
         }
 
@@ -215,16 +215,19 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
         const account = form.getValues("account");
         if (!account) {
             toast.error(t("errors.accountRequired"));
+            form.setError("account", { message: t("errors.accountRequired") });
             return;
         }
         const isEmail = EMAIL_REGEX.test(account);
         const isPhone = PHONE_REGEX.test(account);
         if (!isEmail && !isPhone) {
             toast.error(t("errors.invalidAccount"));
+            form.setError("account", { message: t("errors.invalidAccount") });
             return;
         }
         if (countdown > 0) {
             toast.error(t("errors.waitForCode", { seconds: countdown }));
+            form.setError("account", { message: t("errors.waitForCode", { seconds: countdown }) });
             return;
         }
         sendOtp.mutate({ account });
@@ -245,7 +248,10 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                     name="account"
                     render={() => (
                         <FormItem>
-                            <FormLabel>{t("account.label")}<span className="text-sm text-error-base">*</span></FormLabel>
+                            <FormLabel>
+                                {t("account.label")}
+                                {form.formState.errors.account?.message && <span className="text-sm text-error-base">*</span>}
+                            </FormLabel>
                             <div>
                                 <FormControl>
                                     <div className="flex h-10 items-center relative gap-0 pl-2.5 pr-3 py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">
@@ -265,7 +271,10 @@ const SignInForm = ({ activeTab }: SignInFormProps) => {
                     name="code"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>{t("code.label")}<span className="text-sm text-error-base">*</span></FormLabel>
+                            <FormLabel>
+                                {t("code.label")}
+                                {form.formState.errors.code?.message && <span className="text-sm text-error-base">*</span>}
+                            </FormLabel>
                             <div>
                                 <FormControl>
                                     <div className="flex h-10 items-center relative py-0 transition-all duration-500 hover:bg-gray-100/60 hover:border-gray-100/60 bg-white border border-soft-200 rounded-xl">

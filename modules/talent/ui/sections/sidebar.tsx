@@ -39,7 +39,7 @@ const Sidebar = ({ data, isOwner }: { data: any, isOwner: boolean }) => {
                 )}
                 <div className="flex flex-col items-center gap-1">
                     <UserAvatar
-                        imageUrl="/assets/images/avatar2.png"
+                        imageUrl={data?.user?.profilePicture || ""}
                         name={data?.user?.nickname}
                         className="w-20 h-20 shrink-0 p-0.5"
                     />
